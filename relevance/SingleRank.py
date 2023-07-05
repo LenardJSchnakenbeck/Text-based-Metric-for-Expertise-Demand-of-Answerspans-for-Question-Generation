@@ -127,19 +127,30 @@ text = [(word, sentence.pos[i] in pos) for sentence in sentences
 candidates = document["noun_phrases"]
 normalized = True
 
-def word_scoring():
+def word_scoring(chunked_candidates, window = 10):
+    chunked_candidates = [['Hello', False], [['my', 'name', 'is'], True], [['your', 'mom'], True]]
+
+    words = []
+    #flatten chunked_candidates
+    for candidate in chunked_candidates:
+        word_or_list = candidate[0]
+        iscandidate = candidate[1]
+        words += [(word_or_list, iscandidate)] if isinstance(word_or_list, str) \
+            else list(zip(word_or_list, [iscandidate] * len(word_or_list)))
+
+    #create Graph
     graph = nx.Graph()
-    graph.add_nodes_from([word for word, valid in text if valid]) # text = [(word,True), (word,False)]
+    graph.add_nodes_from([word for word, iscandidate in words if iscandidate])  # words = [(word,True), (word,False)]
 
     # add edges to the graph
-    for i, (node1, is_in_graph1) in enumerate(text):
+    for i, (node1, is_in_graph1) in enumerate(words):
 
         # speed up things
         if not is_in_graph1:
             continue
 
-        for j in range(i + 1, min(i + window, len(text))):
-            node2, is_in_graph2 = text[j]
+        for j in range(i + 1, min(i + window, len(words))):
+            node2, is_in_graph2 = words[j]
             if is_in_graph2 and node1 != node2:
                 graph.add_edge(node1, node2)
 
@@ -149,16 +160,14 @@ def word_scoring():
                     weight='weight')
     return scores
 
-#J: Candidate score = avg(word scores)
-# loop through the candidates
-def candidate_scoring():
-    scores = []
+# Candidate score = avg(word scores)
+def candidate_scoring(word_scores, chunked_candidates, normalized = True):
+    scores = {}
+    candidates = [candidate for candidate, iscandidate in chunked_candidates if iscandidate]
     for k in candidates:
-        tokens = nltk.word_tokenize(k)
-        scores[k] = sum([w[t] for t in tokens]) #
+        tokens = k #nltk.word_tokenize(k)
+        scores[str(k)] = sum([word_scores[t] for t in tokens])
         if normalized:
-            scores[k] /= len(tokens)
-        # use position to break ties
-        #???
-        scores[k] += (candidates[k].offsets[0] * 1e-8)
+            scores[str(k)] /= len(tokens)
+        #scores[str(k)] += (offset * 1e-8) #???
     return scores
