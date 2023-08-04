@@ -1,36 +1,27 @@
-import pandas as pd
-import spacy
+from preprocessing import candidate_phrases
+from similarity import cosine_similarity
 
-articles = pd.read_json("preprocessing/wikipedia_texts.json")#, encoding="utf-8")
+source_documents_path = 'preprocessing/wikipedia_texts.json'
+labeled_documents_path = 'preprocessing/labeled_documents.json'
+embeddings_path = 'similarity/embeddings.pickle'
+cosine_similarities_path = 'similarity/cosine_similarities.pickle'
 
+#chunk candidates by pos-tag
+candidate_phrases.write_json_labeled_documents(source_documents_path, labeled_documents_path)
 
-def get_wikipedia_text(i, articles = articles):
-    return articles.iloc[0]["text"]
+#calculate similarities (candidates-candidates & candidates-documents)
+cosine_similarity.write_pickle_encoded_documents(embeddings_path, labeled_documents_path)
+cosine_similarity.calculate_and_write_pickle_cossim(labeled_documents_path, embeddings_path, cosine_similarities_path)
 
-"""
-def noun_phrase_chunking(text):
-    nlp = spacy.load("en_core_web_sm")
-    a = []
-    chunked_text = nlp(text)
-    noun_chunks = []
-    for chunk in chunked_text.noun_chunks:
-        noun_chunks += [chunk.text]
-    tokenized_text = nltk.word_tokenize(str(text))
-    for i in len(tokenized_text):
-        if tokenized_text[i] in noun_chunks[0]:
-            noun_chunk = i
+cossim_documents = cosine_similarity.load_cosine_similarities(cosine_similarities_path)
 
-        else:
-            noun_chunk = None
+##RELEVANCY
+#KeyBERT-Approach: Similarities between candidates and documents
+#SingleRank
 
-        a += [tokenized_text[i],noun_chunk]
-
-    return
-"""
-
-a = []
-for i in range(len(articles)):
-    a += [get_wikipedia_text(i, articles=articles)]
+##SIMILARITY OF FALSE ALTERNATIVES
+#Similarities between candidates
+    #apply Sigmoid for Influence control
 
 
 
