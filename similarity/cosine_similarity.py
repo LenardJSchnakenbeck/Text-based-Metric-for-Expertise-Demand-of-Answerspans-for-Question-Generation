@@ -16,8 +16,8 @@ def encode_text_and_avg_candidates(documents):
             if isinstance(candidates[i], list):
                 candidate_tokens = tokens_encoded[i:i + len(candidates[i])]
                 candidates_encoded += [sum(candidate_tokens)/len(candidate_tokens)] #averaged
-            else:
-                candidates_encoded += [tokens_encoded[i]]
+            #else:
+            #    candidates_encoded += [tokens_encoded[i]]
             i += 1
         result.append({
             'candidates': candidates_encoded,
@@ -88,6 +88,7 @@ def calculate_and_write_pickle_cossim(labeled_documents_path, embeddings_path,co
 def load_cosine_similarities(cosine_similarities_path):
     with open(cosine_similarities_path, 'rb') as pkl:
         return pickle.load(pkl)
+
 
 #encode_text_and_avg_candidates(documents)  #1. encode and serialize
 #calculate_and_update_json_candidates_document_cossim() #2. calculate and serialize

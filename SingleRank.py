@@ -1,26 +1,17 @@
-import nltk
-import pke
+import json
 import networkx as nx
-# define the set of valid Part-of-Speeches
-pos = {'NOUN', 'PROPN', 'ADJ'}
-# 1. create a SingleRank extractor.
+import pickle
 
-#window = 2
-#spacy_model = None
-#language = "en"
-input = 'Pond herons (Ardeola) are herons from the University of Duisburg, typically 40–50 cm (16–20 in) long with an 80–100 cm (30–40 in) wingspan. Most breed in the tropical Old World, but the migratory squacco heron occurs in southern Europe and the Middle East and winters in Africa. The scientific name comes from Latin ardeola, a small heron (ardea).'
-#candidates = document["noun_phrases"]
 
 def word_scoring(chunked_candidates, window = 10):
-    chunked_candidates = [['Hello', False], [['my', 'name', 'is'], True], [['your', 'mom'], True]]
-
     words = []
     #flatten chunked_candidates
-    for candidate in chunked_candidates:
-        word_or_list = candidate[0]
-        iscandidate = candidate[1]
-        words += [(word_or_list, iscandidate)] if isinstance(word_or_list, str) \
-            else list(zip(word_or_list, [iscandidate] * len(word_or_list)))
+    for word_or_list in chunked_candidates:
+        iscandidate = True if isinstance(word_or_list, list) else False
+        if iscandidate:
+            words += [(word,True) for word in word_or_list]
+        else:
+            words += [(word_or_list, False)]
 
     #create Graph
     graph = nx.Graph()
@@ -46,13 +37,45 @@ def word_scoring(chunked_candidates, window = 10):
 
 
 # Candidate score = sum(word scores)
-def candidate_scoring(word_scores, chunked_candidates, normalized=False):
-    scores = {}
-    candidates = [candidate for candidate, iscandidate in chunked_candidates if iscandidate]
-    for k in candidates:
-        tokens = k #nltk.word_tokenize(k)
-        scores[str(k)] = sum([word_scores[t] for t in tokens])
-        if normalized:
-            scores[str(k)] /= len(tokens)
-        #scores[str(k)] += (offset * 1e-8) #???
-    return scores
+def candidate_scoring(word_scores, candidates, normalized=False):
+    scores_dict = {}
+    scores_array = []
+    #candidates = [candidate for candidate, iscandidate in chunked_candidates if iscandidate]
+    for index, k in enumerate(candidates):
+        if isinstance(k, list):
+            tokens = k #nltk.word_tokenize(k)
+            scores_dict[str(k)] = sum([word_scores[t] for t in tokens])
+            scores_array += [sum([word_scores[t] for t in tokens])]
+            if normalized:
+                scores_dict[str(k)] /= len(tokens)
+
+    # Extract values from the dictionary in the same order as the keys
+    dictionary_values = [scores_dict[key] for key in scores_dict]
+    # Check if the floats in the list match the corresponding values in the dictionary
+    in_same_order = all(a == b for a, b in zip(scores_array, dictionary_values))
+    if not in_same_order: raise ValueError("the order was lost when dictionary was converted to list")
+
+    return scores_array
+
+def calculate_and_write_pickle_singlerank_scores(labeled_documents_path, singlerank_scores_path):
+    documents_json = open(labeled_documents_path)
+    documents = json.load(documents_json)
+    #results = []
+    for document in documents:
+        candidates = document["candidates"]
+        document['singlerank_scores'] = candidate_scoring(word_scoring(candidates), candidates)
+
+    with open(singlerank_scores_path, 'wb') as pkl:
+        pickle.dump(documents, pkl)
+
+def load_singlerank_scores(singlerank_scores_path):
+    with open(singlerank_scores_path, 'rb') as pkl:
+        return pickle.load(pkl)
+
+
+if __name__ == "main":
+    labeled_documents_path = 'preprocessing/labeled_documents.json'
+    singlerank_scores_path = 'similarity/singlerank_scores.pickle'
+    calculate_and_write_pickle_singlerank_scores(labeled_documents_path, singlerank_scores_path)
+    singlerank_documents = load_singlerank_scores(singlerank_scores_path)
+

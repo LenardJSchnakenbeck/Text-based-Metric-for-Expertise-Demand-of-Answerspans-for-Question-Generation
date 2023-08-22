@@ -1,0 +1,29 @@
+Leitfaden für Interview-Studie
+
+*Einverständniserklärung
+
+#Erklärung der Metric
+Erklären
+Verständnis prüfen
+Fragen beantworten
+
+#Erwartungen
+Wozu könnte so eine Metric nützlich sein?
+Was erwartest du dir von so einer Metric?
+Würdest du sagen du kannst die Werte der Metric vorhersagen?
+    -Welche Abweichungen der Werte von deiner persönlichen Einschätzung sind hinzunehmen?
+
+##Die Metric und ihre Teile
+#Relevanz & #Ähnlichkeit zu falschen Alternativen & #Gesamt
+Sind die Werte deinen Erwartungen entsprechend? Inwiefern? / Wie bist du beim Einschätzen vorgegangen?
+Kannst du die Werte nachvollziehen?
+Sind die Werte aussagekräftig?
+Erkennst du Trends/Einflüsse in den Werten?
+
+#Gesamt
+Ist das Verhältnis von Relevanz und Ähnlichkeit zu Falschalternativen deinen Erwartungen entsprechend?
+Welche Werte (R, A o. Gesamt) kannst du am besten nachvollziehen?
+
+#Fazit
+Was würdest du dir noch von so einer Metric wünschen?
+Kannst du dir vorstellen die Metric sinnvoll einzusetzen?
