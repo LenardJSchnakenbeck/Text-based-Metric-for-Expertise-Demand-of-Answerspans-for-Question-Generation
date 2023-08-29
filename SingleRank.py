@@ -1,6 +1,7 @@
 import json
 import networkx as nx
 import pickle
+import numpy as np
 
 
 def word_scoring(chunked_candidates, window = 10):
@@ -37,25 +38,20 @@ def word_scoring(chunked_candidates, window = 10):
 
 
 # Candidate score = sum(word scores)
-def candidate_scoring(word_scores, candidates, normalized=False):
-    scores_dict = {}
+def candidate_scoring(word_scores, candidates, apply_softmax = False):
     scores_array = []
     #candidates = [candidate for candidate, iscandidate in chunked_candidates if iscandidate]
     for index, k in enumerate(candidates):
         if isinstance(k, list):
-            tokens = k #nltk.word_tokenize(k)
-            scores_dict[str(k)] = sum([word_scores[t] for t in tokens])
+            tokens = k
+            #scores_dict[str(k)] = sum([word_scores[t] for t in tokens])
             scores_array += [sum([word_scores[t] for t in tokens])]
-            if normalized:
-                scores_dict[str(k)] /= len(tokens)
 
-    # Extract values from the dictionary in the same order as the keys
-    dictionary_values = [scores_dict[key] for key in scores_dict]
-    # Check if the floats in the list match the corresponding values in the dictionary
-    in_same_order = all(a == b for a, b in zip(scores_array, dictionary_values))
-    if not in_same_order: raise ValueError("the order was lost when dictionary was converted to list")
-
-    return scores_array
+    if apply_softmax:
+        softmax_scores = np.exp(scores_array) / np.sum(np.exp(scores_array))
+        return softmax_scores
+    else:
+        return scores_array
 
 def calculate_and_write_pickle_singlerank_scores(labeled_documents_path, singlerank_scores_path):
     documents_json = open(labeled_documents_path)
@@ -63,6 +59,7 @@ def calculate_and_write_pickle_singlerank_scores(labeled_documents_path, singler
     #results = []
     for document in documents:
         candidates = document["candidates"]
+        document["candidates_only"] = [candidate for candidate in document["candidates"] if isinstance(candidate, list)]
         document['singlerank_scores'] = candidate_scoring(word_scoring(candidates), candidates)
 
     with open(singlerank_scores_path, 'wb') as pkl:
