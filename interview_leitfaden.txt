@@ -2,16 +2,13 @@ Leitfaden für Interview-Studie
 
 *Einverständniserklärung
 
-#Erklärung der Metric
-Erklären
-Verständnis prüfen
-Fragen beantworten
-
 #Erwartungen
 Wozu könnte so eine Metric nützlich sein?
 Was erwartest du dir von so einer Metric?
 Würdest du sagen du kannst die Werte der Metric vorhersagen?
     -Welche Abweichungen der Werte von deiner persönlichen Einschätzung sind hinzunehmen?
+
+--Ab hier Hands on
 
 ##Die Metric und ihre Teile
 #Relevanz & #Ähnlichkeit zu falschen Alternativen & #Gesamt
@@ -27,3 +24,65 @@ Welche Werte (R, A o. Gesamt) kannst du am besten nachvollziehen?
 #Fazit
 Was würdest du dir noch von so einer Metric wünschen?
 Kannst du dir vorstellen die Metric sinnvoll einzusetzen?
+
+
+#### Sarah hilft mir:
+
+offene fragen
+    redet! Alles ist hilfreich :)
+    Proband*innnen zum Redefluss motivieren
+Pausen lassen!!
+evtl. Anwendungsszenario (bearbeiten/nachvollziehen) hineindenken
+
+Überlegen: was wichtig, wie zum reden bekommen, was könnten noch Fragen sein? (Hinterkopf)
+
+
+Themenbereiche
+obligtorische Leitfragen, Erzählaufforderungen | Stichpunkte (für spontane Einwürfe) | weiterführende Fragen | aufrechterhaltungs / seteuerungs Fragen
+Fragen sollen nicht mit Skala beantwortbar sein
+Immer erst erzählen lassen und später nachfragen / Hinweise geben
+
+#Mich Vorstellen
+#Erklärung der Metric
+Erklären
+Verständnis prüfen
+Fragen
+
+Fragen:
+    Wie gehst du beim Texte lernen vor?
+    Wie kannst du am besten Lernen? Helfen dir Fragen? (-> Diskussion)
+    Wann ist eine Frage expertisedemanding?
+    *Text geben*
+    Wie würdest du vorgehen?
+    Wenn du dir Lernfragen überlegen würdest? Worauf würdest du achten? Wie würdest du die sortieren?
+
+    Zum Schluss Fragen zur Bewertung deren Infos
+    Vorerfahrungen: Texte lesen / lernen, Software Nutzung, Vertrauen in Programme, etc
+
+
+Quelle:
+@book{helfferich2011qualitat,
+  title={Die Qualit{\"a}t qualitativer Daten},
+  author={Helfferich, Cornelia},
+  volume={4},
+  year={2011},
+  publisher={Springer}
+}
+
+strukturiertes Leitfadeninterview
+TiPP: Word kann Speech-to-Text
+
+
+
+Auswertungsmethoden
+Grounded Theory mit offenem axialem Kodieren
+Transkript -> Konzept -> erste Kategorien
+
+Quelle:
+@book{przyborski2013qualitative,
+  title={Qualitative sozialforschung: ein arbeitsbuch},
+  author={Przyborski, Aglaja and Wohlrab-Sahr, Monika},
+  year={2013},
+  publisher={Walter de Gruyter}
+}
+https://www.beck-shop.de/przyborski-wohlrab-sahr-qualitative-sozialforschung/product/32473346

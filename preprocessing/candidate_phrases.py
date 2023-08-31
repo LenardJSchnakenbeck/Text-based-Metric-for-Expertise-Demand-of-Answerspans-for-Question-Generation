@@ -2,6 +2,26 @@ import json
 import nltk
 #nltk.download('averaged_perceptron_tagger')
 
+
+def load_wikipedia_and_create_json(path_to_raw_wikipedia_texts, source_documents_path, number_of_lines=10000):
+    #load
+    with open(path_to_raw_wikipedia_texts, "r") as f:
+        if number_of_lines:
+            texts = f.readlines(number_of_lines)
+        else:
+            texts = f.readlines()
+    texts.pop(-1)
+    #refactor
+    texts_dicts = []
+    for text in texts:
+        separator = text.index(" ||| ")
+        title = text[:separator]
+        texts_dicts += [{"title": title, "text": text[separator + 5:]}]
+    #save
+    with open(source_documents_path, "w") as f:
+        json.dump(texts_dicts, f)
+
+
 def candidate_chunking(text, candidate_pos=["CD", "JJ", "NN", "NNP", "NNS", "ADJ", "VBG", "RBS", "PRP"]):
                                                                                 #follwing, most
     # TODO: tokenization: wenn ' im Word: doesn't wird zu ('doesn', 'VBZ'), ('’', 'JJ'), ('t', 'NN')
