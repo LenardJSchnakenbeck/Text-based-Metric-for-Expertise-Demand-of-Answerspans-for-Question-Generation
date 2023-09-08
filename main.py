@@ -16,7 +16,7 @@ embeddings_path = 'similarity/embeddings.pickle'
 cosine_similarities_path = 'similarity/cosine_similarities.pickle'
 singlerank_scores_path = 'similarity/singlerank_scores.pickle'
 
-source_documents_path = 'preprocessing/wikipedia_texts_DiY.json'
+#source_documents_path = 'preprocessing/wikipedia_texts_DiY.json'
 
 
 if __name__ == "__main__":
