@@ -14,6 +14,7 @@ source_documents_path = 'preprocessing/wikipedia_texts.json'
 labeled_documents_path = 'preprocessing/labeled_documents.json'
 embeddings_path = 'similarity/embeddings.pickle'
 cosine_similarities_path = 'similarity/cosine_similarities.pickle'
+wordnet_similarities_path = 'similarity/wordnet_similarities.pickle'
 singlerank_scores_path = 'similarity/singlerank_scores.pickle'
 
 #source_documents_path = 'preprocessing/wikipedia_texts_DiY.json'

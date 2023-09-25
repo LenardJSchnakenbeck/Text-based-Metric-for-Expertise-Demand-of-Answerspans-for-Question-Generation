@@ -30,27 +30,32 @@ def candidate_chunking(text, candidate_pos=["CD", "JJ", "NN", "NNP", "NNS", "ADJ
 
     tokens = nltk.word_tokenize(text)
     tagged = nltk.pos_tag(tokens)
+    tagged_candidates = []
 
     candidates = []
     current_group = []
     for i in range(len(tagged)):
         if tagged[i][1] in candidate_pos or tagged[i][1] is True:
-            current_group += [tagged[i][0]]
+            current_group += [tagged[i]]
         else:
             if current_group:
-                candidates += [current_group]
+                candidates += [[i[0] for i in current_group]] #word
+                tagged_candidates += [i[1] for i in current_group] #pos
                 current_group = []
             candidates += [tagged[i][0]]
 
-    return candidates, tokens, tagged
+
+    return candidates, tokens, tagged_candidates, tagged
 
 
 def chunking_texts(documents):
     labeled_documents = []
     for document in documents:
-        candidate_chunks, tokens, _ = candidate_chunking(document["text"])
+        candidate_chunks, tokens, tagged_candidates, tagged_tokens = candidate_chunking(document["text"])
         document['candidates'] = candidate_chunks
         document['tokens'] = tokens
+        document['candidates_pos'] = tagged_candidates
+        document['tokens_pos'] = tagged_tokens
         labeled_documents.append(document)
     return labeled_documents
 

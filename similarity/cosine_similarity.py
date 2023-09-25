@@ -10,19 +10,20 @@ def encode_text_and_avg_candidates(documents):
     for document in documents:
         text_encoded = model.encode(document['text'])
         candidates = document['candidates']
+        candidates_encoded = model.encode([" ".join(can) if isinstance(can, list) else can for can in candidates])
+        """    
         tokens_encoded = model.encode(document['tokens'])
-        candidates_encoded = []
         i = 0
         offset = 0
         while i < len(candidates):
             if isinstance(candidates[i], list):
-#                print(candidates[i], tokens_encoded[i + offset:i + offset + len(candidates[i])])
                 candidate_tokens = tokens_encoded[i + offset:i + offset + len(candidates[i])]
-                candidates_encoded += [sum(candidate_tokens)/len(candidate_tokens)] #averaged
+                candidates_encoded += [sum(candidate_tokens)/len(candidate_tokens)] #averaged candidate embedding
                 offset += len(candidates[i])-1
             #else:
             #    candidates_encoded += [tokens_encoded[i]]
             i += 1
+        """
         result.append({
             'candidates': candidates_encoded,   # candidate embeddings
             'text': text_encoded                # document embedding
