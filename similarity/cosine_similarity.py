@@ -4,6 +4,13 @@ from sentence_transformers import SentenceTransformer
 import pickle
 import numpy as np
 
+from preprocessing.candidate_phrases import get_main_word, map_pos_tokenizer_to_lemmatizer
+
+from itertools import chain
+import nltk
+from nltk.corpus import wordnet
+lemmatizer = nltk.stem.WordNetLemmatizer()
+
 def encode_text_and_avg_candidates(documents):
     model = SentenceTransformer('all-mpnet-base-v2')
     result = []
@@ -53,20 +60,33 @@ def cossim_candidates_document(embeddings_path):
         result.append(candidates_document_similarites)
     return result
 
-def cossim_candidates_candidates(embeddings_path):
+def cossim_candidates_candidates(embeddings_path, documents):
     with open(embeddings_path, 'rb') as pkl:
         document_embeddings = pickle.load(pkl)
 
     result = []
-    for document_embedding in document_embeddings:
+    for document_embedding, document in zip(document_embeddings, documents):
         #for every candidate (1) calculate cossim to every candidate (2)
         candidates1 = []
-        for candidate1 in document_embedding['candidates']:
+        for i, (candidate1emb, candidate1) in enumerate(zip(document_embedding['candidates'], document['candidates'])):
             candidates2 = []
-            for candidate2 in document_embedding['candidates']:
-                candidates2.append(
-                    float(cosine_similarity(candidate1.reshape(1, -1), candidate2.reshape(1, -1))[0])
-                )
+            #find synonyms
+            pos = document["tokens_pos"][i]
+            if isinstance(candidate1, list):
+                candidate1, pos = get_main_word(candidate1, pos)
+            synsets = wordnet.synsets(lemmatizer.lemmatize(candidate1, map_pos_tokenizer_to_lemmatizer(pos)))
+            synonyms = set(chain.from_iterable(
+                [word.lemma_names() for word in synsets]))
+            #calculate similarity to every other word except synonyms
+            for j, (candidate2emb, candidate2) in enumerate(zip(document_embedding['candidates'], document['candidates'])):
+                if isinstance(candidate2, list):
+                    candidate2, _ = get_main_word(candidate2, document["tokens_pos"][j])
+                if candidate2.lower() in synonyms:
+                    candidates2.append(0.0)
+                else:
+                    candidates2.append(
+                        float(cosine_similarity(candidate1emb.reshape(1, -1), candidate2emb.reshape(1, -1))[0])
+                    )
             candidates1.append(candidates2)
         result.append(candidates1)
     return result
@@ -86,9 +106,7 @@ def calculate_and_write_pickle_cossim(labeled_documents_path, embeddings_path,co
         document["candidates_only"] = [candidate for candidate in document["candidates"] if isinstance(candidate, list)]
 
     #candidates-candidates cosine-similarity
-    cosine_values_can_can = cossim_candidates_candidates(embeddings_path)
-    #if apply_softmax:
-    #    cosine_values_can_can = np.exp(cosine_values_can_can) / np.sum(np.exp(cosine_values_can_can))
+    cosine_values_can_can = cossim_candidates_candidates(embeddings_path, documents)
 
     for index, document in enumerate(documents):
         document['sim_candidates_candidates_raw'] = cosine_values_can_can[index]

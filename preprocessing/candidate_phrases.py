@@ -43,7 +43,7 @@ def candidate_chunking(text, candidate_pos=["CD", "JJ", "NN", "NNP", "NNS", "ADJ
                 tagged_candidates += [i[1] for i in current_group] #pos
                 current_group = []
             candidates += [tagged[i][0]]
-
+            tagged_candidates += [tagged[i][1]]
 
     return candidates, tokens, tagged_candidates, tagged
 
@@ -58,6 +58,27 @@ def chunking_texts(documents):
         document['tokens_pos'] = tagged_tokens
         labeled_documents.append(document)
     return labeled_documents
+
+
+def map_pos_tokenizer_to_lemmatizer(pos):
+    pos = pos[0].lower()
+    if pos not in ["n", "v", "a", "r", "s"]:
+        pos = "n"
+    return pos
+
+
+def get_main_word(candidate, pos):
+    print("get_main_word", candidate, pos)
+    if len(candidate) > 1 and "n" in pos:
+        indexes = [index for index, value in enumerate(pos) if value == "n"]
+        candidate = candidate[indexes[-1]]
+        pos = "n"
+    elif isinstance(candidate, list):
+        candidate = candidate[-1]
+        pos = pos[-1]
+    else:
+        raise ValueError("get_main_word: candidate is no list")
+    return candidate, pos
 
 
 def write_json_labeled_documents(source_documents_path, labeled_documents_path):
