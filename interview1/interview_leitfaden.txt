@@ -49,9 +49,14 @@ Verständnis prüfen
 Fragen
 
 Fragen:
+    !Stell dir vor du musst diesen Text lernen und es gibt einen Test dazu
+    !Stell dir vor du möchtest das wichtigste aus diesem Text behalten, sodass du später darüber erzählen kannst
     Wie gehst du beim Texte lernen vor?
     Wie kannst du am besten Lernen? Helfen dir Fragen? (-> Diskussion)
-    Wann ist eine Frage expertisedemanding?
+    Wann ist eine Frage expertise-demanding? / Wann braucht man viel expertise um eine Frage zu beantworten?
+        Wann wenig?
+    *Meine Metrik bezieht Relevanz und falsche Alternativen ein*
+
     *Text geben*
     Wie würdest du vorgehen?
     Wenn du dir Lernfragen überlegen würdest? Worauf würdest du achten? Wie würdest du die sortieren?

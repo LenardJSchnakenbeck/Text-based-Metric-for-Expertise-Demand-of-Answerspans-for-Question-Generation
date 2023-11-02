@@ -1,0 +1,158 @@
+WhatsApp Audio 2023-10-26 at 10.51.04.mp4
+Speaker1: [00:00:00] Hallo Daniel. Mich vorstellen. Ich bin Versuchsleiter in einer qualitativen Studie. Und ich interviewe dich zu einer Metrik, die Metrik heißt Text Based Metrik für Expertise-Demand of Answer spans for question Generation. Okay. Und ich werde sie dir jetzt Stück für Stück erklären. Also, es gibt Automatic Question Generators. Die kriegen einen Text. Zum Beispiel den hier. Und dann werden einzelne Answer spans markiert. Also span im Sinne von Textabschnitt und Antwort. Und dann wird das im Text markiert und das wird dann in ein neuronales Netz gegeben. Und als Output gibt es dann Fragen, die mit dem markierten Answer span beantwortet werden können. Und die anderen Sachen in einem Text, bilden die Grundlage für die Frage natürlich. Um sowas zu nutzen, muss man halt so Answer spans nutzen. Und ich habe diese Metrik gemacht, um diese Answer spans zu ranken. Nach Expertise Demand, also wie viel Expertise man braucht, um eine Frage zu diesem Textabschnitt beantworten zu können. Und das Ganze ist noch text based, das heißt, es wird nur ein Text betrachtet und nicht zum Beispiel die Vorerfahrungen oder so. Text based metrik for expertise demand of Answer spans for question generation.
+
+Speaker2: [00:02:18] Wie ist das, wenn der Text Kauderwelsch ist.
+
+Speaker1: [00:02:24] Dann funktioniert das nicht.
+
+Speaker2: [00:02:26] Okay, dankeschön.
+
+Speaker1: [00:02:46] Hast du das alles verstanden?
+
+Speaker2: [00:02:49] Ich habe dies alles verstanden. Das ist korrekt. Gut.
+
+Speaker1: [00:02:53] Dann stell dir mal vor, du musst einen Text lernen oder möchtest einen Text lernen, um später die wichtigsten Sachen wieder wiedergeben zu können. Wie würdest du dabei vorgehen?
+
+Speaker2: [00:03:11] Ich würde den Text aufmerksam lesen, mit einem Textmarker die wichtigsten Sachen markieren und versuchen mir diese zu merken und dann beim Wiedergeben stringent von oben nach unten den Text versuchen wiederzugeben. Okay.
+
+Speaker1: [00:03:30] Wie würdest du idealer Weise die Inhalte von dem Text lernen?
+
+Speaker2: [00:03:49] Um wirklich zu lernen, würde ich wahrscheinlich die Sachen, die ich mache, würde ich wahrscheinlich ein Blatt Papier nehmen und die handschriftlich noch mal aufschreiben. Nebenher. Nach dem ersten oder zweiten Lesen.
+
+Speaker1: [00:04:06] Okay. Gut. Glaubst du, dir würden Fragen beim Lernen helfen?
+
+Speaker2: [00:04:19] Ich glaube, Fragen würden doch beim Lernen helfen. Aber ich glaube erst, nachdem ich meine eigene Arbeit verrichtet habe. Ich glaube, wenn ich Sachen markiert habe und rausgeschrieben habe und in meinem Kopf schon mal richtig habe, ist einfach glaube ich noch eine gute Lernüberprüfung. Ob man die Sachen wirklich im Kopf hat?
+
+Speaker1: [00:04:40] Ja okay, aber erst mal Text durchlesen, das Wichtigste markieren.
+
+Speaker2: [00:04:46] Richtig? Ja, aber am Ende kann ich tatsächlich sehr gut vorstellen. Ja. Okay.
+
+Speaker1: [00:04:57] Wann ist eine Frage Expertise Demanding. Also braucht man viel Expertise über den Text, um sie beantworten zu können.
+
+Speaker2: [00:05:13] Ich meine, wenn viele geballte Informationen in dem Answer span vorkommen. Vielleicht auch, wenn der Text nicht so ganz klar ist in diesem Bereich.
+
+Speaker1: [00:05:35] Okay. Und wann braucht man wenig Expertise?
+
+Speaker2: [00:05:53] Wenn es um Informationen geht, die sehr wenig Komponente haben. Wenn da einfach steht. Der Himmel ist blau. Das ist eine sehr einfache Information. Da muss man jetzt nicht irgendwie großartig noch versuchen, die zu verkomplizieren. Wenn die Information auch unwichtig ist. In einem Text über den blauen Himmel muss man ja nicht wissen, dass es auch Salamander auf der Welt gibt. Das kann man dann einfach. Dann brauch man halt wenig Expertise, glaube ich in diesem Bereich.
+
+Speaker1: [00:06:35] Also würdest du sagen für eine unwichtige Frage, die in dem Text nicht so wichtig ist, braucht man wenig Expertise über den Text.
+
+Speaker2: [00:06:51] Nee, dann nicht. Also wenn. Ihr eine unwichtige Frage, die im Text eigentlich nicht so wichtig ist, warum Texte auch nicht gut kennen?
+
+Speaker3: [00:07:04] Okay.
+
+Speaker2: [00:07:05] Was meinst du?
+
+Speaker1: [00:07:07] Wenn etwas unwichtig ist in dem Text, also nur ein Detail, dann bleibt es ja auch eigentlich weniger gut hängen, oder nicht? Dann braucht man viel Expertise über den Text, dass man das weiß.
+
+Speaker2: [00:07:36] Ah so, okay, dann weiß ich das meinst. ja das doch, dass du dem zustimmen. Ja, ja. Ich habe aber nur in dem in der vorigen Frage noch von wegen wenn ich es wiedergeben müsste, dann ist die Information ein bisschen unwichtig. Aber wenn du den ganzen Text gut wiedergeben musst, brauchst du viel Expertise über den Text,  um auch solche Randinformation zu kennen, dem würde ich zustimmen. Ja.
+
+Speaker3: [00:07:56] Okay.
+
+Speaker1: [00:08:06] Und wann würdest du sagen, ist eine Frage schwierig zu beantworten und wann ist sie leicht?
+
+Speaker2: [00:08:14] Ganz generell, wenn die Frage darauf abzielt, viele Informationen zu haben, die man dann alle beantworten muss. Und wenn das auch unterschiedliche Sachen sind. Ein Beispiel dafür. Wenn jetzt fragen würdest, ist der Ball rund? Dann ist das eine einfache Frage, weil die Information ist einfach nur „Ja, der Ball ist rund“. Wenn du jetzt fragen würdest, wie nennen wir alle Aspekte des Klimawandels, dann man sehr viele unterschiedliche Aspekte, die muss man halt alle wissen und alles dann korrekt aufzählen. Ohne Sachen zu verheddern ist glaube ich schon ein bisschen schwer. Vor allem auch, wenn die Informationen, die dann benötigt werden zum Beantworten der Frage, auch sehr engmaschig miteinander verbunden sind. Ja, was noch? Ich glaube, mit dem Verwechseln habe ich ja schon gesagt. Ich glaube, das war‘s erstmal.
+
+Speaker1: [00:09:24] Okay, also würdest du sagen, je offener die Frage, desto schwieriger zu beantworten?
+
+Speaker2: [00:09:30] Ja. Also je nachdem, was der/die Gegenüber erwartet. Wenn ich bei Freunden unterwegs bin und die mich fragen „Erklär mir den Klimawandel“, dann kann ich das in drei Sätzen wahrscheinlich schon so hinklatschen. Aber wenn mich jetzt ein Doktor fragt für eine Doktorarbeit. Ich glaube, das Szenario oder der Kontext macht auch noch viel aus.
+
+Speaker1: [00:09:51] Und genau das, weil je mehr Sachen da sind, die man verwechseln kann, desto schwieriger, würdest du sagen, ist die Frage?
+
+Speaker3: [00:09:59] Ja.
+
+Speaker1: [00:10:00] Okay. Wir haben ja eben darüber geredet, wie relevant eine Information für den Text ist und was das für Auswirkungen das auf die Schwierigkeit von der Frage hat. Wie würdest du da sagen, ist der Einfluss von Relevanz auf Schwierigkeit der Frage?
+
+Speaker2: [00:10:25] Wenn ein Abschnitt des Textes irrelevant ist, macht das für mich noch mal schwieriger zu beantworten, weil man ja im Konstrukt von einem Text, den man liest, schon eine gewisse Vorstellung hat, was man auch dann einfach beim Lesen merkt, was wichtig ist und was nicht wichtig ist. Und man das Unwichtige im Kopf schon ein bisschen aussortiert. Zum Beispiel in dem Text über den blauen Himmel mit dem Sidefact, dass es Salamander auf der Erde gibt. Da denke ich mir automatisch einfach der Text ist über den blauen Himmel und wenn ich ihn wiedergeben will, dann würde ich mich darauf fokussieren. Und der Fokus beim Lesen prägt dann glaube ich auch, dass die Informationen über den Salamander schwieriger zu behalten ist, als die über den blauen Himmel.
+
+Speaker1: [00:11:12] Also würdest du sagen etwas ist relevant, wenn es nah an dem allgemeinen Thema des Textes ist.
+
+Speaker2: [00:11:20] Definitiv ja.
+
+Speaker1: [00:11:22] Okay.
+
+Speaker2: [00:12:03] Würdest du sagen, dass das auch vor allem antwortende Person ankommt? Ich habe schon mal ein Video gesehen von einer Person, die versucht Leute charismatischer zu machen und die meinte, dass es sehr charismatisch ist, wenn man auf geschlossene Fragen offen antwortet. Da gab es ein Beispiel über Bruce Lee. Der dann gefragt wurde, was das stärkste Tier ist. Und dann hat man erwartet dass geschlossen antwortet. „Die Schlange“ zum Beispiel. Aber der hat das dann offen beantwortet und meinte das stärkste Tier ist das mit dem meisten Mut. Und hat dann einfach einen Vortrag über Mut gehalten. Und das heißt ja, er hat eine geschlossene Frage bekommen, aber offen beantwortet. Das heißt, ich würde schon zustimmen, dass es auch ein bisschen auf die Antworten antwortende Person ankommt, ob eine Frage geschlossen oder offen ist.
+
+Speaker1: [00:13:03] Okay danke. Ich gebe dir jetzt einen Text über ASCII Art.
+
+Speaker2: [00:13:08] Sehr interessant. Ja.
+
+Speaker1: [00:13:10] Habe ich selber ausgesucht. Das Thema. Wie würdest du vorgehen diesen Text zu lernen?
+
+Speaker2: [00:13:26] Lernen im Sinne von wieder das danach vortragen könnte oder Fragen beantworten könnte.
+
+Speaker1: [00:13:31] Lernfragen, die du überlegen müsstest, zum Beispiel für ein Kahoot Spiel für deine Freunde. Wie würdest du dabei vorgehen?
+
+Speaker2: [00:13:52] Ähm, ja. Bei Fragen für Kahoot würde ich mir wahrscheinlich etwas Unernstes ausdenken, aber bei richtigen Fragen würde ich wahrscheinlich nicht drauf gehen, was jetzt etwas lustig sein könnte, sondern versuchen, mit meinen Fragen jeden Teil des Textes abzudecken. Das ist glaube ich relativ wichtig, dass man nicht nur am Anfang fünf Fragen hat, am Ende gar nichts mehr. Ich würde versuchen, eine Mischung zu machen aus Informationsfragen und offenen Fragen. Zum Beispiel, dass es 95 printable Characters gibt beim ASCII STANDARD und das einfach nur relativ informationsgefüllte Frage. Kann man einfach easy beantworten, also einfach geschlossen und man sagt dann 95, aber man könnte auch sagen, dann irgendwas zu Kenneth Knowlton. Ich glaube das ist relativ wichtig, da beide Sachen auszuprobieren. Ich würde es versuchen einen relativ klaren Schwierigkeitsunterschied zu haben, im Sinne von, dass es einfache Fragen und schwierige Fragen gibt. Das wird glaube ich noch bisschen interessanter machen, auch wenn das schwierig zu machen ist. Wahrscheinlich. Ja, ich glaube, das war's.
+
+Speaker1: [00:15:15] Warum würdest du einfache und schwierige Fragen nehmen?
+
+Speaker2: [00:15:20] Ähm. Also, es kommt immer auf das Ziel an, das man als Fragensteller, als Fragestellerin hat. Ich glaube, man ist jetzt fürs Lernen machen würde. Dann ist es gut, dass man. Nicht den Kopf ein bisschen anstrengend, aber dass man halt ein bisschen Varianz drin hat, die einen motiviert auch, weil ich glaube, wenn man nur einfache Fragen denkt man ja okay, wie habe ich jetzt Fragen überhaupt gestellt? Ist vollkommen unnötig. Wenn man nur schwierige Fragen hat, ist ein bisschen demotivierend. Deshalb glaube ich, ist eine Mixtur aus einfachen Fragen - wo man merkt okay, das sind die einfachen Fragen. Ich habe das geschafft, easy - und schwierige Fragen, wo man dann merkt, da habe ich noch Probleme oder sollte vielleicht noch ein bisschen mehr investieren ins Lernen oder ins Verstehen des Textes, sodass man dann so ein bisschen beides abdeckt davon.
+
+Speaker1: [00:16:06] Okay, und würdest du die mixen oder irgendwie bestimmt sortieren oder ich?
+
+Speaker2: [00:16:12] Am einfachsten wäre es wahrscheinlich, die einfach nicht zu nicht zu sortieren im Sinne von erst einfach fragen und dann schwierige Fragen, sondern eher so, dass man den Text langgeht und einfach dann in der Reihenfolge fragt. Ich glaube, für den Lernerfolg wäre es wahrscheinlich besser, wenn es gemixt ist. Vielleicht kann man das früher noch mit den Vokabeln englische Vokabeln. Man hat einfach alle abgeschrieben. Man konnte dann irgendwann die Reihe auswendig lernen. Wenn dann eins gefragt wurde, dann am Anfang war man direkt raus. Das kann ich mir vorstellen, dass auch bei solchen Fragen ähnlichen Effekt haben könnte.
+
+Speaker1: [00:16:58] Okay, also am besten zufällig.
+
+Speaker2: [00:17:01] Für den Lernerfolg. Am besten zufällig, ja. Okay.
+
+Speaker1: [00:17:04] Ja, aber ist natürlich einfacher. Die in der richtigen Reihenfolge.
+
+Speaker2: [00:17:07] Würde ich auch sagen. Ja. Vielleicht für Grundschulkinder. Dann erstmal die einfachen Fragen nach der Reihenfolge und dann für Studierende wie Herrn Lennart Schnakenbeck kann man auch mal was Höheres anfordern. Ja.
+
+Speaker1: [00:17:23] Das stimmt. Das kommt dann ja auch auf den zu Fragenden an, richtig?
+
+Speaker2: [00:17:29] Richtig.
+
+Speaker1: [00:17:33] Fällt dir noch was ein zu Fragen? Also zu Texten und Fragen und Lernen.
+
+Speaker2: [00:17:42] Ich glaube, es ist sehr cool, wenn man die Fragen interaktiv gestalten könnte mit Antwortmöglichkeiten, je nachdem, welches Thema dann passend ist, kann es auch mal den Lernerfolg erhöhen, wenn man dann nicht nur eine Editordatei hat und einfach die Sachen reinschreiben muss. Das wäre dann vielleicht weniger interaktiv. Und - davon bin ich auch überzeugt - ich glaube auch, dass Humor eine Rolle spielen könnte. Ich glaube, es ist natürlich sehr schwer, für textgenerator Programme, Humor zu klassifizieren und den auch dann herzustellen. Aber ich glaube, das könnte für den Lernerfolg eine Rolle spielen, zumindest hat es bei mir eine Rolle gespielt. Wenn ich mit meinen Freundinnen für Klausuren genannt habe, dann beim auch mal dumme Fragen zu machen zwischendurch. Das ist, glaube ich auch ein bisschen auflockernd oder erhöht die Lernmotivation. Auch vielleicht dann Sounds einbauen bei einem richtigen, richtigen Antwort „Bling“ und bei Falschen Antworten „Öö-h“. Sowas in die Richtung vielleicht nur als Beispiel. Das habe ich jetzt im Kopf mir kurz ausgedacht. Falls das zu viel war, Sorry. Ja, das würde ich dazu sagen.
+
+Speaker1: [00:19:07] Also multimedial und interaktiv würdest du am liebsten lernen?
+
+Speaker2: [00:19:13] Das korrekt. Ja.
+
+Speaker1: [00:19:16] hast du Vorerfahrung im Texte lesen und lernen?
+
+Speaker2: [00:19:22] Ich glaube im Laufe eines Schüler und Studium Lebens würde ich sagen, liest man schon viele Texte oder auch Studien, die man dann lernt. Deshalb würde ich sagen, habe ich da halt relativ viel Erfahrungen gesammelt. Abgesehen davon, was Interessen angeht, wenn man Interessen mehr lernen will: Hat man meistens mittlerweile/heutzutage  - finde ich - die Möglichkeit zwischen Textform und Videoform zu wählen. Wo ich sagen würde, dass Videoform meistens die Textform übertrifft in einer Hinsicht halt: im Sinne des Verstehens. Aber ich glaube, dadurch dass man in Textform mehr investieren muss, an Zeit oder an Aufmerksamkeit und Konzentration, kann ich vorstellen, dass länger drin bleibt im Kopf. Ich könnte jetzt von mir erzählen, ich habe ein Hobby namens Football Manager. Es ist ein Spiel und Videos gibt es da auch zuhauf, die man auch dann gut intellektuell verdauen kann, die man aber relativ schnell wieder vergisst. Und Textform sind, glaube ich, ein bisschen besser. Das kann mir vorstellen, dass das dann auch über Textform etwas länger im Kopf bleibt. Was soll die Frage nochmal? Sorry, ich habe grade daran gedacht.
+
+Speaker1: [00:20:39] Erzähl gerne.
+
+Speaker2: [00:20:41] Ja, das ist mein Verstehen von Texten.
+
+Speaker1: [00:20:45] Aber eigentlich meintest du ja also, dass deine perfekte Lernumgebung multimodal ist. Ja und das würde eher für Videos sprechen, oder?
+
+Speaker2: [00:20:55] Richtig, also ich glaube, wenn ich die Aufgabe haben würde, einen Text vorzustellen, in fünf Minuten. Also, ich kriege einen Text, den muss ich nach fünf Minuten vorstellen und die Vorstellung soll zehn Minuten dauern. Dann würde ich wahrscheinlich zu einem Video zu greifen, weil ich glaube ich da besser Sachen verstehen kann und was ich nicht ausschließen würde, dass dann auch in dem Video Fragen gestellt werden könnten oder man auch dann interaktiv Fragen beantworten könnte in einem Video. Ich glaube, wenn die Aufgabe wäre, in das jetzt quasi den Text haben würde über von Ich habe jetzt einen Text, den kriege ich und den kann ich nur 15 Minuten bearbeiten und dann verschwindet er und dann muss ich in sechs Monaten Vortrag halten. Würde ich wahrscheinlich lieber lesen, als mir ein Video darüber angucken, wenn es quasi hergestellt werden könnte. Ergibt das Sinn was ich sage.
+
+Speaker1: [00:21:43] du denkst, dass du den Text länger behalten würdest als das Video?
+
+Speaker2: [00:21:45] Ja.
+
+Speaker1: [00:21:47] Und damit langfristig bessere Ergebnisse hättest?
+
+Speaker2: [00:21:53] Das kann ich mir vorstellen. Ja.
+
+Speaker1: [00:21:55] Okay, gibt sonst noch ein Aspekt dazu?
+
+Speaker2: [00:22:03] Ich glaube nicht, ne.
+
+Speaker1: [00:22:07] Wie ist dein Vertrauen zum Programm? Würdest du sagen, wenn Programme irgendwie sowas wie zum Beispiel Fragen generieren oder die Reihenfolge dazu bestimmen? Würdest du sagen, du schätzt das wert oder suchst Fehler darin?
+
+Speaker2: [00:22:25] Ähm, ich würde noch unterscheiden zwischen Programmen, die auf Informationen zugreifen des Internets und Programmen, die quasi nur auf Informationen zugreifen des vorliegenden Textes. Ich habe grade an ChatGPT gedacht, wenn ich jetzt fragen würde über ein gewisses Buch, was der Inhalt davon ist, dann würde ich dem weniger vertrauen, als wenn ich als wenn ich eine Software haben würde, in die ich das Buch einspeisen würde und die nur das Buch bearbeitet und dadurch dann die Fragen generiert oder Inhalt generiert, dem würde ich vertraue. Da würde ich mir auch keine Sorgen machen, glaube ich, mittlerweile und auch nicht nach Fehlern suchen. Ich glaub dem würde ich schon vertrauen. Aber was halt so andere Programme angeht, wie ChatGPT, den würde ich eingeschränkter vertrauen. Das heißt nicht, dass ich denen gar nicht vertraue, aber ich würde das dann für wichtige Sachen schon mal doppelt checken? Also, wenn ich jetzt das lese und mit meinem Kumpel rede, dann würde ich das einfach so frei raus sagen, aber wenn ich jetzt dafür was für eine Uni Sache machen würde, dann würde ich das noch mal hinterfragen oder nochmal nachgucken wie wirklich ist. Bei so Softwares, die nur einen Text haben, da würd ich das nicht machen, da würd ich dem vertrauen.
+
+Speaker1: [00:23:47] Also würdest du sagen, das hängt auch damit zusammen, wie transparent das ist, wie dieses Programm funktioniert. Also ChatGPT ist ja quasi eine Blackbox. Und wenn du jetzt von so einem offline Programm redest. Würde das Vertrauen da rein von dir erhöht werden, wenn du genau wissen würdest wie das funktioniert?
+
+Speaker2: [00:24:12] Das ist gute Frage. Transparenz ist wird es erhöhen glaube ich, das Vertrauen. Aber es würde schon reichen, wenn der Code bereitgestellt wird. Ich weiß noch bei der deutschen Corona App, das war auch Open Source. Da konnte man auch einsehen was da an Code geschrieben ist. Allein das Bereitstellen von Code / wenn es Open Source ist. Das reicht mir schon, dass ich dem vertraue, weil ich das Gefühl habe, wenn das halt was ist, was andere Leute auch benutzen und intelligentere Leute benutzen als ich oder Leute, die mehr irgendwie mit Code selbst zu tun haben Wenn die das durchgelesen haben oder durchlesen konnten zumindest, dann wird das auch okay sein. Und das heißt nicht, dass ich mir dann selbst die Sachen durchlese oder selbst irgendwie Wissen drüber schaffen muss, wie es genau funktioniert. Aber Transparenz in dem Sinne ist schon. Ist auf jeden Fall Vertrauen zu erhöhen für mich, wenn ich weiß, dass es Open Source ist.
+
+Speaker1: [00:25:10] Okay und so sowas wie also jetzt nicht Open Source, sondern die wenn. Also ChatGPT zum Beispiel benutzt ja also quasi alle möglichen Arten von Texten und bildet daraus dann so ein Modell von der Sprache und das kann ja alles mögliche sein. Und wenn es jetzt im Vergleich dazu ein eine KI gibt, die nur ganz bestimmte Texte benutzt oder nicht so nicht so viele Einflüsse hat, sondern bei der die Einflüsse zum Beispiel jetzt nur auf den einen Text beschränkt ist, würde das dein Vertrauen darein erhöhen?
+
+Speaker2: [00:25:58] Das würde es machen, wenn ich die Quelle kennen würde. Wenn ich jetzt ein Programm haben würde, wo ich weiß, dass es die jetzt nur Texte von wissenschaftlichen Quellen nehmen würde, würde das auf jeden Fall mein Vertrauen erhöhen. Wenn ich jetzt weiß, dass die Software nur Texte von der Bild nehmen würde, dann wird das Vertrauen natürlich verringern. Aber das sind natürlich dann Sachen, die man vorher wissen musste oder was die Frage.
+
+Speaker1: [00:26:18] Ja, ich habe die Frage ein bisschen schlecht gestellt. Also ich meinte eigentlich der Algorithmus von ChatGPT ist ja recht uneinsichtig, zum Beispiel. Und wenn man jetzt ein Programm hätte mit einem deutlich simpleren Algorithmus, den man klarer nachvollziehen kann, würden die Ergebnisse davon dann dein Vertrauen eher gewinnen?
+
+Speaker2: [00:26:44] Ich glaube das tatsächlich nicht. Ich glaube nicht. Wie gesagt, ich bin, glaube ich, so sehr abhängig von Expert*innenmeinungen. Ich würde sagen, ich glaube, ich habe Leute in meiner Blase/Bubble gefunden, von denen ich sagen würde, die sind so intelligent oder den vertraue ich so, dass wenn die Sachen empfehlen, zum Beispiel auf Twitter oder auf YouTube oder auf X oder auf meinen Freund*innen. Wenn die sagen, eine Sache ist vertrauenswürdig, dann vertraue ich denen auch uneingeschränkt und dann ist mir auch der Algorithmus eher egal. Ja.
+
+Speaker1: [00:27:22] Vielen Dank.
+
+Speaker2: [00:27:24] Gerne.

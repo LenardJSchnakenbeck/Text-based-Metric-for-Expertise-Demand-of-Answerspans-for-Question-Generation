@@ -87,6 +87,12 @@ def write_json_labeled_documents(source_documents_path, labeled_documents_path):
     with open(labeled_documents_path, 'w') as f:
         json.dump(chunking_texts(documents), f)
 
+
+def load_json_labeled_documents(labeled_documents_path):
+    with open(labeled_documents_path, 'rb') as f:
+        return json.load(f)
+
+
 if __name__ == "__main__":
     write_json_labeled_documents('wikipedia_texts.json','labeled_wikipedia_texts.json')
 

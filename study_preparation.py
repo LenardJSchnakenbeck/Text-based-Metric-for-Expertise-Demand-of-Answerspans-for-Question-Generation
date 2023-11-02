@@ -98,6 +98,7 @@ def create_and_save_html(text_with_values, df, html_doc_name="html_doc.html", ad
         .text {
             margin: 50px;
             margin-top: 300px;
+            margin-left: 250px;
             font-size: x-large;
         }
         /* SIDEBAR */

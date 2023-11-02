@@ -10,8 +10,9 @@ import json
 #TODO: bei similarities synonyme raus nehmen #Entity Coreference labelling
 #TODO: similarities of false alternatives zusammen zählen
 
-path_to_raw_wikipedia_texts = "../../downloads/raw.txt"
-source_documents_path = 'preprocessing/wikipedia_texts.json'
+#path_to_raw_wikipedia_texts = "../../downloads/raw.txt" #https://github.com/tscheepers/Wikipedia-Summary-Dataset
+#source_documents_path = 'preprocessing/wikipedia_texts.json'
+source_documents_path = "experiment_texts.json"
 labeled_documents_path = 'preprocessing/labeled_documents.json'
 embeddings_path = 'similarity/embeddings.pickle'
 cosine_similarities_path = 'similarity/cosine_similarities.pickle'
