@@ -1,0 +1,48 @@
+Text-based Metric for Expertise Demand of Answerspans for Question Generation
+
+Automatic Question Generators (AQG) are models that get a text with a marked Answerspan as input and give a question
+that can be answered with the marked Answerspan as output. E.g.
+I want to develop / test a metric that scores such Answerspans based on Expertise-Demand.
+The metric answers the question
+"How much expertise about the text is needed to answer a question about a certain answerspan?"
+The Metric is Text-based, which means it focusses on one text only, regardless if it is a simple or sophisticated Text.
+Also this metric should be as objective as possible.
+So influences that affect the difficulty to retrieve information from a text that differ between individuals should be neglected.
+E.g. specific previous knowledge, memorizing strategies, cultural background and of course situational aspects.
+
+Do you understand the objective of the metric?
+Do you think you can judge phrases in a text based on their expertise-demand?
+
+
+Rank the following Answerspans in the text "TEXTNAME" based on expertise demand.
+The Answerspan with the lowest expertise demand gets value 0 and the highest value 10.
+
+
+
+
+
+
+Sortiere die Antwortphrasen aus dem Text nach Expertisenanforderungen:
+
+<span style="font-weight: bold;">Earthworms</span> have <span style="font-weight: bold;">the ability to regenerate lost segments</span>, but <span style="font-weight: bold;">this ability</span> varies between <span style="font-weight: bold;">species</span> and depends on <span style="font-weight: bold;">the extent of the damage</span>. <span style="font-weight: bold;">Stephenson</span> (1930) devoted <span style="font-weight: bold;">a chapter of his monograph</span> to this topic, while <span style="font-weight: bold;">G. E. Gates</span> spent <span style="font-weight: bold;">20 years</span> studying <span style="font-weight: bold;">regeneration</span> in <span style="font-weight: bold;">a variety of species</span>, but "because <span style="font-weight: bold;">little interest</span> was shown", <span style="font-weight: bold;">Gates</span> (1972) published only <span style="font-weight: bold;">a few of his findings</span> that, nevertheless, show it is theoretically possible to grow <span style="font-weight: bold;">two whole worms</span> from a <span style="font-weight: bold;">bisected specimen</span> in <span style="font-weight: bold;">certain species</span>.
+
+Noun phrases extracted from the provided text:
+
+Earthworms
+The ability to regenerate lost segments
+This ability
+Species
+The extent of the damage
+Stephenson
+A chapter of his monograph
+G. E. Gates
+20 years
+Regeneration
+A variety of species
+Little interest
+Gates
+A few of his findings
+Theoretically possible
+Two whole worms
+A bisected specimen
+Certain species
