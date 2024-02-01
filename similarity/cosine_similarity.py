@@ -43,8 +43,6 @@ def write_pickle_encoded_documents(embeddings_path,labeled_documents_path):
     with open(embeddings_path, 'wb') as pkl:
         pickle.dump(encode_text_and_avg_candidates(documents), pkl)
 
-
-
 def cossim_candidates_document(embeddings_path):
     with open(embeddings_path, 'rb') as pkl:
         document_embeddings = pickle.load(pkl)
@@ -63,31 +61,25 @@ def cossim_candidates_document(embeddings_path):
 def cossim_candidates_candidates(embeddings_path, documents):
     with open(embeddings_path, 'rb') as pkl:
         document_embeddings = pickle.load(pkl)
-
     result = []
     for document_embedding, document in zip(document_embeddings, documents):
         #for every candidate (1) calculate cossim to every candidate (2)
         candidates1 = []
-        for i, (candidate1emb, candidate1) in enumerate(zip(document_embedding['candidates'], document['candidates'])):
+        i = 0
+        for (candidate1emb, candidate1) in zip(document_embedding['candidates'], document['candidates']):
             candidates2 = []
-            #find synonyms
-            pos = document["tokens_pos"][i]
-            if isinstance(candidate1, list):
-                candidate1, pos = get_main_word(candidate1, pos)
-            synsets = wordnet.synsets(lemmatizer.lemmatize(candidate1, map_pos_tokenizer_to_lemmatizer(pos)))
-            synonyms = set(chain.from_iterable(
-                [word.lemma_names() for word in synsets]))
             #calculate similarity to every other word except synonyms
             for j, (candidate2emb, candidate2) in enumerate(zip(document_embedding['candidates'], document['candidates'])):
                 if isinstance(candidate2, list):
                     candidate2, _ = get_main_word(candidate2, document["tokens_pos"][j])
-                if candidate2.lower() in synonyms:
-                    candidates2.append(0.0)
+                #if candidate2.lower() in synonyms:
+                #    candidates2.append(0.0)
                 else:
                     candidates2.append(
                         float(cosine_similarity(candidate1emb.reshape(1, -1), candidate2emb.reshape(1, -1))[0])
                     )
             candidates1.append(candidates2)
+            i += 1
         result.append(candidates1)
     return result
 

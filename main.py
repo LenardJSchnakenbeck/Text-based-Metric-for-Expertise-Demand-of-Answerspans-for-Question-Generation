@@ -23,18 +23,22 @@ final_documents_path = 'final_documents.json'
 #source_documents_path = 'preprocessing/wikipedia_texts_DiY.json'
 
 
-if __name__ == "__main__" and input("recalculate everything?") == "y":
+if __name__ == "__main__" and input("recalculate everything?") in ["y","yes","ja"]:
     #create sjson from raw wikipedia texts
     #candidate_phrases.load_wikipedia_and_create_json(path_to_raw_wikipedia_texts, source_documents_path)
 
-    #chunk candidates by pos-tag
-    candidate_phrases.write_json_labeled_documents(source_documents_path, labeled_documents_path)
-    print("candidates chunked!")
+     #chunk candidates by pos-tag
+    #candidate_phrases.write_json_labeled_documents(source_documents_path, labeled_documents_path)
+    #print("candidates chunked!")
 
-    #calculate similarities (candidates-candidates & candidates-documents)
+    candidate_phrases.write_study_texts(labeled_documents_path)
+
+    #calculate similarities (cosine: candidates-candidates & candidates-documents / Wordnet: can-can)
     cosine_similarity.write_pickle_encoded_documents(embeddings_path, labeled_documents_path)
     cosine_similarity.calculate_and_write_pickle_cossim(labeled_documents_path, embeddings_path, cosine_similarities_path)
     print("cosine similarities calculated!")
+    wordnet_similarity.calculate_score_and_write_pickle(labeled_documents_path, wordnet_similarities_path)
+
 
     #calculate SingleRank scores
     SingleRank.calculate_and_write_pickle_singlerank_scores(labeled_documents_path, singlerank_scores_path)

@@ -61,24 +61,30 @@ def chunking_texts(documents):
 
 
 def map_pos_tokenizer_to_lemmatizer(pos):
-    pos = pos[0].lower()
-    if pos not in ["n", "v", "a", "r", "s"]:
-        pos = "n"
-    return pos
+    if pos.startswith('J'):
+        return "a"
+    elif pos.startswith('V'):
+        return "v"
+    elif pos.startswith('N'):
+        return "n"
+    elif pos.startswith('R'):
+        return "r"
+    else:
+        return ''
 
 
-def get_main_word(candidate, pos):
-    print("get_main_word", candidate, pos)
-    if len(candidate) > 1 and "n" in pos:
-        indexes = [index for index, value in enumerate(pos) if value == "n"]
-        candidate = candidate[indexes[-1]]
-        pos = "n"
+def get_main_word(candidate, pos_list):
+    print("get_main_word", candidate, pos_list)
+    if len(candidate) > 1 and "NN" in "".join(pos_list):
+        indexes = [index for index, pos in enumerate(pos_list) if "NN" in pos]
+        main_word = candidate[indexes[-1]]
+        pos = "NN"
     elif isinstance(candidate, list):
-        candidate = candidate[-1]
-        pos = pos[-1]
+        main_word = candidate[-1]
+        pos = pos_list[-1]
     else:
         raise ValueError("get_main_word: candidate is no list")
-    return candidate, pos
+    return main_word, pos
 
 
 def write_json_labeled_documents(source_documents_path, labeled_documents_path):
@@ -92,6 +98,19 @@ def load_json_labeled_documents(labeled_documents_path):
     with open(labeled_documents_path, 'rb') as f:
         return json.load(f)
 
+def write_study_texts(labeled_documents_path):
+    texts = [{"title": "Earthworms",
+      "text": "Earthworms have the ability to regenerate lost segments, but this ability varies between species and depends on the extent of the damage. Stephenson (1930) devoted a chapter of his monograph to this topic, while C.E. Gates (1972) spent 20 years studying regeneration in a variety of species, but „because little interest was shown“, Gates published only a few of his findings that, nevertheless, show it is theoretically possible to grow two whole worms from a bisected specimen in certain species.",
+      "candidates": [['Earthworms'],'have', ['the', 'ability', 'to', 'regenerate', 'lost', 'segments'], ',', 'but', 'this', 'ability', 'varies', 'between', ['species'], 'and', 'depends', 'on', ['the', 'extent', 'of', 'the', 'damage'], '.', ['Stephenson'], '(', '1930', ')', 'devoted', ['a', 'chapter', 'of', 'his', 'monograph'], 'to', 'this', 'topic', ',', 'while', ['C.E.Gates'], '(', '1972', ')', 'spent', ['20', 'years'], 'studying', ['regeneration', 'in', 'a', 'variety', 'of', 'species'], ',', 'but', '„', 'because', 'little', 'interest', 'was', 'shown', '“', ',', ['Gates'],  'published', 'only', 'a', 'few', 'of', 'his', 'findings', 'that', ',', 'nevertheless', ',', 'show', 'it', 'is', 'theoretically', 'possible', 'to', 'grow', ['two', 'whole', 'worms'], 'from', ['a', 'bisected', 'specimen'], 'in', ['certain', 'species'], '.'],
+      "tokens": ['Earthworms', 'have', 'the', 'ability', 'to', 'regenerate', 'lost', 'segments', ',', 'but', 'this', 'ability', 'varies', 'between', 'species', 'and', 'depends', 'on', 'the', 'extent', 'of', 'the', 'damage', '.', 'Stephenson', '(', '1930', ')', 'devoted', 'a', 'chapter', 'of', 'his', 'monograph', 'to', 'this', 'topic', ',', 'while', 'C.E', '.', 'Gates', '(', '1972', ')', 'spent', '20', 'years', 'studying', 'regeneration', 'in', 'a', 'variety', 'of', 'species', ',', 'but', '„', 'because', 'little', 'interest', 'was', 'shown', '“', ',', 'Gates', 'published', 'only', 'a', 'few', 'of', 'his', 'findings', 'that', ',', 'nevertheless', ',', 'show', 'it', 'is', 'theoretically', 'possible', 'to', 'grow', 'two', 'whole', 'worms', 'from', 'a', 'bisected', 'specimen', 'in', 'certain', 'species', '.'],
+      "candidates_pos": ['NNS', 'VBP', 'DT', 'NN', 'TO', 'VB', 'VBN', 'NNS', ',', 'CC', 'DT', 'NN', 'VBZ', 'IN', 'NNS', 'CC', 'VBZ', 'IN', 'DT', 'NN', 'IN', 'DT', 'NN', '.', 'NNP', '(', 'CD', ')', 'VBD', 'DT', 'NN', 'IN', 'PRP$', 'NN', 'TO', 'DT', 'NN', ',', 'IN', 'NNP', '.', 'NNP', '(', 'CD', ')', 'VBD', 'CD', 'NNS', 'VBG', 'NN', 'IN', 'DT', 'NN', 'IN', 'NNS', ',', 'CC', 'NNP', 'RB', 'JJ', 'NN', 'VBD', 'VBN', 'NNP', ',', 'NNP', 'VBD', 'RB', 'DT', 'JJ', 'IN', 'PRP$', 'NNS', 'IN', ',', 'RB', ',', 'VB', 'PRP', 'VBZ', 'RB', 'JJ', 'TO', 'VB', 'CD', 'JJ', 'NNS', 'IN', 'DT', 'JJ', 'NNS', 'IN', 'JJ', 'NNS', '.'],
+      "tokens_pos": [('Earthworms', 'NNS'), ('have', 'VBP'), ('the', 'DT'), ('ability', 'NN'), ('to', 'TO'), ('regenerate', 'VB'), ('lost', 'VBN'), ('segments', 'NNS'), (',', ','), ('but', 'CC'), ('this', 'DT'), ('ability', 'NN'), ('varies', 'VBZ'), ('between', 'IN'), ('species', 'NNS'), ('and', 'CC'), ('depends', 'VBZ'), ('on', 'IN'), ('the', 'DT'), ('extent', 'NN'), ('of', 'IN'), ('the', 'DT'), ('damage', 'NN'), ('.', '.'), ('Stephenson', 'NNP'), ('(', '('), ('1930', 'CD'), (')', ')'), ('devoted', 'VBD'), ('a', 'DT'), ('chapter', 'NN'), ('of', 'IN'), ('his', 'PRP$'), ('monograph', 'NN'), ('to', 'TO'), ('this', 'DT'), ('topic', 'NN'), (',', ','), ('while', 'IN'), ('C.E', 'NNP'), ('.', '.'), ('Gates', 'NNP'), ('(', '('), ('1972', 'CD'), (')', ')'), ('spent', 'VBD'), ('20', 'CD'), ('years', 'NNS'), ('studying', 'VBG'), ('regeneration', 'NN'), ('in', 'IN'), ('a', 'DT'), ('variety', 'NN'), ('of', 'IN'), ('species', 'NNS'), (',', ','), ('but', 'CC'), ('„', 'NNP'), ('because', 'RB'), ('little', 'JJ'), ('interest', 'NN'), ('was', 'VBD'), ('shown', 'VBN'), ('“', 'NNP'), (',', ','), ('Gates', 'NNP'), ('published', 'VBD'), ('only', 'RB'), ('a', 'DT'), ('few', 'JJ'), ('of', 'IN'), ('his', 'PRP$'), ('findings', 'NNS'), ('that', 'IN'), (',', ','), ('nevertheless', 'RB'), (',', ','), ('show', 'VB'), ('it', 'PRP'), ('is', 'VBZ'), ('theoretically', 'RB'), ('possible', 'JJ'), ('to', 'TO'), ('grow', 'VB'), ('two', 'CD'), ('whole', 'JJ'), ('worms', 'NNS'), ('from', 'IN'), ('a', 'DT'), ('bisected', 'JJ'), ('specimen', 'NNS'), ('in', 'IN'), ('certain', 'JJ'), ('species', 'NNS'), ('.', '.')]
+         }]
+    #answerspans = ["Earthworms", "the ability to regenerate lost segments", "species", "the extent of the damage",
+    #    "Stephenson", "a chapter of his monograph", "C.E.Gates", "20 years", "regeneration in a variety of species",
+    #    "Gates", "two whole worms", "a bisected specimen", "certain species"]
+    with open(labeled_documents_path, 'w') as f:
+        json.dump(texts, f)
 
 if __name__ == "__main__":
     write_json_labeled_documents('wikipedia_texts.json','labeled_wikipedia_texts.json')
