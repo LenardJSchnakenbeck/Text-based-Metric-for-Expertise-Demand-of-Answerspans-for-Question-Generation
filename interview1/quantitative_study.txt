@@ -24,10 +24,39 @@ The Answerspan with the lowest expertise demand gets value 0 and the highest val
 
 Sortiere die Antwortphrasen aus dem Text nach Expertisenanforderungen:
 
-<span style="font-weight: bold;">Earthworms</span> have <span style="font-weight: bold;">the ability to regenerate lost segments</span>, but <span style="font-weight: bold;">this ability</span> varies between <span style="font-weight: bold;">species</span> and depends on <span style="font-weight: bold;">the extent of the damage</span>. <span style="font-weight: bold;">Stephenson</span> (1930) devoted <span style="font-weight: bold;">a chapter of his monograph</span> to this topic, while <span style="font-weight: bold;">G. E. Gates</span> spent <span style="font-weight: bold;">20 years</span> studying <span style="font-weight: bold;">regeneration</span> in <span style="font-weight: bold;">a variety of species</span>, but "because <span style="font-weight: bold;">little interest</span> was shown", <span style="font-weight: bold;">Gates</span> (1972) published only <span style="font-weight: bold;">a few of his findings</span> that, nevertheless, show it is theoretically possible to grow <span style="font-weight: bold;">two whole worms</span> from a <span style="font-weight: bold;">bisected specimen</span> in <span style="font-weight: bold;">certain species</span>.
+2. Expertisenanforderung:
+Die Metrik, die hier getestet wird, soll helfen die generierten Fragen besser einzuordnen, indem die Antwortphrase anhand ihrer Anforderung an Expertise über den Text eingeschätzt werden. Der Term "Anforderung an Expertise" ist absichtlich so gewählt, da die Metrik möglichst objektiv den Text betrachten soll, während "Schwierigkeit" vor allem die Person betrifft, die die Frage beantwortet. Nichtsdestotrotz ist beides eng Verwand. Je besser man einen Text kennen muss um eine Frage beantworten zu können, desto höher ist die Expertisenanforderung zu ihrer Antwortphrase.
+Das Ziel ist es aber möglichst alle Einflüsse auszublenden, die zwischen den Personen unterschiedlich sind, wie zum Beispiel besondere Einprägungsstrategien, kulturelle Hintergründe oder persönliche Interessen. 
 
 Noun phrases extracted from the provided text:
 
+Earthworms
+the ability to regenerate lost segments
+species
+the extent of the damage
+Stephenson
+a chapter of his monograph
+Gates
+20 years
+regeneration in a variety of species
+Gates
+two whole worms
+a bisected specimen
+certain species
+
+
+Sortieren Sie die Antwortphrasen aus dem Text per Drag and Drop nach Expertisenanforderungen in dem Graph unten. Platzieren Sie Antwortphrasen mit **geringer** Expertisenanforderung (leicht) **links** und solche mit **hoher** Expertisenanforderung (schwer) **rechts**. <br>
+
+<div style="margin-top: 32px; padding: 20px; border: 1px solid lightblue; ">
+zur Erinnerung: <br>
+Die Expertisenanforderung einer Antwortphrase ist **hoch** (rechts), wenn man den Text **sehr gut** kennen (erinnern) muss, um eine Frage zu der Antwortphrase beantworten zu können.<br>
+Die Expertisenanforderung einer Antwortphrase ist **niedrig** (links), wenn man den Text **kaum** kennen (erinnern) muss, um eine Frage zu der Antwortphrase beantworten zu können.<br>
+Oder: Expertisenanforderung von einer Antwortphrase ist die Wahrscheinlichkeit die Information der Antwortphrase zu behalten. </div> <br>
+
+
+
+
+<span style="font-weight: bold;">Earthworms</span> have <span style="font-weight: bold;">the ability to regenerate lost segments</span>, but <span style="font-weight: bold;">this ability</span> varies between <span style="font-weight: bold;">species</span> and depends on <span style="font-weight: bold;">the extent of the damage</span>. <span style="font-weight: bold;">Stephenson</span> (1930) devoted <span style="font-weight: bold;">a chapter of his monograph</span> to this topic, while <span style="font-weight: bold;">G. E. Gates</span> spent <span style="font-weight: bold;">20 years</span> studying <span style="font-weight: bold;">regeneration</span> in <span style="font-weight: bold;">a variety of species</span>, but "because <span style="font-weight: bold;">little interest</span> was shown", <span style="font-weight: bold;">Gates</span> (1972) published only <span style="font-weight: bold;">a few of his findings</span> that, nevertheless, show it is theoretically possible to grow <span style="font-weight: bold;">two whole worms</span> from a <span style="font-weight: bold;">bisected specimen</span> in <span style="font-weight: bold;">certain species</span>.
 Earthworms
 The ability to regenerate lost segments
 This ability
