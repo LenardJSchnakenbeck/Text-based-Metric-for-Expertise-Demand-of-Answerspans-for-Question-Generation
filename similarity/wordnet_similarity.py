@@ -17,7 +17,7 @@ def lemmatize(candidate, pos):
 
 # TODO: mach nur die candidates_only dog!
 def wordnet_similarity(candidates, candidates_pos, tokens, tokens_pos):
-    #lemmatizer = nltk.stem.WordNetLemmatizer()
+    
     candidates_pos = list(
         map(map_pos_tokenizer_to_lemmatizer, candidates_pos))
     #tokens_lemmatized = [lemmatizer.lemmatize(token, map_pos_tokenizer_to_lemmatizer(token_pos[1])) for (token, token_pos) in zip(tokens, tokens_pos)]
