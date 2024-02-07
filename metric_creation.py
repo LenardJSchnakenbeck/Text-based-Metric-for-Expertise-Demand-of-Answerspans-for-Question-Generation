@@ -26,12 +26,15 @@ def apply_min_max_normalization(values):
 
     return [(value - min_val) / (max_val - min_val) for value in values]
 
-
+"""
 def apply_custom_min_max_scaling(data, min_value=0.1, max_value=1):
     min_val = min(data)
     max_val = max(data)
-    scaled_data = [((x - min_val) / (max_val - min_val)) * (max_value - min_value) + min_value for x in data]
-    return scaled_data
+    if not min_val == max_val:
+        scaled_data = [((x - min_val) / (max_val - min_val)) * (max_value - min_value) + min_value for x in data]
+        return scaled_data
+    else:
+        return data"""
 
 
 def compute_scores(singlerank_documents, cossim_documents, wordnet_documents, labeled_documents):
@@ -61,8 +64,8 @@ def compute_scores(singlerank_documents, cossim_documents, wordnet_documents, la
 
 
         def calculate_metric(similarity_scores, relevance_scores):
-            similarity_scores = apply_custom_min_max_scaling(similarity_scores)
-            relevance_scores = apply_custom_min_max_scaling(relevance_scores)
+            similarity_scores = apply_min_max_normalization(similarity_scores)
+            relevance_scores = apply_min_max_normalization(relevance_scores)
             metric_scores = [
                 float((1 - rel_score) * sim_score)
                 for rel_score, sim_score in zip(relevance_scores, similarity_scores)

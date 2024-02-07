@@ -15,33 +15,20 @@ def lemmatize(candidate, pos):
     else:
         return candidate
 
-# TODO: mach nur die candidates_only dog!
 def wordnet_similarity(candidates, candidates_pos, tokens, tokens_pos):
-    
     candidates_pos = list(
         map(map_pos_tokenizer_to_lemmatizer, candidates_pos))
-    #tokens_lemmatized = [lemmatizer.lemmatize(token, map_pos_tokenizer_to_lemmatizer(token_pos[1])) for (token, token_pos) in zip(tokens, tokens_pos)]
-    #tokens_lemmatized = [
-    #    lemmatizer.lemmatize(token, map_pos_tokenizer_to_lemmatizer(token_pos[1]))
-    #    if map_pos_tokenizer_to_lemmatizer(token_pos[1]) else token
-    #    for (token, token_pos)in zip(tokens, tokens_pos)]
-
-    candidates_main_word = [] #[get_main_word(candidate, pos) for candidate, pos in candidates_pos]
+    candidates_main_word = []
     scores = []
-    #candidates = [candidate for candidate in candidates if isinstance(candidate, list)]
-    #print(candidates_pos, tokens_lemmatized, [candidate for candidate in candidates if isinstance(candidate, list)])
-    print(candidates)
+
     i = 0
     for candidate in candidates:
         if isinstance(candidate, list):
-            pos = candidates_pos[i:i+len(candidate)] #TODO: has to be a list###############################################################################
+            pos = candidates_pos[i:i+len(candidate)]
             i += len(candidate)
             #take last noun or last wordy
-            #candidate, pos = get_main_word(candidate, pos)
-            print(candidate, pos)
             candidate, pos = get_main_word(candidate, pos)
             candidates_main_word += [candidate]
-            print(pos)
             synsets = wordnet.synsets(lemmatize(candidate,pos))
             synonyms = set(chain.from_iterable(
                 [word.lemma_names() for word in synsets]))
@@ -51,17 +38,25 @@ def wordnet_similarity(candidates, candidates_pos, tokens, tokens_pos):
             def check_for_others(superordinates, subordinate_function, tokens_lemmatized, candidate):
                 score = 0
                 # score +=1 if meronym that is no synonym and not the candidate itself
-                for superordinate in superordinates:
-                    subordinates = set(chain.from_iterable(
-                        [subordinate.lemma_names() for subordinate in eval(subordinate_function)]))
-                    subordinates = [subordinate.lower() for subordinate in subordinates if subordinate not in synonyms]
-                    for token in tokens_lemmatized:
-                        if token.lower() in subordinates and token.lower() != candidate.lower():
-                            score += 1
+
+                subordinates = set(chain.from_iterable([subordinate.lemma_names()
+                     for superordinate in superordinates for subordinate in eval(subordinate_function)]))
+                #del synonyms
+                number_synonyms = len(subordinates)
+                subordinates = [subordinate.lower() for subordinate in subordinates if subordinate not in synonyms]
+                number_synonyms = number_synonyms - len(subordinates)
+                print(str(number_synonyms) + " synonyms found")
+                for token in tokens_lemmatized:
+                    if token.lower() in subordinates and token.lower() != candidate.lower():
+                        score += 1
                 return score
-            print()
-            scores += [check_for_others(holonyms, "superordinate.member_meronyms()", candidates_main_word, candidates_main_word[-1])]
-            scores += [check_for_others(hypernyms, "superordinate.hyponyms()", candidates_main_word, candidates_main_word[-1])]
+            print(check_for_others(holonyms, "superordinate.member_meronyms()",
+                                        candidates_main_word, candidates_main_word[-1])) #JUNGE DIE LISTE FÜLLT SICH ERST MAN
+            scores += [check_for_others(holonyms, "superordinate.member_meronyms()",
+                                        candidates_main_word, candidates_main_word[-1])
+                       + check_for_others(hypernyms, "superordinate.hyponyms()",
+                                        candidates_main_word, candidates_main_word[-1])]
+            print(scores)
         else:
             i += 1
     return scores

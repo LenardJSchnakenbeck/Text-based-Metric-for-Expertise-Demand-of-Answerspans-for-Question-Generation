@@ -23,7 +23,7 @@ final_documents_path = 'final_documents.json'
 #source_documents_path = 'preprocessing/wikipedia_texts_DiY.json'
 
 
-if __name__ == "__main__" and input("recalculate everything?") in ["y","yes","ja"]:
+if __name__ == "__main__" and input("recalculate everything?").lower() in ["y","yes","ja"]:
     #create sjson from raw wikipedia texts
     #candidate_phrases.load_wikipedia_and_create_json(path_to_raw_wikipedia_texts, source_documents_path)
 

@@ -5,7 +5,8 @@ import re
 
 #df = pd.read_csv("C:/Users/lenar/Downloads/data_metric-expertisedemand_2024-01-12_12-20.csv", encoding="utf-16")
 #df = pd.read_csv("C:/Users/lenar/Downloads/data_metric-expertisedemand_2024-01-12_11-36.csv", encoding="utf-16")
-df = pd.read_csv("C:/Users/lenar/Downloads/data_metric-expertisedemand_2024-01-29_18-59.csv", encoding="utf-16")
+#df = pd.read_csv("C:/Users/lenar/Downloads/data_metric-expertisedemand_2024-01-29_18-59.csv", encoding="utf-16")
+df = pd.read_csv("C:/Users/lenar/Downloads/data_metric-expertisedemand_2024-02-07_11-46.csv", encoding="utf-16")
 
 df.rename(columns={
     "A104": "consent",
@@ -53,3 +54,30 @@ def plot_distribution_sns(column_name):
 #for i in ["ExpDem_01", "ExpDem_02", "ExpDem_03", "ExpDem_04", "ExpDem_05", "ExpDem_06", "ExpDem_07", "ExpDem_08",
 #          "ExpDem_09", "ExpDem_10", "ExpDem_11", "ExpDem_12", "ExpDem_13"]:
 #    plot_distribution_sns(i)
+
+"""
+###Mulitple regression
+
+X1: Rel_01 - Rel_13
+X2: PlofA_01 - PlofA_13
+Y: ExpDem_01 - ExpDem_13
+"""
+Rel = ['Rel_01', 'Rel_02', 'Rel_03', 'Rel_04', 'Rel_05', 'Rel_06', 'Rel_07', 'Rel_08', 'Rel_09', 'Rel_10', 'Rel_11',
+       'Rel_12', 'Rel_13']
+PlofA = ['PlofA_01', 'PlofA_02', 'PlofA_03', 'PlofA_04', 'PlofA_05', 'PlofA_06', 'PlofA_07', 'PlofA_08', 'PlofA_09',
+         'PlofA_10', 'PlofA_11', 'PlofA_12', 'PlofA_13']
+ExpDem = ["ExpDem_01", "ExpDem_02", "ExpDem_03", "ExpDem_04", "ExpDem_05", "ExpDem_06", "ExpDem_07", "ExpDem_08",
+         "ExpDem_09", "ExpDem_10", "ExpDem_11", "ExpDem_12", "ExpDem_13"]
+
+X1 = df[Rel].transpose()
+X2 = df[PlofA].transpose()
+Y = df[ExpDem].transpose()
+
+import statsmodels.api as sm
+
+X = X1
+y = Y
+
+model = sm.OLS(y, X).fit()
+
+print(model.summary())
