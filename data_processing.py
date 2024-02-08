@@ -69,13 +69,79 @@ PlofA = ['PlofA_01', 'PlofA_02', 'PlofA_03', 'PlofA_04', 'PlofA_05', 'PlofA_06',
 ExpDem = ["ExpDem_01", "ExpDem_02", "ExpDem_03", "ExpDem_04", "ExpDem_05", "ExpDem_06", "ExpDem_07", "ExpDem_08",
          "ExpDem_09", "ExpDem_10", "ExpDem_11", "ExpDem_12", "ExpDem_13"]
 
-X1 = df[Rel].transpose()
-X2 = df[PlofA].transpose()
-Y = df[ExpDem].transpose()
+X1 = df[Rel]
+X2 = df[PlofA]
+Y = df[ExpDem]
+
+"""df_all = [[word_rel, word_plofa, word_expdem]
+          for person_words in persons
+          for word in person_words
+          for word_rel, word_plofa, word_expdem in word
+          ]"""
+
+df_Rel = df[Rel].transpose()
+df_Plofa = df[PlofA].transpose()
+df_ExpDem = df[ExpDem].transpose()
+
+def df_all(df_Rel, df_Plofa, df_ExpDem):
+    #df_all = pd.DataFrame(df_Rel.iloc[0:1])
+    #df_all = pd.concat([df_all, df_Plofa.iloc[0:1], df_ExpDem.iloc[0:1]])
+    df_all = pd.DataFrame()
+    for i in range(df_Rel.shape[0]-1):
+         df_all = pd.concat([df_all, df_Rel.iloc[i], df_Plofa.iloc[i], df_ExpDem.iloc[i]], axis=1)
+    return df_all
+
+df_all = df_all(df_Rel, df_Plofa, df_ExpDem)
+df_a = df_all.transpose()
+long_df = df_a.stack().rename_axis(['letter', 'index']).reset_index()
+
+long_df['word'] = long_df['letter'].str[-2:]
+long_df['word'] = long_df['word'].astype(int)
+
+def create_final_df(long_df):
+    start = 0
+    participants_count = long_df['letter'].value_counts()['Rel_01']
+    offset = participants_count * 3
+    final_df = pd.DataFrame()
+    for i in range(long_df.shape[0] // offset):
+        # for j in range(23):
+        Rel = long_df[0][start:start + participants_count].values.tolist()
+        PlofA = long_df[0][start + participants_count:start + participants_count * 2].values.tolist()
+        ExpDem = long_df[0][start + participants_count * 2:start + offset].where(
+            long_df["letter"].str.startswith("ExpDem")).values.tolist()
+        index = long_df[["index"]][start:start + participants_count].values.tolist()
+        index = [i[0] for i in index]
+        word = long_df[["word"]][start:start + participants_count].values.tolist()
+        word = [i[0] for i in word]
+        add_df = pd.DataFrame(
+            {"word": word, "index": index,
+             "Rel": list(Rel), "PlofA": list(PlofA), "ExpDem": list(ExpDem)})
+        # add_df = pd.DataFrame({"index": long_df[["index"]][start:start+offset], "word": long_df[["word"]][start:start+offset],"Rel": Rel, "PlofA": PlofA, "ExpDem": ExpDem})
+        # pd.DataFrame([long_df[["index","word"]][start:start+offset], pd.DataFrame([[Rel, PlofA, ExpDem]])])
+        final_df = pd.concat([final_df, add_df])
+
+        start += offset
+    return final_df
+
+final_df = create_final_df(long_df)
+
+
+
+
+
+
+
+
+# Combine DataFrames while keeping columns and extending rows
+extended_dfs = extend_dfs(df_Rel, df_Plofa, df_ExpDem)
+merged_df = pd.concat(extended_dfs, ignore_index=True)
+
+print(merged_df)
+
 
 import statsmodels.api as sm
 
-X = X1
+X = df[X1, X2]
 y = Y
 
 model = sm.OLS(y, X).fit()
