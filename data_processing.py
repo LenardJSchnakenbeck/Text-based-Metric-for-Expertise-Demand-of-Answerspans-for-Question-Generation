@@ -6,7 +6,8 @@ import re
 #df = pd.read_csv("C:/Users/lenar/Downloads/data_metric-expertisedemand_2024-01-12_12-20.csv", encoding="utf-16")
 #df = pd.read_csv("C:/Users/lenar/Downloads/data_metric-expertisedemand_2024-01-12_11-36.csv", encoding="utf-16")
 #df = pd.read_csv("C:/Users/lenar/Downloads/data_metric-expertisedemand_2024-01-29_18-59.csv", encoding="utf-16")
-df = pd.read_csv("C:/Users/lenar/Downloads/data_metric-expertisedemand_2024-02-07_11-46.csv", encoding="utf-16")
+#df = pd.read_csv("C:/Users/lenar/Downloads/data_metric-expertisedemand_2024-02-07_11-46.csv", encoding="utf-16")
+df = pd.read_csv("C:/Users/lenar/Downloads/data_metric-expertisedemand_2024-02-13_11-54.csv", encoding="utf-16")
 
 df.rename(columns={
     "A104": "consent",
@@ -27,7 +28,7 @@ df.rename(columns={
     "A507_12": "PlofA_12", "A507_13": "PlofA_13", "A502": "PlofA_likert"
 }, inplace=True)
 
-df = df[df.FINISHED != 0]
+df = df[(df.FINISHED != 0) & (df.MISSING <= 10)]
 
 def get_answerspan_text(input_string):
     answerspans = ["Earthworms", "the ability to regenerate lost segments", "species", "the extent of the damage",
@@ -87,18 +88,25 @@ def df_all(df_Rel, df_Plofa, df_ExpDem):
     #df_all = pd.DataFrame(df_Rel.iloc[0:1])
     #df_all = pd.concat([df_all, df_Plofa.iloc[0:1], df_ExpDem.iloc[0:1]])
     df_all = pd.DataFrame()
-    for i in range(df_Rel.shape[0]-1):
+    for i in range(df_Rel.shape[0]):
          df_all = pd.concat([df_all, df_Rel.iloc[i], df_Plofa.iloc[i], df_ExpDem.iloc[i]], axis=1)
     return df_all
 
 df_all = df_all(df_Rel, df_Plofa, df_ExpDem)
+
+from sklearn.neighbors import LocalOutlierFactor
+clf = LocalOutlierFactor()
+#clf.fit_predict(x)
+df_all["outlier_Rel"] = clf.fit_predict(df_all.iloc[::3])
+df_all["outlier_PlofA"] = clf.fit_predict(df_all.iloc[1::3])
+df_all["outlier_ExpDem"] = clf.fit_predict(df_all.iloc[2::3])
+
 df_a = df_all.transpose()
-long_df = df_a.stack().rename_axis(['letter', 'index']).reset_index()
 
-long_df['word'] = long_df['letter'].str[-2:]
-long_df['word'] = long_df['word'].astype(int)
-
-def create_final_df(long_df):
+def create_final_df(df_a):
+    long_df = df_a.stack().rename_axis(['letter', 'index']).reset_index()
+    long_df['word'] = long_df['letter'].str[-2:]
+    long_df['word'] = long_df['word'].astype(int)
     start = 0
     participants_count = long_df['letter'].value_counts()['Rel_01']
     offset = participants_count * 3
@@ -108,7 +116,7 @@ def create_final_df(long_df):
         Rel = long_df[0][start:start + participants_count].values.tolist()
         PlofA = long_df[0][start + participants_count:start + participants_count * 2].values.tolist()
         ExpDem = long_df[0][start + participants_count * 2:start + offset].where(
-            long_df["letter"].str.startswith("ExpDem")).values.tolist()
+            long_df["letter"].str.startswith("ExpDem")).values.tolist() #muss das sein??
         index = long_df[["index"]][start:start + participants_count].values.tolist()
         index = [i[0] for i in index]
         word = long_df[["word"]][start:start + participants_count].values.tolist()
@@ -122,28 +130,40 @@ def create_final_df(long_df):
 
         start += offset
     return final_df
-
-final_df = create_final_df(long_df)
-
-
-
-
-
-
-
-
-# Combine DataFrames while keeping columns and extending rows
-extended_dfs = extend_dfs(df_Rel, df_Plofa, df_ExpDem)
-merged_df = pd.concat(extended_dfs, ignore_index=True)
-
-print(merged_df)
-
+final_df = create_final_df(df_a)
 
 import statsmodels.api as sm
+import statsmodels.formula.api as smf
+md = smf.mixedlm("ExpDem ~ Rel + PlofA", final_df, groups=final_df["word"])
+mdf = md.fit()
+print(mdf.summary())
 
-X = df[X1, X2]
-y = Y
 
-model = sm.OLS(y, X).fit()
+import krippendorff
+krippendorff.alpha(value_counts=df_all[ExpDem])
+#0.03605281993487608
+krippendorff.alpha(value_counts=df_all[PlofA])
+#0.020112634064339607
+krippendorff.alpha(value_counts=df_all[Rel])
+#0.025592442366210277
 
-print(model.summary())
+
+from statsmodels.stats.diagnostic import kstest_normal
+def calcualte_KolomogorovSmirnov(df_values):
+    start = 0
+    norm_array = []
+    for i in range(0,df_values.shape[0]):
+        ks_stat, p_value = kstest_normal(df_values.iloc[i])
+        #print("Kolmogorov-Smirnov statistic:", ks_stat)
+        #print("p-value:", p_value)
+        if p_value > 0.05:
+            norm_array += [True]
+        else:
+            norm_array += [False]
+    return norm_array
+
+eval_df = pd.DataFrame()
+#calcualte_KolomogorovSmirnov(df_a.iloc[::3])
+eval_df["norm_Rel"] = calcualte_KolomogorovSmirnov(df_a.iloc[::3])
+eval_df["norm_PlofA"] = calcualte_KolomogorovSmirnov(df_a.iloc[1::3])
+eval_df["norm_ExpDem"] = calcualte_KolomogorovSmirnov(df_a.iloc[2::3])
