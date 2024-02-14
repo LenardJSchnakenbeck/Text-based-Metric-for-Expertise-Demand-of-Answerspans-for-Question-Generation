@@ -42,27 +42,7 @@ def get_answerspan_text(input_string):
     else:
         return answerspans[int(match.group(2))]
 
-def plot_distribution(column_name):
-    df[column_name].hist()
-    plt.title(get_answerspan_text(column_name))
-    plt.show()
 
-def plot_distribution_sns(column_name):
-    sns.histplot(df, x=column_name, binwidth=50, kde=True)
-    plt.title(get_answerspan_text(column_name))
-    plt.show()
-
-#for i in ["ExpDem_01", "ExpDem_02", "ExpDem_03", "ExpDem_04", "ExpDem_05", "ExpDem_06", "ExpDem_07", "ExpDem_08",
-#          "ExpDem_09", "ExpDem_10", "ExpDem_11", "ExpDem_12", "ExpDem_13"]:
-#    plot_distribution_sns(i)
-
-"""
-###Mulitple regression
-
-X1: Rel_01 - Rel_13
-X2: PlofA_01 - PlofA_13
-Y: ExpDem_01 - ExpDem_13
-"""
 Rel = ['Rel_01', 'Rel_02', 'Rel_03', 'Rel_04', 'Rel_05', 'Rel_06', 'Rel_07', 'Rel_08', 'Rel_09', 'Rel_10', 'Rel_11',
        'Rel_12', 'Rel_13']
 PlofA = ['PlofA_01', 'PlofA_02', 'PlofA_03', 'PlofA_04', 'PlofA_05', 'PlofA_06', 'PlofA_07', 'PlofA_08', 'PlofA_09',
@@ -70,21 +50,11 @@ PlofA = ['PlofA_01', 'PlofA_02', 'PlofA_03', 'PlofA_04', 'PlofA_05', 'PlofA_06',
 ExpDem = ["ExpDem_01", "ExpDem_02", "ExpDem_03", "ExpDem_04", "ExpDem_05", "ExpDem_06", "ExpDem_07", "ExpDem_08",
          "ExpDem_09", "ExpDem_10", "ExpDem_11", "ExpDem_12", "ExpDem_13"]
 
-X1 = df[Rel]
-X2 = df[PlofA]
-Y = df[ExpDem]
-
-"""df_all = [[word_rel, word_plofa, word_expdem]
-          for person_words in persons
-          for word in person_words
-          for word_rel, word_plofa, word_expdem in word
-          ]"""
-
 df_Rel = df[Rel].transpose()
 df_Plofa = df[PlofA].transpose()
 df_ExpDem = df[ExpDem].transpose()
 
-def df_all(df_Rel, df_Plofa, df_ExpDem):
+def create_df_all(df_Rel, df_Plofa, df_ExpDem):
     #df_all = pd.DataFrame(df_Rel.iloc[0:1])
     #df_all = pd.concat([df_all, df_Plofa.iloc[0:1], df_ExpDem.iloc[0:1]])
     df_all = pd.DataFrame()
@@ -92,19 +62,28 @@ def df_all(df_Rel, df_Plofa, df_ExpDem):
          df_all = pd.concat([df_all, df_Rel.iloc[i], df_Plofa.iloc[i], df_ExpDem.iloc[i]], axis=1)
     return df_all
 
-df_all = df_all(df_Rel, df_Plofa, df_ExpDem)
+df_all = create_df_all(df_Rel, df_Plofa, df_ExpDem)
 
 from sklearn.neighbors import LocalOutlierFactor
+
 clf = LocalOutlierFactor()
 #clf.fit_predict(x)
-df_all["outlier_Rel"] = clf.fit_predict(df_all.iloc[::3])
-df_all["outlier_PlofA"] = clf.fit_predict(df_all.iloc[1::3])
-df_all["outlier_ExpDem"] = clf.fit_predict(df_all.iloc[2::3])
+df_all["outlier_Rel"] = clf.fit_predict(df_all[Rel])
+df_all["outlier_PlofA"] = clf.fit_predict(df_all[PlofA])
+df_all["outlier_ExpDem"] = clf.fit_predict(df_all[ExpDem])
+df_all["outlier_LOF"] = [-1 if -1 in outliers else 1 for outliers in
+                     zip(df_all["outlier_Rel"],df_all["outlier_PlofA"],df_all["outlier_ExpDem"])]
 
-df_a = df_all.transpose()
+df_all = df_all[df_all["outlier_LOF"] != -1]
 
-def create_final_df(df_a):
-    long_df = df_a.stack().rename_axis(['letter', 'index']).reset_index()
+#df_all["outlier_Rel"] = clf.fit_predict(df_all.transpose().iloc[::3])
+#df_all["outlier_PlofA"] = clf.fit_predict(df_all.transpose().iloc[1::3])
+#df_all["outlier_ExpDem"] = clf.fit_predict(df_all.transpose().iloc[2::3])
+
+#df_a = df_all.transpose()
+
+def create_final_df(df_all):
+    long_df = df_all.transpose().stack().rename_axis(['letter', 'index']).reset_index()
     long_df['word'] = long_df['letter'].str[-2:]
     long_df['word'] = long_df['word'].astype(int)
     start = 0
@@ -130,13 +109,28 @@ def create_final_df(df_a):
 
         start += offset
     return final_df
-final_df = create_final_df(df_a)
+
+RelPlofAExpDem = sorted(list(Rel+PlofA+ExpDem), key=lambda x: x[-2:])
+#df_all ohne outlier-columns
+final_df = create_final_df(df_all[RelPlofAExpDem])
 
 import statsmodels.api as sm
+
+#Kollinearität
+from statsmodels.formula.api import ols
+reg = ols("Rel ~ PlofA", final_df).fit()
+print(reg.summary())
+
+#Grouped_multiple regression
 import statsmodels.formula.api as smf
-md = smf.mixedlm("ExpDem ~ Rel + PlofA", final_df, groups=final_df["word"])
-mdf = md.fit()
-print(mdf.summary())
+multireg_grouped = smf.mixedlm("ExpDem ~ Rel + PlofA", final_df, groups=final_df["word"]).fit()
+print(multireg_grouped.summary())
+
+#multiple regression
+from statsmodels.formula.api import ols
+multireg = ols("ExpDem ~ Rel + PlofA", final_df).fit()
+print(multireg.summary())
+
 
 
 import krippendorff
@@ -164,6 +158,21 @@ def calcualte_KolomogorovSmirnov(df_values):
 
 eval_df = pd.DataFrame()
 #calcualte_KolomogorovSmirnov(df_a.iloc[::3])
-eval_df["norm_Rel"] = calcualte_KolomogorovSmirnov(df_a.iloc[::3])
-eval_df["norm_PlofA"] = calcualte_KolomogorovSmirnov(df_a.iloc[1::3])
-eval_df["norm_ExpDem"] = calcualte_KolomogorovSmirnov(df_a.iloc[2::3])
+eval_df["norm_Rel"] = calcualte_KolomogorovSmirnov(df_all[RelPlofAExpDem].transpose().iloc[::3])
+eval_df["norm_PlofA"] = calcualte_KolomogorovSmirnov(df_all[RelPlofAExpDem].transpose().iloc[1::3])
+eval_df["norm_ExpDem"] = calcualte_KolomogorovSmirnov(df_all[RelPlofAExpDem].transpose().iloc[2::3])
+
+
+def plot_distribution(column_name):
+    df[column_name].hist()
+    plt.title(get_answerspan_text(column_name))
+    plt.show()
+
+def plot_distribution_sns(column_name):
+    sns.histplot(df, x=column_name, binwidth=50, kde=True)
+    plt.title(get_answerspan_text(column_name))
+    plt.show()
+
+for i in ["ExpDem_01", "ExpDem_02", "ExpDem_03", "ExpDem_04", "ExpDem_05", "ExpDem_06", "ExpDem_07", "ExpDem_08",
+          "ExpDem_09", "ExpDem_10", "ExpDem_11", "ExpDem_12", "ExpDem_13"]:
+    plot_distribution_sns(i)
