@@ -18,19 +18,6 @@ def encode_text_and_avg_candidates(documents):
         text_encoded = model.encode(document['text'])
         candidates = document['candidates']
         candidates_encoded = model.encode([" ".join(can) if isinstance(can, list) else can for can in candidates])
-        """    
-        tokens_encoded = model.encode(document['tokens'])
-        i = 0
-        offset = 0
-        while i < len(candidates):
-            if isinstance(candidates[i], list):
-                candidate_tokens = tokens_encoded[i + offset:i + offset + len(candidates[i])]
-                candidates_encoded += [sum(candidate_tokens)/len(candidate_tokens)] #averaged candidate embedding
-                offset += len(candidates[i])-1
-            #else:
-            #    candidates_encoded += [tokens_encoded[i]]
-            i += 1
-        """
         result.append({
             'candidates': candidates_encoded,   # candidate embeddings
             'text': text_encoded                # document embedding
@@ -61,6 +48,7 @@ def cossim_candidates_document(embeddings_path):
 def cossim_candidates_candidates(embeddings_path, documents):
     with open(embeddings_path, 'rb') as pkl:
         document_embeddings = pickle.load(pkl)
+
     result = []
     for document_embedding, document in zip(document_embeddings, documents):
         #for every candidate (1) calculate cossim to every candidate (2)
@@ -75,9 +63,8 @@ def cossim_candidates_candidates(embeddings_path, documents):
                 #if candidate2.lower() in synonyms:
                 #    candidates2.append(0.0)
                 else:
-                    candidates2.append(
-                        float(cosine_similarity(candidate1emb.reshape(1, -1), candidate2emb.reshape(1, -1))[0])
-                    )
+                    candidates2.append(float(
+                        cosine_similarity(candidate1emb.reshape(1, -1), candidate2emb.reshape(1, -1))[0]))
             candidates1.append(candidates2)
             i += 1
         result.append(candidates1)
