@@ -74,7 +74,6 @@ def map_pos_tokenizer_to_lemmatizer(pos):
 
 
 def get_main_word(candidate, pos_list):
-    print("get_main_word", candidate, pos_list)
     if len(candidate) > 1 and "NN" in "".join(pos_list):
         indexes = [index for index, pos in enumerate(pos_list) if "NN" in pos]
         main_word = candidate[indexes[-1]]
