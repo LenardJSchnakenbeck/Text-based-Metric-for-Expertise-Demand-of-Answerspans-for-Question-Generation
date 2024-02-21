@@ -26,15 +26,25 @@ def apply_min_max_normalization(values):
 
     return [(value - min_val) / (max_val - min_val) for value in values]
 
-"""
-def apply_custom_min_max_scaling(data, min_value=0.1, max_value=1):
-    min_val = min(data)
-    max_val = max(data)
-    if not min_val == max_val:
-        scaled_data = [((x - min_val) / (max_val - min_val)) * (max_value - min_value) + min_value for x in data]
+
+def apply_laplace_smoothing(values, smoothing_parameter=0.1):
+    number_values = len(values)
+    smoothed_values = []
+    for value in values:
+        smoothed_values += [
+            (value + smoothing_parameter) /
+            (sum(values) + smoothing_parameter * number_values)
+        ]
+    return smoothed_values
+
+
+def apply_custom_min_max_scaling(data, min_value=0.01, max_value=1):
+    if min(data) != max(data):
+        scaled_data = [((x - min(data)) / (max(data) - min(data))) * (max_value - min_value) + min_value for x in data]
         return scaled_data
     else:
-        return data"""
+        return data
+
 
 
 def compute_scores(singlerank_documents, cossim_documents, wordnet_documents, labeled_documents):
@@ -64,8 +74,8 @@ def compute_scores(singlerank_documents, cossim_documents, wordnet_documents, la
 
 
         def calculate_metric(similarity_scores, relevance_scores):
-            similarity_scores = apply_min_max_normalization(similarity_scores)
-            relevance_scores = apply_min_max_normalization(relevance_scores)
+            #similarity_scores = apply_min_max_normalization(similarity_scores)
+            #relevance_scores = apply_min_max_normalization(relevance_scores)
             metric_scores = [
                 float((1 - rel_score) * sim_score)
                 for rel_score, sim_score in zip(relevance_scores, similarity_scores)
@@ -77,13 +87,24 @@ def compute_scores(singlerank_documents, cossim_documents, wordnet_documents, la
 
         final_document["similarity_cossim"] = similarity_cossim
         final_document["similarity_wordnet"] = similarity_wordnet
+        smoothed_similarity_wordnet = apply_laplace_smoothing(similarity_wordnet)
+        final_document["similarity_wordnet_smoothed"] = smoothed_similarity_wordnet
         final_document["relevance_cossim"] = relevance_cossim
         final_document["relevance_singlerank"] = relevance_singlerank
 
-        final_document["m_s_cos_r_cos"] = calculate_metric(similarity_cossim, relevance_cossim)
-        final_document["m_s_cos_r_sr"] = calculate_metric(similarity_cossim, relevance_singlerank)
-        final_document["m_s_wn_r_cos"] = calculate_metric(similarity_wordnet, relevance_cossim)
-        final_document["m_s_wn_r_sr"] = calculate_metric(similarity_wordnet, relevance_singlerank)
+        final_document["CosineSim_CosineRel"] = calculate_metric(
+            apply_min_max_normalization(similarity_cossim),
+            apply_min_max_normalization(relevance_cossim))
+        final_document["CosineSim_SinglerankRel"] = calculate_metric(
+            apply_min_max_normalization(similarity_cossim),
+            apply_min_max_normalization(relevance_singlerank))
+
+        final_document["WordnetSim_CosineRel"] = calculate_metric(
+            apply_laplace_smoothing(apply_min_max_normalization(similarity_wordnet)),
+            apply_min_max_normalization(relevance_cossim))
+        final_document["WordnetSim_SinglerankRel"] = calculate_metric(
+            apply_laplace_smoothing(apply_min_max_normalization(similarity_wordnet)),
+            apply_min_max_normalization(relevance_singlerank))
 
 
         #TODO: Boxplots für unterschiedliche Values

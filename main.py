@@ -55,7 +55,21 @@ if __name__ == "__main__" and input("recalculate everything?").lower() in ["y","
     print("results are loaded :)")
 
 else:
+    import pandas as pd
+
     documents = load_final_documents(final_documents_path)
 
+    metric_results = pd.DataFrame({
+        'CosineSim_CosineRel': documents[0]['CosineSim_CosineRel'],
+        'WordnetSim_SinglerankRel': documents[0]['WordnetSim_SinglerankRel'],
+        'WordnetSim_CosineRel': documents[0]['WordnetSim_CosineRel'],
+        'CosineSim_SinglerankRel': documents[0]['CosineSim_SinglerankRel'],
+        'CosineRel': documents[0]['relevance_cossim'],
+        "SinglerankRel": documents[0]['relevance_singlerank'],
+        'WordnetSim': documents[0]['similarity_wordnet'],
+        'CosineSim': documents[0]['similarity_cossim']
+    })
+    import seaborn as sns
 
+    sns.boxplot(metric_results)
 

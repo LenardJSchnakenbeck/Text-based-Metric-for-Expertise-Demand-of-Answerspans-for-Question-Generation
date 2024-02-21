@@ -7,7 +7,10 @@ import re
 #df = pd.read_csv("C:/Users/lenar/Downloads/data_metric-expertisedemand_2024-01-12_11-36.csv", encoding="utf-16")
 #df = pd.read_csv("C:/Users/lenar/Downloads/data_metric-expertisedemand_2024-01-29_18-59.csv", encoding="utf-16")
 #df = pd.read_csv("C:/Users/lenar/Downloads/data_metric-expertisedemand_2024-02-07_11-46.csv", encoding="utf-16")
-df = pd.read_csv("C:/Users/lenar/Downloads/data_metric-expertisedemand_2024-02-13_11-54.csv", encoding="utf-16")
+#df = pd.read_csv("C:/Users/lenar/Downloads/data_metric-expertisedemand_2024-02-13_11-54.csv", encoding="utf-16")
+df = pd.read_csv("C:/Users/lenar/Downloads/data_metric-expertisedemand_2024-02-19_17-13.csv", encoding="utf-16")
+#df = pd.read_csv("C:/Users/lenar/Downloads/data_metric-expertisedemand_2024-02-21_10-35.csv", encoding="utf-16")
+
 
 df.rename(columns={
     "A104": "consent",
@@ -27,6 +30,12 @@ df.rename(columns={
     "A507_07": "PlofA_07", "A507_08": "PlofA_08", "A507_09": "PlofA_09", "A507_10": "PlofA_10", "A507_11": "PlofA_11",
     "A507_12": "PlofA_12", "A507_13": "PlofA_13", "A502": "PlofA_likert"
 }, inplace=True)
+Rel = ['Rel_01', 'Rel_02', 'Rel_03', 'Rel_04', 'Rel_05', 'Rel_06', 'Rel_07', 'Rel_08', 'Rel_09', 'Rel_10', 'Rel_11',
+       'Rel_12', 'Rel_13']
+PlofA = ['PlofA_01', 'PlofA_02', 'PlofA_03', 'PlofA_04', 'PlofA_05', 'PlofA_06', 'PlofA_07', 'PlofA_08', 'PlofA_09',
+         'PlofA_10', 'PlofA_11', 'PlofA_12', 'PlofA_13']
+ExpDem = ["ExpDem_01", "ExpDem_02", "ExpDem_03", "ExpDem_04", "ExpDem_05", "ExpDem_06", "ExpDem_07", "ExpDem_08",
+         "ExpDem_09", "ExpDem_10", "ExpDem_11", "ExpDem_12", "ExpDem_13"]
 
 df_raw = df
 df = df[(df.FINISHED != 0) & (df.MISSING <= 10)]
@@ -43,18 +52,6 @@ def get_answerspan_text(input_string):
     else:
         return answerspans[int(match.group(2))-1]
 
-
-Rel = ['Rel_01', 'Rel_02', 'Rel_03', 'Rel_04', 'Rel_05', 'Rel_06', 'Rel_07', 'Rel_08', 'Rel_09', 'Rel_10', 'Rel_11',
-       'Rel_12', 'Rel_13']
-PlofA = ['PlofA_01', 'PlofA_02', 'PlofA_03', 'PlofA_04', 'PlofA_05', 'PlofA_06', 'PlofA_07', 'PlofA_08', 'PlofA_09',
-         'PlofA_10', 'PlofA_11', 'PlofA_12', 'PlofA_13']
-ExpDem = ["ExpDem_01", "ExpDem_02", "ExpDem_03", "ExpDem_04", "ExpDem_05", "ExpDem_06", "ExpDem_07", "ExpDem_08",
-         "ExpDem_09", "ExpDem_10", "ExpDem_11", "ExpDem_12", "ExpDem_13"]
-
-df_Rel = df[Rel].transpose()
-df_Plofa = df[PlofA].transpose()
-df_ExpDem = df[ExpDem].transpose()
-
 def create_df_all(df_Rel, df_Plofa, df_ExpDem):
     #df_all = pd.DataFrame(df_Rel.iloc[0:1])
     #df_all = pd.concat([df_all, df_Plofa.iloc[0:1], df_ExpDem.iloc[0:1]])
@@ -63,10 +60,13 @@ def create_df_all(df_Rel, df_Plofa, df_ExpDem):
          df_all = pd.concat([df_all, df_Rel.iloc[i], df_Plofa.iloc[i], df_ExpDem.iloc[i]], axis=1)
     return df_all
 
+df_Rel = df[Rel].transpose()
+df_Plofa = df[PlofA].transpose()
+df_ExpDem = df[ExpDem].transpose()
 df_all = create_df_all(df_Rel, df_Plofa, df_ExpDem)
 
+#Outlier
 from sklearn.neighbors import LocalOutlierFactor
-
 clf = LocalOutlierFactor()
 #clf.fit_predict(x)
 df_all["outlier_Rel"] = clf.fit_predict(df_all[Rel])
@@ -74,15 +74,15 @@ df_all["outlier_PlofA"] = clf.fit_predict(df_all[PlofA])
 df_all["outlier_ExpDem"] = clf.fit_predict(df_all[ExpDem])
 df_all["outlier_LOF"] = [-1 if -1 in outliers else 1 for outliers in
                      zip(df_all["outlier_Rel"],df_all["outlier_PlofA"],df_all["outlier_ExpDem"])]
-
 df_outlier = df_all
 df_all = df_all[df_all["outlier_LOF"] != -1]
 
-#df_all["outlier_Rel"] = clf.fit_predict(df_all.transpose().iloc[::3])
-#df_all["outlier_PlofA"] = clf.fit_predict(df_all.transpose().iloc[1::3])
-#df_all["outlier_ExpDem"] = clf.fit_predict(df_all.transpose().iloc[2::3])
-
-#df_a = df_all.transpose()
+print(
+    "Total Number of Participants:\t\t\t", df_raw.shape[0],
+    "\n - Not Finished or >= 10 inputs missing:", df_raw.shape[0]-df_outlier.shape[0],
+    "\n - Detected Outlier:\t\t\t\t\t", df_outlier.shape[0]-df_all.shape[0],
+    "\nRemaining Number of Participants:\t\t", df_all.shape[0]
+)
 
 def create_final_df(df_all):
     long_df = df_all.transpose().stack().rename_axis(['letter', 'Participant']).reset_index()
@@ -112,7 +112,6 @@ def create_final_df(df_all):
         start += offset
     return final_df
 
-
 def flatten_df(df_all, columns = [Rel,PlofA,ExpDem], flatflat = False): ##############HLPRPLRPR
     #unnötiger scheiß
     [Rel, PlofA, ExpDem] = columns
@@ -140,7 +139,8 @@ import statsmodels.formula.api as smf
 #df_all ohne outlier-columns
 RelPlofAExpDem = sorted(list(Rel+PlofA+ExpDem), key=lambda x: x[-2:])
 final_df = create_final_df(df_all[RelPlofAExpDem])
-multireg_grouped = smf.mixedlm("ExpDem ~ Rel + PlofA", final_df, groups=final_df["word"]).fit() #word / Participant
+#multireg_grouped = smf.mixedlm("ExpDem ~ Rel + PlofA", final_df, groups=final_df["word"]).fit() #word / Participant
+multireg_grouped = smf.mixedlm("ExpDem ~ Rel + PlofA", final_df, re_formula="0 + Rel + PlofA", groups=final_df["word"]).fit() #word / Participant
 print(multireg_grouped.summary())
 
 #Kollinearität
@@ -159,15 +159,15 @@ flattened_df = flatten_df(df_all, columns = [Rel,PlofA,ExpDem], flatflat= True)
 #print(multireg.summary())
 
 
-
 #Krippendorff Alpha
 import krippendorff
 krippendorff.alpha(value_counts=df_all[ExpDem])
-#0.03605281993487608
+#0.030713555607083665
 krippendorff.alpha(value_counts=df_all[PlofA])
-#0.020112634064339607
+#0.023675808443291424
 krippendorff.alpha(value_counts=df_all[Rel])
-#0.025592442366210277
+#0.018813595421105278
+
 
 #Normalverteilung
 from statsmodels.stats.diagnostic import kstest_normal
@@ -185,11 +185,17 @@ def calcualte_KolomogorovSmirnov(df_values):
     return norm_array
 
 eval_df = pd.DataFrame()
-#calcualte_KolomogorovSmirnov(df_a.iloc[::3])
 eval_df["Rel"] = calcualte_KolomogorovSmirnov(df_all[Rel].transpose())
 eval_df["PlofA"] = calcualte_KolomogorovSmirnov(df_all[PlofA].transpose())
 eval_df["ExpDem"] = calcualte_KolomogorovSmirnov(df_all[ExpDem].transpose())
 
+
+#Plotten
+def plot_list(values_list):
+    df = pd.DataFrame({'value': values_list,
+                       'index': [i for i in range(len(values_list))]
+                       })
+    df.plot(kind='bar', x='index', y='value')
 
 def plot_distribution(column_name):
     df[column_name].hist()
@@ -211,34 +217,56 @@ for i, column_name in enumerate(RelPlofAExpDem):
 
 #Violinplot-Overview
 #sns.violinplot(final_df, x="PlofA", y="word", orient="y", fill=False) #verdeckt
+#flattened_dff = flatten_df(df_all, columns = [Rel,PlofA,ExpDem], flatflat = True)
 #sns.violinplot(flattened_dff, x="Answerspan", y="value", hue="factor") #nebeneinander
 
-#Boxplot-Overview
+#Overview
 #sns.boxplot(flattened_dff, x="Answerspan", y="value", hue="factor")
+#sns.violinplot(flattened_df, x="Answerspan", y="value", hue="factor")
+###sns.lineplot(flattened_df, x="Answerspan", y="value", hue="factor")
 
 #Multiple Regression viz
 r = flattened_df[flattened_df["factor"] == "Rel"]
 e = flattened_df[flattened_df["factor"] == "ExpDem"]["value"]
 
-#
-outlier = flatten_df( df_outlier[df_outlier["outlier_LOF"] == -1], columns=[Rel,PlofA,ExpDem], flatflat=True)
-sns.lineplot(flattened_df, x="Answerspan", y="value", hue="factor")
-sns.lineplot(outlier, x="Answerspan", y="value", hue="factor", style="Person")
+##OUTLIER
+#outlier-trash
+#outlier = flatten_df(df_outlier[df_outlier["outlier_LOF"] == -1], columns=[Rel,PlofA,ExpDem], flatflat=True)
+#sns.lineplot(outlier, x="Answerspan", y="value", hue="factor", style="Person")
 
 #Outlier Rel
 outlier_Rel = flatten_df( df_outlier[df_outlier["outlier_Rel"] == -1], columns=[Rel,PlofA,ExpDem], flatflat=True)
-sns.lineplot(flattened_df[flattened_df["factor"] == "Rel"], x="Answerspan", y="value")
-sns.lineplot(outlier_Rel[outlier_Rel["factor"] == "Rel"], x="Answerspan", y="value", hue="Person", palette="tab10", linewidth=4) #, style="Person"
+sns.boxplot(flattened_df[flattened_df["factor"] == "Rel"], x="Answerspan", y="value", color="lightgrey", width =0.4)
+#plt.clf()
+sns.lineplot(outlier_Rel[outlier_Rel["factor"] == "Rel"], x="Answerspan", y="value", hue="Person", palette="tab10", linewidth=2) #, style="Person"
+
 #Outlier ExpDem
 outlier_ExpDem = flatten_df( df_outlier[df_outlier["outlier_ExpDem"] == -1], columns=[Rel,PlofA,ExpDem], flatflat=True)
-sns.lineplot(flattened_df[flattened_df["factor"] == "ExpDem"], x="Answerspan", y="value")
+sns.boxplot(flattened_df[flattened_df["factor"] == "ExpDem"], x="Answerspan", y="value", color="lightgrey", width =0.4)
+#plt.clf()
 sns.lineplot(outlier_ExpDem[outlier_ExpDem["factor"] == "ExpDem"], x="Answerspan", y="value", hue="Person", palette="tab10", linewidth=4)
 
-#Filter for Rel and PlofA rows, keeping desired columns
-filtered_df = flattened_df[flattened_df['factor'].isin(['Rel', 'PlofA'])][['Answerspan', 'Person', 'factor', 'value']]
+
+#Regression Plot
+regression_plot_df = flattened_df[flattened_df['factor'].isin(['Rel', 'PlofA'])][['Answerspan', 'Person', 'factor', 'value']]
 exp_dem_values = flattened_df[flattened_df['factor'] == 'ExpDem']['value'].tolist() * 2  # Duplicate for redundancy
-filtered_df['ExpDem'] = exp_dem_values
-filtered_df = filtered_df.rename(columns={'value': 'values'})
+regression_plot_df['ExpDem'] = exp_dem_values
+regression_plot_df = regression_plot_df.rename(columns={'value': 'values'})
+sns.lmplot(regression_plot_df, x="ExpDem", y="values", hue="factor")
+
+
+
+#####################compare to data
+
+df_compare = final_df[:]
+df_compare["ExpDem"] = [x//800 for x in df_compare["ExpDem"]]
+sns.lineplot(df_compare, x="word", y="ExpDem")
+sns.lineplot(pd.DataFrame({ 'CosineSim_CosineRel': documents[0]['CosineSim_CosineRel'],'CosineSim_SinglerankRel': documents[0]['CosineSim_SinglerankRel']}))
+
+
+
+
+
 
 
 #Später Feedback
