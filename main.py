@@ -23,7 +23,7 @@ final_documents_path = 'final_documents.json'
 #source_documents_path = 'preprocessing/wikipedia_texts_DiY.json'
 
 
-if __name__ == "__main__" and input("recalculate everything?").lower() in ["y","yes","ja"]:
+if __name__ == "__main__" and input("recalculate everything?").lower() in ["y", "yes", "ja"]:
     #create sjson from raw wikipedia texts
     #candidate_phrases.load_wikipedia_and_create_json(path_to_raw_wikipedia_texts, source_documents_path)
 
@@ -58,8 +58,8 @@ else:
     import pandas as pd
 
     documents = load_final_documents(final_documents_path)
-
-    metric_results = pd.DataFrame({
+""" 
+   metric_results = pd.DataFrame({
         'CosineSim_CosineRel': documents[0]['CosineSim_CosineRel'],
         'WordnetSim_SinglerankRel': documents[0]['WordnetSim_SinglerankRel'],
         'WordnetSim_CosineRel': documents[0]['WordnetSim_CosineRel'],
@@ -72,4 +72,4 @@ else:
     import seaborn as sns
 
     sns.boxplot(metric_results)
-
+"""

@@ -8,9 +8,9 @@ import re
 #df = pd.read_csv("C:/Users/lenar/Downloads/data_metric-expertisedemand_2024-01-29_18-59.csv", encoding="utf-16")
 #df = pd.read_csv("C:/Users/lenar/Downloads/data_metric-expertisedemand_2024-02-07_11-46.csv", encoding="utf-16")
 #df = pd.read_csv("C:/Users/lenar/Downloads/data_metric-expertisedemand_2024-02-13_11-54.csv", encoding="utf-16")
-df = pd.read_csv("C:/Users/lenar/Downloads/data_metric-expertisedemand_2024-02-19_17-13.csv", encoding="utf-16")
+#df = pd.read_csv("C:/Users/lenar/Downloads/data_metric-expertisedemand_2024-02-19_17-13.csv", encoding="utf-16")
 #df = pd.read_csv("C:/Users/lenar/Downloads/data_metric-expertisedemand_2024-02-21_10-35.csv", encoding="utf-16")
-
+df = pd.read_csv("/Users/lenard/Downloads/data_metric-expertisedemand_2024-02-21_10-39.csv", encoding="utf-16")
 
 df.rename(columns={
     "A104": "consent",
@@ -52,18 +52,19 @@ def get_answerspan_text(input_string):
     else:
         return answerspans[int(match.group(2))-1]
 
-def create_df_all(df_Rel, df_Plofa, df_ExpDem):
+def create_df_all(df):
     #df_all = pd.DataFrame(df_Rel.iloc[0:1])
     #df_all = pd.concat([df_all, df_Plofa.iloc[0:1], df_ExpDem.iloc[0:1]])
+    df_Rel = df[Rel].transpose()
+    df_Plofa = df[PlofA].transpose()
+    df_ExpDem = df[ExpDem].transpose()
     df_all = pd.DataFrame()
     for i in range(df_Rel.shape[0]):
          df_all = pd.concat([df_all, df_Rel.iloc[i], df_Plofa.iloc[i], df_ExpDem.iloc[i]], axis=1)
     return df_all
 
-df_Rel = df[Rel].transpose()
-df_Plofa = df[PlofA].transpose()
-df_ExpDem = df[ExpDem].transpose()
-df_all = create_df_all(df_Rel, df_Plofa, df_ExpDem)
+
+df_all = create_df_all(df)
 
 #Outlier
 from sklearn.neighbors import LocalOutlierFactor
@@ -75,12 +76,14 @@ df_all["outlier_ExpDem"] = clf.fit_predict(df_all[ExpDem])
 df_all["outlier_LOF"] = [-1 if -1 in outliers else 1 for outliers in
                      zip(df_all["outlier_Rel"],df_all["outlier_PlofA"],df_all["outlier_ExpDem"])]
 df_outlier = df_all
-df_all = df_all[df_all["outlier_LOF"] != -1]
+df_all = df_all[df_all["outlier_LOF"] != -1][Rel+PlofA+ExpDem]
 
 print(
     "Total Number of Participants:\t\t\t", df_raw.shape[0],
     "\n - Not Finished or >= 10 inputs missing:", df_raw.shape[0]-df_outlier.shape[0],
-    "\n - Detected Outlier:\t\t\t\t\t", df_outlier.shape[0]-df_all.shape[0],
+    "\n - Detected Outlier Rel:\t\t\t\t", df_outlier.value_counts(df_outlier["outlier_Rel"] == -1)[True],
+    #"\n - Detected Outlier PlofA:\t\t\t\t\t", df_outlier.value_counts(df_outlier["outlier_PlofA"] == -1)[True],
+    "\n - Detected Outlier ExpDem:\t\t\t\t", df_outlier.value_counts(df_outlier["outlier_ExpDem"] == -1)[True],
     "\nRemaining Number of Participants:\t\t", df_all.shape[0]
 )
 
@@ -168,28 +171,7 @@ krippendorff.alpha(value_counts=df_all[PlofA])
 krippendorff.alpha(value_counts=df_all[Rel])
 #0.018813595421105278
 
-
-#Normalverteilung
-from statsmodels.stats.diagnostic import kstest_normal
-def calcualte_KolomogorovSmirnov(df_values):
-    start = 0
-    norm_array = []
-    for i in range(0,df_values.shape[0]):
-        ks_stat, p_value = kstest_normal(df_values.iloc[i])
-        #print("Kolmogorov-Smirnov statistic:", ks_stat)
-        #print("p-value:", p_value)
-        if p_value > 0.05:
-            norm_array += [True] #normalverteilt
-        else:
-            norm_array += [False]
-    return norm_array
-
-eval_df = pd.DataFrame()
-eval_df["Rel"] = calcualte_KolomogorovSmirnov(df_all[Rel].transpose())
-eval_df["PlofA"] = calcualte_KolomogorovSmirnov(df_all[PlofA].transpose())
-eval_df["ExpDem"] = calcualte_KolomogorovSmirnov(df_all[ExpDem].transpose())
-
-
+"""
 #Plotten
 def plot_list(values_list):
     df = pd.DataFrame({'value': values_list,
@@ -208,7 +190,7 @@ def plot_distribution_sns(column_name, i):
 
     #title = str(get_answerspan_text(column_name) + "(normal distributed: " +  eval_df[column_name[:-3]][i] + ")")
     plt.title(get_answerspan_text(column_name))
-    plt.savefig( str(r"C:\Users\lenar\Documents\Masterarbeit\plots\Hist_" + column_name + '.png'))
+    plt.savefig( str(r"C:\ Users\lenar\Documents\Masterarbeit\plots\Hist_" + column_name + '.png'))
     #plt.show()
 
 for i, column_name in enumerate(RelPlofAExpDem):
@@ -254,14 +236,82 @@ regression_plot_df['ExpDem'] = exp_dem_values
 regression_plot_df = regression_plot_df.rename(columns={'value': 'values'})
 sns.lmplot(regression_plot_df, x="ExpDem", y="values", hue="factor")
 
-
+"""
 
 #####################compare to data
+
+from metric_creation import load_final_documents
+from main import final_documents_path
+documents = load_final_documents(final_documents_path)
+metric_results = pd.DataFrame({
+        'CosineSim_CosineRel': documents[0]['CosineSim_CosineRel'],
+        'WordnetSim_SinglerankRel': documents[0]['WordnetSim_SinglerankRel'],
+        'WordnetSim_CosineRel': documents[0]['WordnetSim_CosineRel'],
+        'CosineSim_SinglerankRel': documents[0]['CosineSim_SinglerankRel'],
+        'CosineRel': documents[0]['relevance_cossim'],
+        "SinglerankRel": documents[0]['relevance_singlerank'],
+        'WordnetSim': documents[0]['similarity_wordnet'],
+        'CosineSim': documents[0]['similarity_cossim']
+    })
+
+#Normalverteilung
+from statsmodels.stats.diagnostic import kstest_normal
+def calcualte_KolomogorovSmirnov(df_values):
+    start = 0
+    norm_array = []
+    for i in range(0,df_values.shape[0]):
+        ks_stat, p_value = kstest_normal(df_values.iloc[i])
+        #print("Kolmogorov-Smirnov statistic:", ks_stat)
+        #print("p-value:", p_value)
+        if p_value <= 0.1:
+            norm_array += [True] #normalverteilt
+        else:
+            norm_array += [(p_value, ks_stat)]
+    return norm_array
+
+eval_df = pd.DataFrame()
+eval_df["Rel"] = calcualte_KolomogorovSmirnov(df_all[Rel].transpose())
+eval_df["PlofA"] = calcualte_KolomogorovSmirnov(df_all[PlofA].transpose())
+eval_df["ExpDem"] = calcualte_KolomogorovSmirnov(df_all[ExpDem].transpose())
+
+from scipy import stats
+
+def calculate_t_test(annotation_series, metric_prediction_value):
+    tstat, pval = stats.ttest_1samp(annotation_series, metric_prediction_value, alternative='two-sided')
+    return pval
+
+import numpy as np
+from scipy import stats
+
+def calculate_belonging_via_confidence_interval(annotation_series, metric_prediction_value, confidence_level=0.95):
+  mean = annotation_series.mean()
+  stddev = annotation_series.std()
+
+  # Calculate the critical z-score for the desired confidence level.
+  critical_z_score = stats.norm.ppf(confidence_level)
+
+  lower_bound = mean - critical_z_score * stddev
+  upper_bound = mean + critical_z_score * stddev
+  return lower_bound < metric_prediction_value < upper_bound
+
+
+def create_z_test_df(metric_version='CosineSim_SinglerankRel'):
+    df_t_test_results = pd.DataFrame()
+    for i, column in enumerate([Rel, PlofA, ExpDem]):
+        print(column)
+        t_test_results = []
+        for j, column in enumerate(column):
+            t_test_results += [
+                calculate_belonging_via_confidence_interval(df_all[column], metric_results[metric_version][j])]
+        df_t_test_results[column[:-3]] = pd.Series(t_test_results)
+    print(df_t_test_results)
+    return df_t_test_results
+
 
 df_compare = final_df[:]
 df_compare["ExpDem"] = [x//800 for x in df_compare["ExpDem"]]
 sns.lineplot(df_compare, x="word", y="ExpDem")
-sns.lineplot(pd.DataFrame({ 'CosineSim_CosineRel': documents[0]['CosineSim_CosineRel'],'CosineSim_SinglerankRel': documents[0]['CosineSim_SinglerankRel']}))
+sns.lineplot(pd.DataFrame({'CosineSim_CosineRel': documents[0]['CosineSim_CosineRel'],'CosineSim_SinglerankRel': documents[0]['CosineSim_SinglerankRel']}))
 
 
 
