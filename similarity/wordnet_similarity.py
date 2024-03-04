@@ -58,8 +58,6 @@ def wordnet_similarity(candidates, candidates_pos, tokens, tokens_pos):
                 +check_for_others(
                     hypernyms, "superordinate.hyponyms()", tokens_lemmatized, lemmatize(candidate,pos))
             ]
-
-            print(candidate, scores)
             i += len_can
         else:
             i += 1

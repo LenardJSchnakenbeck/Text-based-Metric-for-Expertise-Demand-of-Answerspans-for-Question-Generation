@@ -68,7 +68,6 @@ def compute_scores(singlerank_documents, cossim_documents, wordnet_documents, la
                 similarity_cossim_list = cossim_document["sim_candidates_candidates_raw"][index]
                 similarity_cossim_list[index] = 0.0 #sim(token_i, token_i) = 0
 
-                #HYPERPARAMETER :(
                 similarity_cossim += [sum(similarity_cossim_list)]
                 index += 1
 

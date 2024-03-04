@@ -10,7 +10,9 @@ import re
 #df = pd.read_csv("C:/Users/lenar/Downloads/data_metric-expertisedemand_2024-02-13_11-54.csv", encoding="utf-16")
 #df = pd.read_csv("C:/Users/lenar/Downloads/data_metric-expertisedemand_2024-02-19_17-13.csv", encoding="utf-16")
 #df = pd.read_csv("C:/Users/lenar/Downloads/data_metric-expertisedemand_2024-02-21_10-35.csv", encoding="utf-16")
-df = pd.read_csv("/Users/lenard/Downloads/data_metric-expertisedemand_2024-02-21_10-39.csv", encoding="utf-16")
+df = pd.read_csv("C:/Users/lenar/Downloads/data_metric-expertisedemand_2024-02-29_18-58.csv", encoding="utf-16")
+
+#df = pd.read_csv("/Users/lenard/Downloads/data_metric-expertisedemand_2024-02-21_10-39.csv", encoding="utf-16")
 
 df.rename(columns={
     "A104": "consent",
@@ -36,7 +38,15 @@ PlofA = ['PlofA_01', 'PlofA_02', 'PlofA_03', 'PlofA_04', 'PlofA_05', 'PlofA_06',
          'PlofA_10', 'PlofA_11', 'PlofA_12', 'PlofA_13']
 ExpDem = ["ExpDem_01", "ExpDem_02", "ExpDem_03", "ExpDem_04", "ExpDem_05", "ExpDem_06", "ExpDem_07", "ExpDem_08",
          "ExpDem_09", "ExpDem_10", "ExpDem_11", "ExpDem_12", "ExpDem_13"]
+#RelPlofAExpDem = Rel+PlofA+ExpDem
+RelPlofAExpDem = sorted(list(Rel+PlofA+ExpDem), key=lambda x: x[-2:])
+answerspans = ["Earthworms", "the ability to regenerate lost segments", "species", "the extent of the damage",
+                   "Stephenson", "a chapter of his monograph", "C.E. Gates", "20 years",
+                   "regeneration in a variety of species", "Gates", "two whole worms", "a bisected specimen",
+                   "certain species"]
 
+expert = df[df["CASE"]==399]
+df = df[df["CASE"]!=399]
 df_raw = df
 df = df[(df.FINISHED != 0) & (df.MISSING <= 10)]
 
@@ -69,14 +79,37 @@ df_all = create_df_all(df)
 #Outlier
 from sklearn.neighbors import LocalOutlierFactor
 clf = LocalOutlierFactor()
+#from sklearn.linear_model import SGDOneClassSVM
+#clf = SGDOneClassSVM()
 #clf.fit_predict(x)
-df_all["outlier_Rel"] = clf.fit_predict(df_all[Rel])
-df_all["outlier_PlofA"] = clf.fit_predict(df_all[PlofA])
-df_all["outlier_ExpDem"] = clf.fit_predict(df_all[ExpDem])
+outlier_Rel = clf.fit_predict(df_all[Rel])
+outlier_PlofA = clf.fit_predict(df_all[PlofA])
+outlier_ExpDem = clf.fit_predict(df_all[ExpDem])
 df_all["outlier_LOF"] = [-1 if -1 in outliers else 1 for outliers in
-                     zip(df_all["outlier_Rel"],df_all["outlier_PlofA"],df_all["outlier_ExpDem"])]
+                     zip(outlier_Rel,outlier_PlofA,outlier_ExpDem)]
+
+from pyod.models.abod import ABOD
+model = ABOD(contamination=0.1, method='default', n_neighbors=15)
+model.fit(df_all[RelPlofAExpDem])
+labels = model.predict(df_all[RelPlofAExpDem])
+df_all["outlier_ABOD"] = labels
+print(sum(labels), labels)
+#print("ABOD Outliers PlofA:", outliers.sum())
+
+for factor in [Rel, PlofA, ExpDem]:
+    model.fit(df_all[factor])
+    outlier = model.predict(df_all[factor])
+    df_all["outlier"+factor[0][:-3]] = outlier
+
+
+
+#df_all["outlier_LOF"] = [-1 if -1 in outliers else 1 for outliers in
+#                     zip(outlier_Rel,outlier_PlofA,outlier_ExpDem)]
+
 df_outlier = df_all
-df_all = df_all[df_all["outlier_LOF"] != -1][Rel+PlofA+ExpDem]
+#del df_all["outlier_LOF"]
+df_outliersonly = df_all[df_all["outlier_ABOD"] == 1]
+df_all = df_all[df_all["outlier_ABOD"] != -1][Rel+PlofA+ExpDem]
 
 print(
     "Total Number of Participants:\t\t\t", df_raw.shape[0],
@@ -140,7 +173,7 @@ import statsmodels.api as sm
 #Grouped_multiple regression
 import statsmodels.formula.api as smf
 #df_all ohne outlier-columns
-RelPlofAExpDem = sorted(list(Rel+PlofA+ExpDem), key=lambda x: x[-2:])
+#RelPlofAExpDem = sorted(list(Rel+PlofA+ExpDem), key=lambda x: x[-2:])
 final_df = create_final_df(df_all[RelPlofAExpDem])
 #multireg_grouped = smf.mixedlm("ExpDem ~ Rel + PlofA", final_df, groups=final_df["word"]).fit() #word / Participant
 multireg_grouped = smf.mixedlm("ExpDem ~ Rel + PlofA", final_df, re_formula="0 + Rel + PlofA", groups=final_df["word"]).fit() #word / Participant
@@ -212,6 +245,15 @@ r = flattened_df[flattened_df["factor"] == "Rel"]
 e = flattened_df[flattened_df["factor"] == "ExpDem"]["value"]
 
 ##OUTLIER
+sns.boxplot(flattened_df[flattened_df["factor"] == "Rel"], x="Answerspan", y="value", color="lightgrey", width =0.4)
+df_outliersonly = df_all[df_all["outlier_ABOD"] == 1]
+outflat = flatten_df(df_outliersonly, columns = [Rel,PlofA,ExpDem], flatflat= True)
+
+sns.lineplot(
+    outflat[(outflat["factor"] == "ExpDem") & (outflat["Person"].isin( list(df_outliersonly[df_outliersonly["outlierPlofA"]==1].index)))], 
+    x="Answerspan", y="value", hue="Person", palette="tab10", linewidth=2) #, style="Person"
+
+
 #outlier-trash
 #outlier = flatten_df(df_outlier[df_outlier["outlier_LOF"] == -1], columns=[Rel,PlofA,ExpDem], flatflat=True)
 #sns.lineplot(outlier, x="Answerspan", y="value", hue="factor", style="Person")
@@ -236,11 +278,18 @@ regression_plot_df['ExpDem'] = exp_dem_values
 regression_plot_df = regression_plot_df.rename(columns={'value': 'values'})
 sns.lmplot(regression_plot_df, x="ExpDem", y="values", hue="factor")
 
+#Expert Plot
+sns.boxplot(flattened_df[flattened_df["factor"] == "Rel"], x="Answerspan", y="value", color="lightgrey", width =0.4)
+sns.lineplot(expertflat[expertflat["factor"] == "Rel"], x="Answerspan", y="value", color="red")
+sns.boxplot(flattened_df[flattened_df["factor"] == "PlofA"], x="Answerspan", y="value", color="lightgrey", width =0.4)
+sns.lineplot(expertflat[expertflat["factor"] == "PlofA"], x="Answerspan", y="value", color="red")
+sns.boxplot(flattened_df[flattened_df["factor"] == "ExpDem"], x="Answerspan", y="value", color="lightgrey", width =0.4)
+sns.lineplot(expertflat[expertflat["factor"] == "ExpDem"], x="Answerspan", y="value", color="red")
 """
 
 #####################compare to data
 
-from metric_creation import load_final_documents
+from metric_creation import load_final_documents, apply_min_max_normalization
 from main import final_documents_path
 documents = load_final_documents(final_documents_path)
 metric_results = pd.DataFrame({
@@ -308,14 +357,27 @@ def create_z_test_df(metric_version='CosineSim_SinglerankRel'):
     return df_t_test_results
 
 
+###EXPERT
+
+krippendorff.alpha(value_counts=expert[ExpDem].concat())
+
 df_compare = final_df[:]
 df_compare["ExpDem"] = [x//800 for x in df_compare["ExpDem"]]
 sns.lineplot(df_compare, x="word", y="ExpDem")
-sns.lineplot(pd.DataFrame({'CosineSim_CosineRel': documents[0]['CosineSim_CosineRel'],'CosineSim_SinglerankRel': documents[0]['CosineSim_SinglerankRel']}))
+sns.lineplot(pd.DataFrame({
+    'expert': list(map(lambda x: x / 1000, (expertflat[expertflat["factor"]=="ExpDem"]["value"]))),
+    'CosineSim_CosineRel': documents[0]['CosineSim_CosineRel'],
+    'CosineSim_SinglerankRel': documents[0]['CosineSim_SinglerankRel']}))
 
+sns.lineplot(pd.DataFrame({
+    'expert': list(map(lambda x: x / 1000, (expertflat[expertflat["factor"]=="Rel"]["value"]))),
+    'CosineRel': documents[0]['relevance_cossim'],
+    'SinglerankRel': documents[0]['relevance_singlerank']}))
 
-
-
+sns.lineplot(pd.DataFrame({
+    'expert': list(map(lambda x: x / 1000, (expertflat[expertflat["factor"]=="PlofA"]["value"]))),
+    'CosineSim': documents[0]['similarity_cossim'],
+    'WordnetSim': documents[0]['similarity_wordnet']}))
 
 
 

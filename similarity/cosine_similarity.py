@@ -45,7 +45,7 @@ def cossim_candidates_document(embeddings_path):
         result.append(candidates_document_similarites)
     return result
 
-def cossim_candidates_candidates(embeddings_path, documents):
+def cossim_candidates_candidates(embeddings_path, documents, synonyms=[(['C.E.Gates'],['Gates']),(['Gates'],['C.E.Gates'])]):
     with open(embeddings_path, 'rb') as pkl:
         document_embeddings = pickle.load(pkl)
 
@@ -58,10 +58,11 @@ def cossim_candidates_candidates(embeddings_path, documents):
             candidates2 = []
             #calculate similarity to every other word except synonyms
             for j, (candidate2emb, candidate2) in enumerate(zip(document_embedding['candidates'], document['candidates'])):
-                if isinstance(candidate2, list):
+                if candidate1 == ["Gates"]: print(candidate1,candidate2)
+                if (candidate1,candidate2) in synonyms:
+                    candidates2.append(0.0)
+                elif isinstance(candidate2, list):
                     candidate2, _ = get_main_word(candidate2, document["tokens_pos"][j])
-                #if candidate2.lower() in synonyms:
-                #    candidates2.append(0.0)
                 else:
                     candidates2.append(float(
                         cosine_similarity(candidate1emb.reshape(1, -1), candidate2emb.reshape(1, -1))[0]))
@@ -90,11 +91,6 @@ def calculate_and_write_pickle_cossim(labeled_documents_path, embeddings_path,co
     for index, document in enumerate(documents):
         document['sim_candidates_candidates_raw'] = cosine_values_can_can[index]
     #    document['sim_candidates_candidates'] = sum(cosine_values_can_can[index])
-
-    #TODO: synonyme raus nehmen und zusammen rechnen
-
-
-
 
     with open(cosine_similarities_path, 'wb') as pkl:
         pickle.dump(documents, pkl)
