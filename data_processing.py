@@ -2,6 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import re
+import numpy as np
 
 #df = pd.read_csv("C:/Users/lenar/Downloads/data_metric-expertisedemand_2024-01-12_12-20.csv", encoding="utf-16")
 #df = pd.read_csv("C:/Users/lenar/Downloads/data_metric-expertisedemand_2024-01-12_11-36.csv", encoding="utf-16")
@@ -73,52 +74,46 @@ def create_df_all(df):
          df_all = pd.concat([df_all, df_Rel.iloc[i], df_Plofa.iloc[i], df_ExpDem.iloc[i]], axis=1)
     return df_all
 
-
 df_all = create_df_all(df)
 
 #Outlier
-from sklearn.neighbors import LocalOutlierFactor
-clf = LocalOutlierFactor()
-#from sklearn.linear_model import SGDOneClassSVM
-#clf = SGDOneClassSVM()
-#clf.fit_predict(x)
-outlier_Rel = clf.fit_predict(df_all[Rel])
-outlier_PlofA = clf.fit_predict(df_all[PlofA])
-outlier_ExpDem = clf.fit_predict(df_all[ExpDem])
-df_all["outlier_LOF"] = [-1 if -1 in outliers else 1 for outliers in
-                     zip(outlier_Rel,outlier_PlofA,outlier_ExpDem)]
+def outlier_LOF(df_all):
+    from sklearn.neighbors import LocalOutlierFactor
+    clf = LocalOutlierFactor()
+    outlier_Rel = clf.fit_predict(df_all[Rel])
+    outlier_PlofA = clf.fit_predict(df_all[PlofA])
+    outlier_ExpDem = clf.fit_predict(df_all[ExpDem])
+    df_all["outlier_LOF"] = [-1 if -1 in outliers else 1 for outliers in
+                         zip(outlier_Rel,outlier_PlofA,outlier_ExpDem)]
+    return df_all #del df_all["outlier_LOF"]
+
+def ABOD_outlier_processing():
+    from pyod.models.abod import ABOD
+    model = ABOD(contamination=0.14, method='default', n_neighbors=10)
+    for factor in [Rel, PlofA, ExpDem]:
+        model.fit(df_all[factor])
+        outlier = model.predict(df_all[factor])
+        df_all["outlier"+factor[0][:-3]] = outlier
+
+    for con in [0.14,0.22]:
+        model = ABOD(contamination=con, method='default', n_neighbors=10)
+        model.fit(df_all[RelPlofAExpDem])
+        labels = model.predict(df_all[RelPlofAExpDem])
+        df_all[str(con)+"outlier_ABOD"] = labels
+        print(sum(labels), labels)
+
 
 from pyod.models.abod import ABOD
-model = ABOD(contamination=0.1, method='default', n_neighbors=15)
+model = ABOD(contamination=0.14, method='default', n_neighbors=10)
 model.fit(df_all[RelPlofAExpDem])
 labels = model.predict(df_all[RelPlofAExpDem])
 df_all["outlier_ABOD"] = labels
-print(sum(labels), labels)
-#print("ABOD Outliers PlofA:", outliers.sum())
 
-for factor in [Rel, PlofA, ExpDem]:
-    model.fit(df_all[factor])
-    outlier = model.predict(df_all[factor])
-    df_all["outlier"+factor[0][:-3]] = outlier
-
-
-
-#df_all["outlier_LOF"] = [-1 if -1 in outliers else 1 for outliers in
-#                     zip(outlier_Rel,outlier_PlofA,outlier_ExpDem)]
 
 df_outlier = df_all
-#del df_all["outlier_LOF"]
 df_outliersonly = df_all[df_all["outlier_ABOD"] == 1]
-df_all = df_all[df_all["outlier_ABOD"] != -1][Rel+PlofA+ExpDem]
+df_all = df_all[df_all["outlier_ABOD"] != 1][Rel+PlofA+ExpDem]
 
-print(
-    "Total Number of Participants:\t\t\t", df_raw.shape[0],
-    "\n - Not Finished or >= 10 inputs missing:", df_raw.shape[0]-df_outlier.shape[0],
-    "\n - Detected Outlier Rel:\t\t\t\t", df_outlier.value_counts(df_outlier["outlier_Rel"] == -1)[True],
-    #"\n - Detected Outlier PlofA:\t\t\t\t\t", df_outlier.value_counts(df_outlier["outlier_PlofA"] == -1)[True],
-    "\n - Detected Outlier ExpDem:\t\t\t\t", df_outlier.value_counts(df_outlier["outlier_ExpDem"] == -1)[True],
-    "\nRemaining Number of Participants:\t\t", df_all.shape[0]
-)
 
 def create_final_df(df_all):
     long_df = df_all.transpose().stack().rename_axis(['letter', 'Participant']).reset_index()
@@ -148,6 +143,8 @@ def create_final_df(df_all):
         start += offset
     return final_df
 
+final_df = create_final_df(df_all[RelPlofAExpDem])
+
 def flatten_df(df_all, columns = [Rel,PlofA,ExpDem], flatflat = False): ##############HLPRPLRPR
     #unnötiger scheiß
     [Rel, PlofA, ExpDem] = columns
@@ -168,41 +165,102 @@ def flatten_df(df_all, columns = [Rel,PlofA,ExpDem], flatflat = False): ########
     ExpDem["factor"] = ["ExpDem"] * flattened_df.shape[0]
     return pd.concat([Rel, PlofA, ExpDem], ignore_index=True)
 
-import statsmodels.api as sm
-
-#Grouped_multiple regression
-import statsmodels.formula.api as smf
-#df_all ohne outlier-columns
-#RelPlofAExpDem = sorted(list(Rel+PlofA+ExpDem), key=lambda x: x[-2:])
-final_df = create_final_df(df_all[RelPlofAExpDem])
-#multireg_grouped = smf.mixedlm("ExpDem ~ Rel + PlofA", final_df, groups=final_df["word"]).fit() #word / Participant
-multireg_grouped = smf.mixedlm("ExpDem ~ Rel + PlofA", final_df, re_formula="0 + Rel + PlofA", groups=final_df["word"]).fit() #word / Participant
-print(multireg_grouped.summary())
-
-#Kollinearität
-from statsmodels.formula.api import ols
-reg = ols("Rel ~ PlofA", final_df).fit()
-print(reg.summary())
-
-#multiple regression
-from statsmodels.formula.api import ols
-multireg = ols("ExpDem ~ Rel + PlofA", final_df).fit()
-print(multireg.summary())
-final_df["PredictionRel"] = multireg.predict(final_df)
-
 flattened_df = flatten_df(df_all, columns = [Rel,PlofA,ExpDem], flatflat= True)
-#multireg = ols("ExpDem ~ Rel + PlofA", flattened_df).fit()
-#print(multireg.summary())
 
+def likert_scores(df, df_all):
+    #1 = stimme voll und ganz zu #5 = stimme überhaupt nicht zu
+    likert_items = df.loc[df_all.index][["Rel_likert", "PlofA_likert"]]
+
+    likert_items["Rel_likert"].mean() #2.142
+    sns.countplot(x=likert_items["Rel_likert"], color=(0.12156862745098039, 0.4666666666666667, 0.7058823529411765))
+    plt.xticks(ticks=range(5), labels=["Completely Agree", "Agree", "Neither agree,\n nor disagree","Disagree", "Completely Disagree"])
+
+    likert_items["PlofA_likert"].mean() #2.232
+    sns.countplot(x=likert_items["PlofA_likert"], color=(1.0, 0.4980392156862745, 0.054901960784313725))
+    plt.xticks(ticks=range(5), labels=["Completely Agree", "Agree", "Neither agree,\n nor disagree","Disagree", "Completely Disagree"])
+
+#simple linear multiple regression
+def simple_linear_multiple_regression():
+    from statsmodels.formula.api import ols
+    multireg = ols("ExpDem ~ Rel + PlofA", final_df)
+    results = multireg.fit()
+    print(results.summary())
+
+
+#Mixed effects LM
+import statsmodels.api as sm
+from statsmodels.regression.mixed_linear_model import MixedLM
+from scipy.stats import chi2
+
+null_model_formula = "ExpDem ~ 1"
+null_model = MixedLM.from_formula(null_model_formula, groups="word", data=final_df)
+null_result = null_model.fit(reml = False)
+#print(null_result.summary())
+
+#Likelihood comparison
+print("null_result.llf:", null_result.llf)
+for model_formula in ["ExpDem ~ 1", "ExpDem ~ Rel", "ExpDem ~ PlofA", "ExpDem ~ Rel + PlofA"]:
+    #model_formula = "ExpDem ~ Rel + PlofA"
+    mixedlm_model = MixedLM.from_formula(model_formula, groups="word", data=final_df)
+    mixedlm_result = mixedlm_model.fit(reml = False)
+    #print(mixedlm_result.summary())
+    #print(model_formula)
+
+    lr_statistic = -2 * (null_result.llf - mixedlm_result.llf)
+    df_difference = mixedlm_result.df_modelwc - null_result.df_modelwc
+    p_value = 1 - chi2.cdf(lr_statistic, df_difference)
+    print("\n\n",model_formula, "\n","-"*20)
+    print("Likelihood Ratio Test Statistic:", lr_statistic)
+    print("P-value:", p_value)
+    print("df_difference:", df_difference)
+    #print("null_result.llf:", null_result.llf)
+    print("mixedlm_result.llf:", mixedlm_result.llf)
+    print("bic:", mixedlm_result.bic)
+
+#Mixed effects assumptions
+random_intercepts = mixedlm_result.random_effects
+random_intercepts_list = [value.values[0] for value in mixedlm_result.random_effects.values()]
+shapiro_stat, shapiro_p_val = shapiro(random_intercepts_list)
+print("mean:", np.mean(random_intercepts_list))
+print("Shapiro-Wilk Test Statistic:", shapiro_stat)
+print("p-value:", shapiro_p_val)
+
+from scipy.stats import pearsonr
+fixed_effects = mixedlm_result.fe_params
+correlations = {}
+for random_effect, intercepts in enumerate(random_intercepts_list):
+    random_effect += 1
+    correlation, p_value = pearsonr(intercepts, final_df[random_effect])
+    correlations[random_effect] = (correlation, p_value)
+
+# Print correlations
+for random_effect, (correlation, p_value) in correlations.items():
+    print(f"Correlation between {random_effect} and fixed effects: {correlation}, p-value: {p_value}"
+
+# Kollinearität
+from statsmodels.stats.outliers_influence import variance_inflation_factor
+vif = variance_inflation_factor(final_df[["Rel", "PlofA"]].values, 0)
+
+# heteroscedasticity
+from statsmodels.stats.diagnostic import het_breuschpagan
+lm, lm_pvalue, fval, breuschfpval = het_breuschpagan(mixedlm_result.resid, mixedlm_model.exog, robust=True)
+print("Lagrange multiplier statistic:",lm, lm_pvalue)
+print("Breusch F and p:",fval, breuschfpval)
+
+# normality of residuals
+from scipy.stats import shapiro
+shapiro_stat, shapiro_p_val = shapiro(mixedlm_result.resid)
+print("shapiro Wilk normal residuals:", shapiro_stat, shapiro_p_val)
+#sns.histplot(mixedlm_result.resid, bins=20)
+
+# independence of error
+residuals_mean = np.mean(mixedlm_result.resid)
 
 #Krippendorff Alpha
 import krippendorff
-krippendorff.alpha(value_counts=df_all[ExpDem])
-#0.030713555607083665
-krippendorff.alpha(value_counts=df_all[PlofA])
-#0.023675808443291424
-krippendorff.alpha(value_counts=df_all[Rel])
-#0.018813595421105278
+alpha_Rel = krippendorff.alpha(reliability_data=df_all[Rel], level_of_measurement="ratio")
+alpha_PlofA = krippendorff.alpha(reliability_data=df_all[PlofA], level_of_measurement="ratio")
+alpha_ExpDem = krippendorff.alpha(reliability_data=df_all[ExpDem], level_of_measurement="ratio")
 
 """
 #Plotten
@@ -245,14 +303,6 @@ r = flattened_df[flattened_df["factor"] == "Rel"]
 e = flattened_df[flattened_df["factor"] == "ExpDem"]["value"]
 
 ##OUTLIER
-sns.boxplot(flattened_df[flattened_df["factor"] == "Rel"], x="Answerspan", y="value", color="lightgrey", width =0.4)
-df_outliersonly = df_all[df_all["outlier_ABOD"] == 1]
-outflat = flatten_df(df_outliersonly, columns = [Rel,PlofA,ExpDem], flatflat= True)
-
-sns.lineplot(
-    outflat[(outflat["factor"] == "ExpDem") & (outflat["Person"].isin( list(df_outliersonly[df_outliersonly["outlierPlofA"]==1].index)))], 
-    x="Answerspan", y="value", hue="Person", palette="tab10", linewidth=2) #, style="Person"
-
 
 #outlier-trash
 #outlier = flatten_df(df_outlier[df_outlier["outlier_LOF"] == -1], columns=[Rel,PlofA,ExpDem], flatflat=True)
@@ -271,12 +321,12 @@ sns.boxplot(flattened_df[flattened_df["factor"] == "ExpDem"], x="Answerspan", y=
 sns.lineplot(outlier_ExpDem[outlier_ExpDem["factor"] == "ExpDem"], x="Answerspan", y="value", hue="Person", palette="tab10", linewidth=4)
 
 
-#Regression Plot
+#Scatter Plot
 regression_plot_df = flattened_df[flattened_df['factor'].isin(['Rel', 'PlofA'])][['Answerspan', 'Person', 'factor', 'value']]
 exp_dem_values = flattened_df[flattened_df['factor'] == 'ExpDem']['value'].tolist() * 2  # Duplicate for redundancy
 regression_plot_df['ExpDem'] = exp_dem_values
-regression_plot_df = regression_plot_df.rename(columns={'value': 'values'})
-sns.lmplot(regression_plot_df, x="ExpDem", y="values", hue="factor")
+regression_plot_df = regression_plot_df.rename(columns={'value': 'Rel / PlofA'})
+sns.scatterplot(regression_plot_df, x="ExpDem", y="Rel / PlofA", hue="factor")
 
 #Expert Plot
 sns.boxplot(flattened_df[flattened_df["factor"] == "Rel"], x="Answerspan", y="value", color="lightgrey", width =0.4)
@@ -286,6 +336,34 @@ sns.lineplot(expertflat[expertflat["factor"] == "PlofA"], x="Answerspan", y="val
 sns.boxplot(flattened_df[flattened_df["factor"] == "ExpDem"], x="Answerspan", y="value", color="lightgrey", width =0.4)
 sns.lineplot(expertflat[expertflat["factor"] == "ExpDem"], x="Answerspan", y="value", color="red")
 """
+
+def ppplot(results_resid):
+    import scipy.stats as stats
+    import matplotlib.pyplot as plt
+    # Generate a P-P plot
+    fig = plt.figure(figsize=(6, 6))
+    ax = fig.add_subplot(111)
+    stats.probplot(results.resid, dist="norm", plot=ax)
+    ax.set_title('P-P Plot of Residuals')
+    ax.get_lines()[1].set_linestyle('--')  # Add a dashed line for reference
+    plt.show()
+
+def plot_outlier(df_all):
+    flattened_df = flatten_df(df_all, flatflat=True)
+    df_outliersonly = df_all[df_all["outlier_ABOD"] == 1]
+    outflat = flatten_df(df_outliersonly, columns=[Rel, PlofA, ExpDem], flatflat=True)
+    for factor in ["Rel", "PlofA", "ExpDem"]:
+        sns.boxplot(flattened_df[flattened_df["factor"] == factor],
+                    x="Answerspan", y="value", color="lightgrey", width=0.4)
+        plt.savefig(r"C:\Users\lenar\Documents\Masterarbeit\plots\Boxplot_" + factor + ".png")
+        plt.clf()
+        sns.lineplot(
+            outflat[(outflat["factor"] == factor) &
+                    (outflat["Person"].isin(list(df_outliersonly[df_outliersonly["outlier" + factor] == 1].index)))],
+            x="Answerspan", y="value", hue="Person", palette="tab10", linewidth=2)  # , style="Person"
+        plt.savefig(r"C:\Users\lenar\Documents\Masterarbeit\plots\Outlier_" + factor + ".png", transparent=True)
+        plt.clf()
+
 
 #####################compare to data
 
@@ -358,9 +436,7 @@ def create_z_test_df(metric_version='CosineSim_SinglerankRel'):
 
 
 ###EXPERT
-
-krippendorff.alpha(value_counts=expert[ExpDem].concat())
-
+"""
 df_compare = final_df[:]
 df_compare["ExpDem"] = [x//800 for x in df_compare["ExpDem"]]
 sns.lineplot(df_compare, x="word", y="ExpDem")
@@ -378,7 +454,7 @@ sns.lineplot(pd.DataFrame({
     'expert': list(map(lambda x: x / 1000, (expertflat[expertflat["factor"]=="PlofA"]["value"]))),
     'CosineSim': documents[0]['similarity_cossim'],
     'WordnetSim': documents[0]['similarity_wordnet']}))
-
+"""
 
 
 #Später Feedback
