@@ -4,16 +4,7 @@ import seaborn as sns
 import re
 import numpy as np
 
-#df = pd.read_csv("C:/Users/lenar/Downloads/data_metric-expertisedemand_2024-01-12_12-20.csv", encoding="utf-16")
-#df = pd.read_csv("C:/Users/lenar/Downloads/data_metric-expertisedemand_2024-01-12_11-36.csv", encoding="utf-16")
-#df = pd.read_csv("C:/Users/lenar/Downloads/data_metric-expertisedemand_2024-01-29_18-59.csv", encoding="utf-16")
-#df = pd.read_csv("C:/Users/lenar/Downloads/data_metric-expertisedemand_2024-02-07_11-46.csv", encoding="utf-16")
-#df = pd.read_csv("C:/Users/lenar/Downloads/data_metric-expertisedemand_2024-02-13_11-54.csv", encoding="utf-16")
-#df = pd.read_csv("C:/Users/lenar/Downloads/data_metric-expertisedemand_2024-02-19_17-13.csv", encoding="utf-16")
-#df = pd.read_csv("C:/Users/lenar/Downloads/data_metric-expertisedemand_2024-02-21_10-35.csv", encoding="utf-16")
 df = pd.read_csv("C:/Users/lenar/Downloads/data_metric-expertisedemand_2024-02-29_18-58.csv", encoding="utf-16")
-
-#df = pd.read_csv("/Users/lenard/Downloads/data_metric-expertisedemand_2024-02-21_10-39.csv", encoding="utf-16")
 
 df.rename(columns={
     "A104": "consent",
@@ -46,11 +37,6 @@ answerspans = ["Earthworms", "the ability to regenerate lost segments", "species
                    "regeneration in a variety of species", "Gates", "two whole worms", "a bisected specimen",
                    "certain species"]
 
-expert = df[df["CASE"]==399]
-df = df[df["CASE"]!=399]
-df_raw = df
-df = df[(df.FINISHED != 0) & (df.MISSING <= 10)]
-
 def get_answerspan_text(input_string):
     answerspans = ["Earthworms", "the ability to regenerate lost segments", "species", "the extent of the damage",
                    "Stephenson", "a chapter of his monograph", "C.E. Gates", "20 years",
@@ -62,110 +48,6 @@ def get_answerspan_text(input_string):
         return -1
     else:
         return answerspans[int(match.group(2))-1]
-
-def create_df_all(df):
-    #df_all = pd.DataFrame(df_Rel.iloc[0:1])
-    #df_all = pd.concat([df_all, df_Plofa.iloc[0:1], df_ExpDem.iloc[0:1]])
-    df_Rel = df[Rel].transpose()
-    df_Plofa = df[PlofA].transpose()
-    df_ExpDem = df[ExpDem].transpose()
-    df_all = pd.DataFrame()
-    for i in range(df_Rel.shape[0]):
-         df_all = pd.concat([df_all, df_Rel.iloc[i], df_Plofa.iloc[i], df_ExpDem.iloc[i]], axis=1)
-    return df_all
-
-df_all = create_df_all(df)
-
-#Outlier
-def outlier_LOF(df_all):
-    from sklearn.neighbors import LocalOutlierFactor
-    clf = LocalOutlierFactor()
-    outlier_Rel = clf.fit_predict(df_all[Rel])
-    outlier_PlofA = clf.fit_predict(df_all[PlofA])
-    outlier_ExpDem = clf.fit_predict(df_all[ExpDem])
-    df_all["outlier_LOF"] = [-1 if -1 in outliers else 1 for outliers in
-                         zip(outlier_Rel,outlier_PlofA,outlier_ExpDem)]
-    return df_all #del df_all["outlier_LOF"]
-
-def ABOD_outlier_processing():
-    from pyod.models.abod import ABOD
-    model = ABOD(contamination=0.14, method='default', n_neighbors=10)
-    for factor in [Rel, PlofA, ExpDem]:
-        model.fit(df_all[factor])
-        outlier = model.predict(df_all[factor])
-        df_all["outlier"+factor[0][:-3]] = outlier
-
-    for con in [0.14,0.22]:
-        model = ABOD(contamination=con, method='default', n_neighbors=10)
-        model.fit(df_all[RelPlofAExpDem])
-        labels = model.predict(df_all[RelPlofAExpDem])
-        df_all[str(con)+"outlier_ABOD"] = labels
-        print(sum(labels), labels)
-
-
-from pyod.models.abod import ABOD
-model = ABOD(contamination=0.14, method='default', n_neighbors=10)
-model.fit(df_all[RelPlofAExpDem])
-labels = model.predict(df_all[RelPlofAExpDem])
-df_all["outlier_ABOD"] = labels
-
-
-df_outlier = df_all
-df_outliersonly = df_all[df_all["outlier_ABOD"] == 1]
-df_all = df_all[df_all["outlier_ABOD"] != 1][Rel+PlofA+ExpDem]
-
-
-def create_final_df(df_all):
-    long_df = df_all.transpose().stack().rename_axis(['letter', 'Participant']).reset_index()
-    long_df['word'] = long_df['letter'].str[-2:]
-    long_df['word'] = long_df['word'].astype(int)
-    start = 0
-    participants_count = long_df['letter'].value_counts()['Rel_01']
-    offset = participants_count * 3
-    final_df = pd.DataFrame()
-    for i in range(long_df.shape[0] // offset):
-        # for j in range(23):
-        Rel = long_df[0][start:start + participants_count].values.tolist()
-        PlofA = long_df[0][start + participants_count:start + participants_count * 2].values.tolist()
-        ExpDem = long_df[0][start + participants_count * 2:start + offset].where(
-            long_df["letter"].str.startswith("ExpDem")).values.tolist() #muss das sein??
-        index = long_df[["Participant"]][start:start + participants_count].values.tolist()
-        index = [i[0] for i in index]
-        word = long_df[["word"]][start:start + participants_count].values.tolist()
-        word = [i[0] for i in word]
-        add_df = pd.DataFrame(
-            {"word": word, "Participant": index,
-             "Rel": list(Rel), "PlofA": list(PlofA), "ExpDem": list(ExpDem)})
-        # add_df = pd.DataFrame({"index": long_df[["index"]][start:start+offset], "word": long_df[["word"]][start:start+offset],"Rel": Rel, "PlofA": PlofA, "ExpDem": ExpDem})
-        # pd.DataFrame([long_df[["index","word"]][start:start+offset], pd.DataFrame([[Rel, PlofA, ExpDem]])])
-        final_df = pd.concat([final_df, add_df])
-
-        start += offset
-    return final_df
-
-final_df = create_final_df(df_all[RelPlofAExpDem])
-
-def flatten_df(df_all, columns = [Rel,PlofA,ExpDem], flatflat = False): ##############HLPRPLRPR
-    #unnötiger scheiß
-    [Rel, PlofA, ExpDem] = columns
-    flattened_df = pd.DataFrame()
-    flattened_df["Rel"] = df_all[Rel].melt(value_name="value")["value"]
-    flattened_df["PlofA"] = df_all[PlofA].melt(value_name="value")["value"]
-    flattened_df["ExpDem"] = df_all[ExpDem].melt(value_name="value")["value"]
-    flattened_df["Answerspan"] = df_all[Rel].melt(var_name="Answerspan")["Answerspan"]
-    flattened_df["Answerspan"] = flattened_df["Answerspan"].str[-2:].astype(int)
-    #flattened_df["Person"] = df_all.index * flattened_df.shape[0]/len(df_all.index)
-    flattened_df["Person"] = [df_all.index[i % len(df_all.index)] for i in range(len(flattened_df))]
-    if not flatflat: return flattened_df
-    Rel = flattened_df[["Rel","Answerspan","Person"]].rename(columns={"Rel": "value"})
-    Rel["factor"] = ["Rel"] * flattened_df.shape[0]
-    PlofA = flattened_df[["PlofA","Answerspan","Person"]].rename(columns={"PlofA": "value"})
-    PlofA["factor"] = ["PlofA"] * flattened_df.shape[0]
-    ExpDem = flattened_df[["ExpDem", "Answerspan", "Person"]].rename(columns={"ExpDem": "value"})
-    ExpDem["factor"] = ["ExpDem"] * flattened_df.shape[0]
-    return pd.concat([Rel, PlofA, ExpDem], ignore_index=True)
-
-flattened_df = flatten_df(df_all, columns = [Rel,PlofA,ExpDem], flatflat= True)
 
 def likert_scores(df, df_all):
     #1 = stimme voll und ganz zu #5 = stimme überhaupt nicht zu
@@ -179,6 +61,53 @@ def likert_scores(df, df_all):
     sns.countplot(x=likert_items["PlofA_likert"], color=(1.0, 0.4980392156862745, 0.054901960784313725))
     plt.xticks(ticks=range(5), labels=["Completely Agree", "Agree", "Neither agree,\n nor disagree","Disagree", "Completely Disagree"])
 
+
+def create_df_all(df):
+    df_Rel = df[Rel].transpose()
+    df_Plofa = df[PlofA].transpose()
+    df_ExpDem = df[ExpDem].transpose()
+    df_all = pd.DataFrame()
+    for i in range(df_Rel.shape[0]):
+         df_all = pd.concat([df_all, df_Rel.iloc[i], df_Plofa.iloc[i], df_ExpDem.iloc[i]], axis=1)
+    return df_all
+
+def flatten_df(df_all, columns = [Rel,PlofA,ExpDem], flatflat = False): ##############HLPRPLRPR
+    [Rel, PlofA, ExpDem] = columns
+    flattened_df = pd.DataFrame()
+    flattened_df["Rel"] = df_all[Rel].melt(value_name="value")["value"]
+    flattened_df["PlofA"] = df_all[PlofA].melt(value_name="value")["value"]
+    flattened_df["ExpDem"] = df_all[ExpDem].melt(value_name="value")["value"]
+    flattened_df["Answerspan"] = df_all[Rel].melt(var_name="Answerspan")["Answerspan"]
+    flattened_df["Answerspan"] = flattened_df["Answerspan"].str[-2:].astype(int)
+    flattened_df["Person"] = [df_all.index[i % len(df_all.index)] for i in range(len(flattened_df))]
+    if not flatflat: return flattened_df
+    Rel = flattened_df[["Rel","Answerspan","Person"]].rename(columns={"Rel": "value"})
+    Rel["factor"] = ["Rel"] * flattened_df.shape[0]
+    PlofA = flattened_df[["PlofA","Answerspan","Person"]].rename(columns={"PlofA": "value"})
+    PlofA["factor"] = ["PlofA"] * flattened_df.shape[0]
+    ExpDem = flattened_df[["ExpDem", "Answerspan", "Person"]].rename(columns={"ExpDem": "value"})
+    ExpDem["factor"] = ["ExpDem"] * flattened_df.shape[0]
+    return pd.concat([Rel, PlofA, ExpDem], ignore_index=True)
+
+expert = df[df["CASE"]==399]
+df = df[df["CASE"]!=399]
+df_raw = df
+df = df[(df.FINISHED != 0) & (df.MISSING <= 10)]
+df_all = create_df_all(df)
+
+#OUTLIER
+from pyod.models.abod import ABOD
+model = ABOD(contamination=0.14, method='default', n_neighbors=10)
+model.fit(df_all[RelPlofAExpDem])
+labels = model.predict(df_all[RelPlofAExpDem])
+df_all["outlier_ABOD"] = labels
+df_outlier = df_all
+df_outliersonly = df_all[df_all["outlier_ABOD"] == 1]
+df_all = df_all[df_all["outlier_ABOD"] != 1][Rel+PlofA+ExpDem]
+
+final_df = flatten_df(df_all, columns = [Rel,PlofA,ExpDem], flatflat= False)
+flattened_df = flatten_df(df_all, columns = [Rel,PlofA,ExpDem], flatflat= True)
+
 #min-max-normalization
 norm_df_all = pd.DataFrame(columns=RelPlofAExpDem)
 for var in [Rel, PlofA, ExpDem]:
@@ -187,72 +116,17 @@ for var in [Rel, PlofA, ExpDem]:
     norm_df_all[var] = normalized_values
 
 norm_flattened_df = flatten_df(norm_df_all, flatflat=True)
-norm_final_df = create_final_df(norm_df_all)
+norm_final_df = flatten_df(norm_df_all, columns = [Rel,PlofA,ExpDem], flatflat= False)
+
+#final_df = norm_final_df
+#flattened_df = norm_flattened_df
+#df_all = norm_df_all
 
 #simple linear multiple regression
-def simple_linear_multiple_regression():
-    from statsmodels.formula.api import ols
-    multireg = ols("ExpDem ~ Rel + PlofA", final_df)
-    results = multireg.fit()
-    print(results.summary())
-
-
-#Mixed effects LM
-import statsmodels.api as sm
-from statsmodels.regression.mixed_linear_model import MixedLM
-from scipy.stats import chi2
-
-null_model_formula = "ExpDem ~ 1"
-null_model = MixedLM.from_formula(null_model_formula, groups="word", data=final_df)
-null_result = null_model.fit(reml = False)
-#print(null_result.summary())
-
-#Likelihood comparison
-print("null_result.llf:", null_result.llf)
-for model_formula in ["ExpDem ~ 1", "ExpDem ~ Rel", "ExpDem ~ PlofA", "ExpDem ~ Rel + PlofA"]:
-    #model_formula = "ExpDem ~ Rel + PlofA"
-    mixedlm_model = MixedLM.from_formula(model_formula, groups="word", data=final_df)
-    mixedlm_result = mixedlm_model.fit(reml = False)
-    #print(mixedlm_result.summary())
-    #print(model_formula)
-
-    lr_statistic = -2 * (null_result.llf - mixedlm_result.llf)
-    df_difference = mixedlm_result.df_modelwc - null_result.df_modelwc
-    p_value = 1 - chi2.cdf(lr_statistic, df_difference)
-    print("\n\n",model_formula, "\n","-"*20)
-    print("Likelihood Ratio Test Statistic:", lr_statistic)
-    print("P-value:", p_value)
-    print("df_difference:", df_difference)
-    #print("null_result.llf:", null_result.llf)
-    print("mixedlm_result.llf:", mixedlm_result.llf)
-    print("bic:", mixedlm_result.bic)
-
-
-def loglikelihood_ratio_chi2():
-    from scipy.stats import chi2
-    lr_statistic = -2 * (null_result.llf - mixedlm_result.llf)
-    df_difference = mixedlm_result.df_modelwc - null_result.df_modelwc
-    p_value = 1 - chi2.cdf(lr_statistic, df_difference)
-    print("Likelihood Ratio Test Statistic:", lr_statistic)
-    print("P-value:", p_value)
-    print("df_difference:", df_difference)
-
-Rsq_McFadden = 1 - (np.log(abs(mixedlm_result.llf)) / np.log(abs(null_result.llf)))
-Rsq_CoxSnell = 1 - (null_result.llf / mixedlm_result.llf) ** (2 / mixedlm_result.nobs)
-
-#Mixed effects assumptions
-#The random effects are normally distributed with mean zero
-from scipy.stats import shapiro
-random_intercepts = mixedlm_result.random_effects
-random_intercepts_list = [value.values[0] for value in mixedlm_result.random_effects.values()]
-shapiro_stat, shapiro_p_val = shapiro(random_intercepts_list)
-print("mean:", np.mean(random_intercepts_list))
-print("Shapiro-Wilk Test Statistic:", shapiro_stat)
-print("p-value:", shapiro_p_val)
-
-#Within-group errors are independent with mean zero and variance σ^2.
-within_group_error = mixedlm_result.scale
-np.mean(within_group_error)
+from statsmodels.formula.api import ols
+multireg = ols("ExpDem ~ Rel + PlofA", final_df)
+results = multireg.fit()
+print(results.summary())
 
 # Kollinearität
 from statsmodels.stats.outliers_influence import variance_inflation_factor
@@ -260,18 +134,18 @@ vif = variance_inflation_factor(final_df[["Rel", "PlofA"]].values, 0)
 
 # heteroscedasticity
 from statsmodels.stats.diagnostic import het_breuschpagan
-lm, lm_pvalue, fval, breuschfpval = het_breuschpagan(mixedlm_result.resid, mixedlm_model.exog, robust=True)
+lm, lm_pvalue, fval, breuschfpval = het_breuschpagan(results.resid, multireg.exog, robust=True)
 print("Lagrange multiplier statistic:",lm, lm_pvalue)
 print("Breusch F and p:",fval, breuschfpval)
 
 # normality of residuals
 from scipy.stats import shapiro
-shapiro_stat, shapiro_p_val = shapiro(mixedlm_result.resid)
+shapiro_stat, shapiro_p_val = shapiro(results.resid)
 print("shapiro Wilk normal residuals:", shapiro_stat, shapiro_p_val)
 #sns.histplot(mixedlm_result.resid, bins=20)
 
 # independence of error
-residuals_mean = np.mean(mixedlm_result.resid)
+residuals_mean = np.mean(results.resid)
 
 #Krippendorff Alpha
 import krippendorff
@@ -279,21 +153,20 @@ alpha_Rel = krippendorff.alpha(reliability_data=df_all[Rel], level_of_measuremen
 alpha_PlofA = krippendorff.alpha(reliability_data=df_all[PlofA], level_of_measurement="ratio")
 alpha_ExpDem = krippendorff.alpha(reliability_data=df_all[ExpDem], level_of_measurement="ratio")
 
-
-for var in [Rel,PlofA,ExpDem]:
-    ranges = []
-    for index in df_all.index[0:-1]:
-        values = df_all[var].loc[index].to_list()
-        ranges += [[min(values), max(values)]]
-    df = pd.DataFrame(ranges, columns=['Min', 'Max'])
-    df["Max"] = 1000-df["Max"]
-    df = pd.melt(df, value_vars=["Min", "Max"],
-                        var_name="Deviation", value_name="Value")
-    sns.histplot(df, x="Value", hue="Deviation", binwidth=16.6666666666666, edgecolor='none')
-    plt.title("Deviations from Min/Max " + var[0][:-3])
-    plt.savefig(str(r"C:\Users\lenar\Documents\Masterarbeit\plots\Deviations_from_MinMax_" + var[0][:-3] + '.png'))
-    plt.clf()
-
+def MinMax_Deviation():
+    for var in [Rel,PlofA,ExpDem]:
+        ranges = []
+        for index in df_all.index[0:-1]:
+            values = df_all[var].loc[index].to_list()
+            ranges += [[min(values), max(values)]]
+        df = pd.DataFrame(ranges, columns=['Min', 'Max'])
+        df["Max"] = 1000-df["Max"]
+        df = pd.melt(df, value_vars=["Min", "Max"],
+                            var_name="Deviation", value_name="Value")
+        sns.histplot(df, x="Value", hue="Deviation", binwidth=16.6666666666666, edgecolor='none')
+        plt.title("Deviations from Min/Max " + var[0][:-3])
+        plt.savefig(str(r"C:\Users\lenar\Documents\Masterarbeit\plots\Deviations_from_MinMax_" + var[0][:-3] + '.png'))
+        plt.clf()
 
 
 
@@ -363,8 +236,10 @@ regression_plot_df['ExpDem'] = exp_dem_values
 regression_plot_df = regression_plot_df.rename(columns={'value': 'Rel / PlofA'})
 sns.scatterplot(regression_plot_df, x="ExpDem", y="Rel / PlofA", hue="factor")
 
-
-
+#Expert Plot
+expert_df_all = create_df_all(expert)
+expert_final = create_final_df(create_df_all(expert))
+expert_flat = flatten_df(create_df_all(expert), flatflat=True)
 
 sns.boxplot(flattened_df[flattened_df["factor"] == "Rel"], x="Answerspan", y="value", color="lightgrey", width =0.4)
 sns.lineplot(expert_flat[expert_flat["factor"] == "Rel"], x="Answerspan", y="value", color="brown")
@@ -410,6 +285,12 @@ def plot_outlier(df_all):
 
 #####################compare to data
 
+#Expert
+expert_df_all = create_df_all(expert)
+expert_final = flatten_df(create_df_all(expert), flatflat=False)
+expert_flat = flatten_df(create_df_all(expert), flatflat=True)
+
+
 from metric_creation import load_final_documents, apply_min_max_normalization
 from main import final_documents_path
 documents = load_final_documents(final_documents_path)
@@ -419,10 +300,10 @@ def scale_0_1000(data):
     return apply_custom_min_max_scaling(data, 0, 1000)
 
 metric_results = pd.DataFrame({
-        'CosineSim_CosineRel': documents[0]['CosineSim_CosineRel'],
-        'WordnetSim_SinglerankRel': documents[0]['WordnetSim_SinglerankRel'],
-        'WordnetSim_CosineRel': documents[0]['WordnetSim_CosineRel'],
-        'CosineSim_SinglerankRel': documents[0]['CosineSim_SinglerankRel'],
+        'CosineSim_CosineRel': scale_0_1000(documents[0]['CosineSim_CosineRel']),
+        'WordnetSim_SinglerankRel': scale_0_1000(documents[0]['WordnetSim_SinglerankRel']),
+        'WordnetSim_CosineRel': scale_0_1000(documents[0]['WordnetSim_CosineRel']),
+        'CosineSim_SinglerankRel': scale_0_1000(documents[0]['CosineSim_SinglerankRel']),
         'CosineRel': documents[0]['relevance_cossim'],
         "SinglerankRel": documents[0]['relevance_singlerank'],
         'WordnetSim': documents[0]['similarity_wordnet'],
@@ -430,24 +311,16 @@ metric_results = pd.DataFrame({
     })
 
 
-def plot_results(metric_results):
-    for method in metric_results.keys():#["CosineRel", "SinglerankRel", 'WordnetSim', 'CosineSim']:
-        color = sns.color_palette()[0]
-        if method[-3:] == "Sim": color = sns.color_palette()[1]
-        elif "_" in method: color = sns.color_palette()[2]
-        sns.lineplot(pd.DataFrame(scale_0_1000(metric_results[method])), linewidth=4, palette=[color])
-        plt.savefig( str(r"C:\Users\lenar\Documents\Masterarbeit\plots\metric\predictions_" + method + '.png'), transparent=True)
-        plt.clf()
+
+for method in ["CosineRel", "SinglerankRel", 'WordnetSim', 'CosineSim']:
+    sns.lineplot(pd.DataFrame(scale_0_1000(metric_results[method])), linewidth=4)
+    plt.savefig( str(r"C:\Users\lenar\Documents\Masterarbeit\plots\metric\predictions_" + method + '.png'), transparent=True)
+    plt.clf()
 
 
 means_Rel = [np.mean(df_all[answerspan]) for answerspan in Rel]
 means_PlofA = [np.mean(df_all[answerspan]) for answerspan in PlofA]
 means_ExpDem = [np.mean(df_all[answerspan]) for answerspan in ExpDem]
-
-#Expert Plot
-expert_df_all = create_df_all(expert)
-expert_final = flatten_df(create_df_all(expert), flatflat=False)
-expert_flat = flatten_df(create_df_all(expert), flatflat=True)
 
 expert_PlofA = list(expert_df_all[PlofA].iloc[0])
 expert_Rel = list(expert_df_all[Rel].iloc[0])
@@ -465,7 +338,6 @@ def calculate_distances_to_mean(means, predictions, squared=True):
 
 #Compare to mean
 df_evaluation = pd.DataFrame({
-    #Rel
     "sqr_deviation_CosineRel":
         calculate_distances_to_mean(means_Rel,  scale_0_1000(metric_results['CosineRel']),    squared=True),
     "sqr_deviation_SingleRankRel":
@@ -474,7 +346,7 @@ df_evaluation = pd.DataFrame({
         calculate_distances_to_mean(means_Rel, [np.mean(means_Rel) for i in range(13)], squared=True),
     "sqr_deviation_ExpertRel":
         calculate_distances_to_mean(means_Rel, expert_Rel, squared=True),
-    #PlofA
+
     "sqr_deviation_WordnetSim":
         calculate_distances_to_mean(means_PlofA,scale_0_1000(metric_results['WordnetSim']),   squared=True),
     "sqr_deviation_CosineSim":
@@ -483,92 +355,54 @@ df_evaluation = pd.DataFrame({
         calculate_distances_to_mean(means_PlofA,[np.mean(means_PlofA) for i in range(13)],    squared=True),
     "sqr_deviation_ExpertSim":
         calculate_distances_to_mean(means_PlofA, expert_PlofA, squared=True),
-    #ExpDem
-    "sqr_deviation_CosineSim_CosineRel":
-        calculate_distances_to_mean(means_ExpDem, scale_0_1000(metric_results['CosineSim_CosineRel']), squared=True),
-    "sqr_deviation_WordnetSim_SinglerankRel":
-        calculate_distances_to_mean(means_ExpDem, scale_0_1000(metric_results["WordnetSim_SinglerankRel"]),squared=True),
-    "sqr_deviation_WordnetSim_CosineRel":
-        calculate_distances_to_mean(means_ExpDem, scale_0_1000(metric_results['WordnetSim_CosineRel']), squared=True),
-    "sqr_deviation_CosineSim_SinglerankRel":
-        calculate_distances_to_mean(means_ExpDem, scale_0_1000(metric_results['CosineSim_SinglerankRel']),squared=True),
-    "sqr_deviation_Expert":
-        calculate_distances_to_mean(means_ExpDem, expert_ExpDem, squared=True),
-    "sqr_deviation_Mean":
-        calculate_distances_to_mean(means_ExpDem, [np.mean(means_ExpDem) for i in range(13)], squared=True)
     })
 
+#df_evaluation[["sqr_deviation_CosineRel", "sqr_deviation_SingleRankRel"]].plot(kind='bar', figsize=(10, 6))
+df_evaluation[["sqr_deviation_WordnetSim", "sqr_deviation_CosineSim"]].plot(kind='bar', figsize=(10, 6))
+df_evaluation[["sqr_deviation_CosineRel", "sqr_deviation_SingleRankRel", "sqr_deviation_CosineSim"]].plot(kind='bar', figsize=(10, 6))
+plt.xlabel('Answerspans')
+plt.ylabel('Squared Deviation')
+plt.title('Squared Deviation Comparison')
+plt.xticks(rotation=0)  # Rotate x-axis labels if needed
+plt.tight_layout()  # Adjust layout to prevent clipping of labels
+plt.show()
 
 mean_dev = {
 'CosineRel': np.mean(df_evaluation["sqr_deviation_CosineRel"]),
 "SinglerankRel": np.mean(df_evaluation["sqr_deviation_SingleRankRel"]),
 'MeanRel': np.mean(df_evaluation["sqr_deviation_MeanRel"]),
 'ExpertRel': np.mean(df_evaluation["sqr_deviation_ExpertRel"]),
-
 'WordnetPlofA': np.mean(df_evaluation["sqr_deviation_WordnetSim"]),
 'CosinePlofA': np.mean(df_evaluation["sqr_deviation_CosineSim"]),
 'MeanPlofA': np.mean(df_evaluation["sqr_deviation_MeanSim"]),
 'ExpertPlofA': np.mean(df_evaluation["sqr_deviation_ExpertSim"]),
-
-'CosinePlofA_CosineRel': np.mean(df_evaluation["sqr_deviation_CosineSim_CosineRel"]),
-"WordnetPlofA_SinglerankRel": np.mean(df_evaluation["sqr_deviation_WordnetSim_SinglerankRel"]),
-'WordnetPlofA_CosineRel': np.mean(df_evaluation["sqr_deviation_WordnetSim_CosineRel"]),
-'CosinePlofA_SinglerankRel': np.mean(df_evaluation["sqr_deviation_CosineSim_SinglerankRel"]),
-'ExpertExpDem': np.mean(df_evaluation["sqr_deviation_Expert"]),
-'MeanExpDem': np.mean(df_evaluation["sqr_deviation_Mean"])
            }
 
-def plot_deviations_bar_mean():
-    mean_dev = pd.DataFrame(mean_dev, index=[0])
-    #mean_dev[['CosineRel', "SinglerankRel", 'MeanRel', 'ExpertRel']].plot(kind='bar', colormap="Set2")
-    #mean_dev[['WordnetPlofA', 'CosinePlofA', 'MeanPlofA', 'ExpertPlofA']].plot(kind='bar', colormap="Set2")
-    #mean_dev[['CosinePlofA_CosineRel', "WordnetPlofA_SinglerankRel", 'WordnetPlofA_CosineRel', 'CosinePlofA_SinglerankRel', 'ExpertExpDem', 'MeanExpDem']].plot(kind='bar', colormap="Set2")
-    plt.xlabel('method')
-    plt.ylabel('Mean Squared Deviation')
-    plt.title('Mean Deviation Comparison')
-    plt.xticks(rotation=0)  # Rotate x-axis labels if needed
-    plt.tight_layout()  # Adjust layout to prevent clipping of labels
-    plt.show()
-
-def plot_deviations_PER_ANSWERSPAN_bar_mean():
-    df_evaluation[["sqr_deviation_CosineRel", "sqr_deviation_SingleRankRel", "sqr_deviation_MeanRel", "sqr_deviation_ExpertRel"]].plot(kind='bar', figsize=(10, 6))
-    #df_evaluation[["sqr_deviation_WordnetSim", "sqr_deviation_CosineSim"]].plot(kind='bar', figsize=(10, 6))
-    #df_evaluation[["sqr_deviation_CosineRel", "sqr_deviation_SingleRankRel", "sqr_deviation_CosineSim"]].plot(kind='bar', figsize=(10, 6))
-    plt.xlabel('Answerspans')
-    plt.ylabel('Squared Deviation')
-    plt.title('Squared Deviation Comparison')
-    plt.xticks(rotation=0)  # Rotate x-axis labels if needed
-    plt.tight_layout()  # Adjust layout to prevent clipping of labels
-    plt.show()
+pd.DataFrame(mean_dev, index=[0]).plot(kind='bar', colormap="Set2")
+plt.xlabel('method')
+plt.ylabel('Mean Squared Deviation')
+plt.title('Mean Deviation Comparison')
+plt.xticks(rotation=0)  # Rotate x-axis labels if needed
+plt.tight_layout()  # Adjust layout to prevent clipping of labels
+plt.show()
 
 #compare to expert
 df_evaluation_w_expert = pd.DataFrame({
-    #Rel
     "sqr_deviation_CosineRel":
         calculate_distances_to_mean(expert_Rel,  scale_0_1000(metric_results['CosineRel']),    squared=True),
     "sqr_deviation_SingleRankRel":
         calculate_distances_to_mean(expert_Rel,  scale_0_1000(metric_results["SinglerankRel"]),squared=True),
     "sqr_deviation_MeanRel":
         calculate_distances_to_mean(expert_Rel, [np.mean(means_Rel) for i in range(13)], squared=True),
-    #PlofA
+
     "sqr_deviation_WordnetSim":
         calculate_distances_to_mean(expert_PlofA,scale_0_1000(metric_results['WordnetSim']),   squared=True),
     "sqr_deviation_CosineSim":
         calculate_distances_to_mean(expert_PlofA,scale_0_1000(metric_results['CosineSim']),    squared=True),
     "sqr_deviation_MeanSim":
         calculate_distances_to_mean(expert_PlofA,[np.mean(means_PlofA) for i in range(13)],    squared=True),
-    #ExpDem
-    "sqr_deviation_CosineSim_CosineRel":
-        calculate_distances_to_mean(expert_ExpDem, scale_0_1000(metric_results['CosineSim_CosineRel']), squared=True),
-    "sqr_deviation_WordnetSim_SinglerankRel":
-        calculate_distances_to_mean(expert_ExpDem, scale_0_1000(metric_results["WordnetSim_SinglerankRel"]), squared=True),
-    "sqr_deviation_WordnetSim_CosineRel":
-        calculate_distances_to_mean(expert_ExpDem, scale_0_1000(metric_results['WordnetSim_CosineRel']), squared=True),
-    "sqr_deviation_CosineSim_SinglerankRel":
-        calculate_distances_to_mean(expert_ExpDem, scale_0_1000(metric_results['CosineSim_SinglerankRel']), squared=True),
-    "sqr_deviation_Mean":
-        calculate_distances_to_mean(expert_ExpDem, [np.mean(means_ExpDem) for i in range(13)], squared=True)
     })
+
 
 mean_dev_expert = {
 'CosineRel': np.mean(df_evaluation_w_expert["sqr_deviation_CosineRel"]),
@@ -576,42 +410,105 @@ mean_dev_expert = {
 'MeanRel': np.mean(df_evaluation_w_expert["sqr_deviation_MeanRel"]),
 'WordnetPlofA': np.mean(df_evaluation_w_expert["sqr_deviation_WordnetSim"]),
 'CosinePlofA': np.mean(df_evaluation_w_expert["sqr_deviation_CosineSim"]),
-'MeanPlofA': np.mean(df_evaluation_w_expert["sqr_deviation_MeanSim"]),
-'CosinePlofA_CosineRel': np.mean(df_evaluation_w_expert["sqr_deviation_CosineSim_CosineRel"]),
-"WordnetPlofA_SinglerankRel": np.mean(df_evaluation_w_expert["sqr_deviation_WordnetSim_SinglerankRel"]),
-'WordnetPlofA_CosineRel': np.mean(df_evaluation_w_expert["sqr_deviation_WordnetSim_CosineRel"]),
-'CosinePlofA_SinglerankRel': np.mean(df_evaluation_w_expert["sqr_deviation_CosineSim_SinglerankRel"]),
-'MeanExpDem': np.mean(df_evaluation_w_expert["sqr_deviation_Mean"])
+'MeanPlofA': np.mean(df_evaluation_w_expert["sqr_deviation_MeanSim"])
            }
 
-def plot_deviations_bar_expert(mean_dev_expert):
-    mean_dev_expert = pd.DataFrame(mean_dev_expert, index=[0])
-    #mean_dev_expert[['CosineRel', "SinglerankRel", 'MeanRel']].plot(kind='bar', colormap="Set2")
-    mean_dev_expert[['WordnetPlofA', 'CosinePlofA', 'MeanPlofA']].plot(kind='bar', colormap="Set2")
-    mean_dev_expert[['CosinePlofA_CosineRel', "WordnetPlofA_SinglerankRel", 'WordnetPlofA_CosineRel', 'CosinePlofA_SinglerankRel', 'MeanExpDem']].plot(kind='bar', colormap="Set2")
-    plt.xlabel('method')
-    plt.ylabel('Expert Squared Deviation')
-    plt.title('Expert Deviation Comparison')
-    plt.xticks(rotation=0)  # Rotate x-axis labels if needed
-    plt.tight_layout()  # Adjust layout to prevent clipping of labels
-    plt.show()
+pd.DataFrame(mean_dev_expert, index=[0]).plot(kind='bar', colormap="Set2")
+plt.xlabel('method')
+plt.ylabel('Mean Squared Deviation')
+plt.title('Mean Deviation Comparison')
+plt.xticks(rotation=0)  # Rotate x-axis labels if needed
+plt.tight_layout()  # Adjust layout to prevent clipping of labels
+plt.show()
+
+
+
+# EXPDEM compare to mean
+metric_results[['CosineSim_CosineRel', 'WordnetSim_SinglerankRel',
+                'WordnetSim_CosineRel', 'CosineSim_SinglerankRel']].plot(kind='line', legend=False)
+plt.xticks(rotation=0)  # Rotate x-axis labels if needed
+plt.tight_layout()  # Adjust layout to prevent clipping of labels
+plt.savefig( str(r"C:\Users\lenar\Documents\Masterarbeit\plots\metric\metric_predictions_ExpDem_nolegend.png"), transparent=True)
+plt.show()
+
+
+df_eval_ExpDem = pd.DataFrame({
+    "sqr_deviation_CosineSim_CosineRel":
+        calculate_distances_to_mean(means_ExpDem,  scale_0_1000(metric_results['CosineSim_CosineRel']),    squared=True),
+    "sqr_deviation_WordnetSim_SinglerankRel":
+        calculate_distances_to_mean(means_ExpDem,  scale_0_1000(metric_results["WordnetSim_SinglerankRel"]),squared=True),
+    "sqr_deviation_WordnetSim_CosineRel":
+        calculate_distances_to_mean(means_ExpDem,scale_0_1000(metric_results['WordnetSim_CosineRel']),   squared=True),
+    "sqr_deviation_CosineSim_SinglerankRel":
+        calculate_distances_to_mean(means_ExpDem,scale_0_1000(metric_results['CosineSim_SinglerankRel']),    squared=True),
+    "sqr_deviation_Expert":
+        calculate_distances_to_mean(means_ExpDem, expert_ExpDem, squared=True),
+    "sqr_deviation_Mean":
+        calculate_distances_to_mean(means_ExpDem, [np.mean(means_ExpDem) for i in range(13)], squared=True)
+    })
+mean_dev_ExpDem = {
+'CosinePlofA_CosineRel': np.mean(df_eval_ExpDem["sqr_deviation_CosineSim_CosineRel"]),
+"WordnetPlofA_SinglerankRel": np.mean(df_eval_ExpDem["sqr_deviation_WordnetSim_SinglerankRel"]),
+'WordnetPlofA_CosineRel': np.mean(df_eval_ExpDem["sqr_deviation_WordnetSim_CosineRel"]),
+'CosinePlofA_SinglerankRel': np.mean(df_eval_ExpDem["sqr_deviation_CosineSim_SinglerankRel"]),
+'Expert': np.mean(df_eval_ExpDem["sqr_deviation_Expert"]),
+'Mean': np.mean(df_eval_ExpDem["sqr_deviation_Mean"])
+           }
+pd.DataFrame(mean_dev_ExpDem, index=[0]).plot(kind='bar')
+plt.xlabel('method')
+plt.ylabel('Mean Squared Deviation')
+plt.title('Mean Deviation Comparison')
+plt.xticks(rotation=0)  # Rotate x-axis labels if needed
+plt.tight_layout()  # Adjust layout to prevent clipping of labels
+plt.show()
+
+
+#EXPDEM EXOERT
+
+df_eval_ExpDem_expert = pd.DataFrame({
+    "sqr_deviation_CosineSim_CosineRel":
+        calculate_distances_to_mean(expert_ExpDem,  scale_0_1000(metric_results['CosineSim_CosineRel']),    squared=True),
+    "sqr_deviation_WordnetSim_SinglerankRel":
+        calculate_distances_to_mean(expert_ExpDem,  scale_0_1000(metric_results["WordnetSim_SinglerankRel"]),squared=True),
+    "sqr_deviation_WordnetSim_CosineRel":
+        calculate_distances_to_mean(expert_ExpDem,scale_0_1000(metric_results['WordnetSim_CosineRel']),   squared=True),
+    "sqr_deviation_CosineSim_SinglerankRel":
+        calculate_distances_to_mean(expert_ExpDem,scale_0_1000(metric_results['CosineSim_SinglerankRel']),    squared=True),
+    "sqr_deviation_Mean":
+        calculate_distances_to_mean(expert_ExpDem, [np.mean(means_ExpDem) for i in range(13)], squared=True)
+    })
+mean_dev_ExpDem_expert = {
+'CosinePlofA_CosineRel': np.mean(df_eval_ExpDem_expert["sqr_deviation_CosineSim_CosineRel"]),
+"WordnetPlofA_SinglerankRel": np.mean(df_eval_ExpDem_expert["sqr_deviation_WordnetSim_SinglerankRel"]),
+'WordnetPlofA_CosineRel': np.mean(df_eval_ExpDem_expert["sqr_deviation_WordnetSim_CosineRel"]),
+'CosinePlofA_SinglerankRel': np.mean(df_eval_ExpDem_expert["sqr_deviation_CosineSim_SinglerankRel"]),
+'Mean': np.mean(df_eval_ExpDem_expert["sqr_deviation_Mean"])
+           }
+pd.DataFrame(mean_dev_ExpDem_expert, index=[0]).plot(kind='bar')
+plt.xlabel('method')
+plt.ylabel('Mean Squared Deviation')
+plt.title('Mean Deviation Comparison')
+plt.xticks(rotation=0)  # Rotate x-axis labels if needed
+plt.tight_layout()  # Adjust layout to prevent clipping of labels
+plt.show()
+
+
 
 
 
 #Normalverteilung
-#from statsmodels.stats.diagnostic import kstest_normal
-from scipy.stats import shapiro
+from statsmodels.stats.diagnostic import kstest_normal
 def calcualte_KolomogorovSmirnov(df_values):
     start = 0
     norm_array = []
     for i in range(0,df_values.shape[0]):
-        shapiro_stat, p_value = shapiro(df_values.iloc[i])
-        #ks_stat, p_value = kstest_normal(df_values.iloc[i])
-
-        #if p_value <= 0.1:
-        #    norm_array += [True] #normalverteilt
-        #else:
-        norm_array += [round(p_value, 3)] #, ks_stat)]
+        ks_stat, p_value = kstest_normal(df_values.iloc[i])
+        #print("Kolmogorov-Smirnov statistic:", ks_stat)
+        #print("p-value:", p_value)
+        if p_value <= 0.1:
+            norm_array += [True] #normalverteilt
+        else:
+            norm_array += [(p_value, ks_stat)]
     return norm_array
 
 eval_df = pd.DataFrame()
@@ -619,6 +516,38 @@ eval_df["Rel"] = calcualte_KolomogorovSmirnov(df_all[Rel].transpose())
 eval_df["PlofA"] = calcualte_KolomogorovSmirnov(df_all[PlofA].transpose())
 eval_df["ExpDem"] = calcualte_KolomogorovSmirnov(df_all[ExpDem].transpose())
 
+from scipy import stats
+
+def calculate_t_test(annotation_series, metric_prediction_value):
+    tstat, pval = stats.ttest_1samp(annotation_series, metric_prediction_value, alternative='two-sided')
+    return pval
+
+import numpy as np
+from scipy import stats
+
+def calculate_belonging_via_confidence_interval(annotation_series, metric_prediction_value, confidence_level=0.95):
+  mean = annotation_series.mean()
+  stddev = annotation_series.std()
+
+  # Calculate the critical z-score for the desired confidence level.
+  critical_z_score = stats.norm.ppf(confidence_level)
+
+  lower_bound = mean - critical_z_score * stddev
+  upper_bound = mean + critical_z_score * stddev
+  return lower_bound < metric_prediction_value < upper_bound
+
+
+def create_z_test_df(metric_version='CosineSim_SinglerankRel'):
+    df_t_test_results = pd.DataFrame()
+    for i, column in enumerate([Rel, PlofA, ExpDem]):
+        print(column)
+        t_test_results = []
+        for j, column in enumerate(column):
+            t_test_results += [
+                calculate_belonging_via_confidence_interval(df_all[column], metric_results[metric_version][j])]
+        df_t_test_results[column[:-3]] = pd.Series(t_test_results)
+    print(df_t_test_results)
+    return df_t_test_results
 
 
 ###EXPERT

@@ -37,6 +37,11 @@ def apply_laplace_smoothing(values, smoothing_parameter=0.1):
         ]
     return smoothed_values
 
+def apply_smoothed_normalization(values):
+    values = [value + 1 for value in values]
+    values += [0]
+    values = apply_min_max_normalization(values)
+    return values[:-1]
 
 def apply_custom_min_max_scaling(data, min_value=0.01, max_value=1):
     if min(data) != max(data):
@@ -99,10 +104,10 @@ def compute_scores(singlerank_documents, cossim_documents, wordnet_documents, la
             apply_min_max_normalization(relevance_singlerank))
 
         final_document["WordnetSim_CosineRel"] = calculate_metric(
-            apply_laplace_smoothing(apply_min_max_normalization(similarity_wordnet)),
+            apply_smoothed_normalization(similarity_wordnet), #smoothed
             apply_min_max_normalization(relevance_cossim))
         final_document["WordnetSim_SinglerankRel"] = calculate_metric(
-            apply_laplace_smoothing(apply_min_max_normalization(similarity_wordnet)),
+            apply_smoothed_normalization(similarity_wordnet), #smoothed
             apply_min_max_normalization(relevance_singlerank))
 
 
