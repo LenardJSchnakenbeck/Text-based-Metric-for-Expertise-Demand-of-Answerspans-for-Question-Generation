@@ -18,6 +18,7 @@ embeddings_path = 'similarity/embeddings.pickle'
 cosine_similarities_path = 'similarity/cosine_similarities.pickle'
 wordnet_similarities_path = 'similarity/wordnet_similarities.pickle'
 singlerank_scores_path = 'similarity/singlerank_scores.pickle'
+singlerank_meaned_scores_path = 'similarity/singlerank_meaned_scores.pickle' #
 final_documents_path = 'final_documents.json'
 
 #source_documents_path = 'preprocessing/wikipedia_texts_DiY.json'
@@ -41,16 +42,17 @@ if __name__ == "__main__" and input("recalculate everything?").lower() in ["y", 
 
 
     #calculate SingleRank scores
-    SingleRank.calculate_and_write_pickle_singlerank_scores(labeled_documents_path, singlerank_scores_path)
+    SingleRank.calculate_and_write_pickle_singlerank_scores(labeled_documents_path, singlerank_meaned_scores_path)
     print("singlerank applied!")
 
     #load results
     labeled_documents = json.load(open(labeled_documents_path))
     singlerank_documents = SingleRank.load_singlerank_scores(singlerank_scores_path)
+    singlerank_meaned_documents = SingleRank.load_singlerank_scores(singlerank_meaned_scores_path)
     cossim_documents = cosine_similarity.load_cosine_similarities(cosine_similarities_path)
     wordnet_documents = wordnet_similarity.load_wordnet_similarities(wordnet_similarities_path)
     documents = compute_scores(
-        singlerank_documents, cossim_documents, wordnet_documents, labeled_documents)
+        singlerank_documents, singlerank_meaned_documents, cossim_documents, wordnet_documents, labeled_documents)
     write_json_final_documents(documents, final_documents_path)
     print("results are loaded :)")
 

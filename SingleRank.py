@@ -38,20 +38,16 @@ def word_scoring(chunked_candidates, window = 10):
 
 
 # Candidate score = sum(word scores)
-def candidate_scoring(word_scores, candidates, apply_softmax = False):
+def candidate_scoring(word_scores, candidates): #apply_softmax = False
     scores_array = []
     #candidates = [candidate for candidate, iscandidate in chunked_candidates if iscandidate]
     for index, k in enumerate(candidates):
         if isinstance(k, list):
             tokens = k
             #scores_dict[str(k)] = sum([word_scores[t] for t in tokens])
-            scores_array += [sum([word_scores[t] for t in tokens])]
+            scores_array += [sum([word_scores[t] for t in tokens])/len(tokens)]
 
-    if apply_softmax:
-        softmax_scores = np.exp(scores_array) / np.sum(np.exp(scores_array))
-        return softmax_scores
-    else:
-        return scores_array
+    return scores_array
 
 def calculate_and_write_pickle_singlerank_scores(labeled_documents_path, singlerank_scores_path):
     documents_json = open(labeled_documents_path)
@@ -70,9 +66,9 @@ def load_singlerank_scores(singlerank_scores_path):
         return pickle.load(pkl)
 
 
-if __name__ == "main":
+if __name__ == "__main__":
     labeled_documents_path = 'preprocessing/labeled_documents.json'
-    singlerank_scores_path = 'similarity/singlerank_scores.pickle'
+    singlerank_scores_path = 'similarity/singlerank_scores_mean.pickle'
     calculate_and_write_pickle_singlerank_scores(labeled_documents_path, singlerank_scores_path)
     singlerank_documents = load_singlerank_scores(singlerank_scores_path)
 

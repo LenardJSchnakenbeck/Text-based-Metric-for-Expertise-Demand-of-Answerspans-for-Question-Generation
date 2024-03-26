@@ -52,23 +52,25 @@ def apply_custom_min_max_scaling(data, min_value=0.01, max_value=1):
 
 
 
-def compute_scores(singlerank_documents, cossim_documents, wordnet_documents, labeled_documents):
+def compute_scores(singlerank_documents, singlerank_meaned_documents, cossim_documents, wordnet_documents, labeled_documents):
     final_documents = labeled_documents[:]
 
     #metric_scores_cossim = []
     #metric_scores_singlerank = []
-    for index, (cossim_document, wordnet_document, singlerank_document, final_document) in \
-            enumerate(zip(cossim_documents, wordnet_documents, singlerank_documents, final_documents)):
+    for index, (cossim_document, wordnet_document, singlerank_document, singlerank_meaned_document, final_document) in \
+            enumerate(zip(cossim_documents, wordnet_documents, singlerank_documents, singlerank_meaned_documents, final_documents)):
         similarity_cossim = []
         similarity_wordnet = []
         relevance_cossim = []
         relevance_singlerank = []
+        relevance_singlerank_meaned = []
 
         index = 0
         for candidate in final_document["candidates"]:
             if isinstance(candidate, list):
                 relevance_cossim += [cossim_document["sim_candidates_document"][index]]
                 relevance_singlerank += [singlerank_document["singlerank_scores"][index]]
+                relevance_singlerank_meaned += [singlerank_meaned_document["singlerank_scores"][index]]
                 similarity_wordnet += [wordnet_document["sim_wordnet"][index]]
                 similarity_cossim_list = cossim_document["sim_candidates_candidates_raw"][index]
                 similarity_cossim_list[index] = 0.0 #sim(token_i, token_i) = 0
@@ -95,6 +97,7 @@ def compute_scores(singlerank_documents, cossim_documents, wordnet_documents, la
         final_document["similarity_wordnet_smoothed"] = smoothed_similarity_wordnet
         final_document["relevance_cossim"] = relevance_cossim
         final_document["relevance_singlerank"] = relevance_singlerank
+        final_document["relevance_singlerank_meaned"] = relevance_singlerank_meaned
 
         final_document["CosineSim_CosineRel"] = calculate_metric(
             apply_min_max_normalization(similarity_cossim),
@@ -110,6 +113,13 @@ def compute_scores(singlerank_documents, cossim_documents, wordnet_documents, la
             apply_smoothed_normalization(similarity_wordnet), #smoothed
             apply_min_max_normalization(relevance_singlerank))
 
+    #########SingleRank_meaned
+        final_document["CosineSim_Singlerank_meanedRel"] = calculate_metric(
+            apply_min_max_normalization(similarity_cossim),
+            apply_min_max_normalization(relevance_singlerank_meaned))
+        final_document["WordnetSim_Singlerank_meanedRel"] = calculate_metric(
+            apply_smoothed_normalization(similarity_wordnet), #smoothed
+            apply_min_max_normalization(relevance_singlerank_meaned))
 
         #TODO: Boxplots für unterschiedliche Values
         #TODO: Texte raussuchen
