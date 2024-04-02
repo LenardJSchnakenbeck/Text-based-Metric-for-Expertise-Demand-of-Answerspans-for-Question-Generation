@@ -1,0 +1,2138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE surveyProject SYSTEM "doctype.survey.dtd">
+<surveyProject version="2.4" timestamp="2024-04-02 10:08:15" program="oFb" progversion="3.5.05 1357">
+<title>Textbasierte Metrik für Expertisenanforderung von Antwortphrasen zur Generierung von Fragen</title>
+<description>Studie zu Masterarbeit von Lenard Schnakenbeck</description>
+<attributes.specific program="ofb">
+<attr id="language">ger</attr>
+<attr id="translations">eng</attr>
+</attributes.specific>
+<section>
+<title>Erklärung der Metrik</title>
+<attributes.specific program="ofb">
+<attr id="id">A2</attr>
+<attr id="pos">1</attr>
+</attributes.specific>
+<question>
+<description>Textbasierte Metrik für Exper...</description>
+<class>TextContent</class>
+<title>Erklärung der Metrik</title>
+<explanation />
+<headerText>
+<txt>Erklärung der Metrik: Textbasierte Metrik für Expertisenanforderung von Antwortphrasen zur Generierung von Fragen</txt>
+<txt lng="eng">Explanation of the metric: Text-based metric for expertise demand of Answerspans to generate questions</txt>
+</headerText>
+<inputPosition>right</inputPosition>
+<lead>
+<txt><![CDATA[<p>Diese Studie zielt darauf ab eine Metrik zu testen. Die Metrik errechnet einen Wert für ein Wort oder Wortgruppe in einem Text (z.B. Sachtext). <br />Zu dem Wort (der Wortgruppe) können Fragen mit schon existierenden Programmen automatisch generiert werden. Mit dem Wert der Metrik können die Fragen nach Expertisenanforderung (Schwierigkeit) sortiert werden (zB. Prüfungs- oder Lernfragen).<br /></p>
+
+<p>Die Metrik heißt:<br />"<b>Textbasierte Metrik für Expertisenanforderung von Antwortphrasen zur Generierung von Fragen</b>" 
+<br />(Original Titel: "Text-based Metric for Expertise Demand of Answerspans for Question Generation").  <br /><br /><b>Im Folgenden werden die drei Teile der Metrik stückweise erklärt, bitte nehmen Sie sich die Zeit und lesen Sie die Erklärung sorgfältig durch.</b><br /></p>
+
+<p><u>1. Antwortphrasen und automatische Generierung von Fragen:</u><br />Bei der automatischen Generierung von Fragen wird einem Programm ein Text mit einer markierten Antwortphrase gegeben. Die Antwortphrase besteht aus einem oder mehreren Wörtern. Damit wird eine Frage generiert, sodass die generierte Frage mit der Antworphrase beantwortet werden kann. <br /><b>Beispiel:<br /></b>Textausschnitt: "Die französische Revolution war <u>1789</u> und die Glorious Revolution fand in England statt."<br />Eine Antwortphrase kann zum Beispiel 1789 sein. Die generierte Frage dazu ist: "Wann war die französiche Revolution?"<br /><br /></p>
+
+<p><u>2. Expertisenanforderung: </u><br />Die Metrik soll helfen die generierten Fragen nach Schwierigkeit zu sortieren, indem die Antwortphrasen ausgewertet werden. <br />Die Metrik bewertet Antwortphrasen anhand ihrer<b> </b>Anforderung an Expertise über den Text.<b><br /></b>Wie leicht oder schwer Fragen für eine Person sind kann sehr von der Person abhängen. Die Metrik soll aber <b>möglichst objektiv</b> sein und alle Einflüsse ausblenden, die zwischen den Personen unterschiedlich sind (wie zum Beispiel besondere Einprägungsstrategien, kulturelle Hintergründe oder spezifische persönliche Interessen.) <br />Deshalb wird von Expertisenanforderung statt Schwierigkeit gesprochen. <br /></p>
+
+<p>Die Expertisenanforderung einer Antwortphrase ist <b>hoch</b>, wenn man den Text <b>sehr gut</b> kennen (erinnern) muss, um eine Frage zu der Antwortphrase beantworten zu können.<br />Die Expertisenanforderung einer Antwortphrase ist <b>niedrig</b>, wenn man den Text <b>kaum</b> kennen (erinnern) muss, um eine Frage zu der Antwortphrase beantworten zu können. <br />Oder: Die Expertisenanforderung von einer Antwortphrase ist die Wahrscheinlichkeit, dass Leser/innen die Information der Antwortphrase erinnern.<b><br /><br /></b></p>
+
+<p><u>3. Text-basiert:
+</u><br />Zum einen bedeutet text-basiert, dass der Fokus auf dem  Text liegt und nicht auf den Personen, die die Fragen beantworten (wie oben erklärt).<br />Zum anderen bedeutet text-basiert, dass nur ein einzelner Text betrachtet wird, also die Antwortphrasen nur innerhalb eines Textes verglichen werden und nicht etwa zwischen den Texten. <br /></p>
+
+<p><br /></p>
+
+<p><u>Zusammenfassung: </u><br />Die Metrik schätzt die Anforderungen von Antwortphrasen an die Expertise über den Text ein. Die Expertisenanforderung sollte möglichst objektiv 
+bewertet werden. <br />Die Expertisenanforderung einer Antwortphrase ist hoch, wenn man den Text sehr gut kennen muss, um eine Frage zu der Antwortphrase beantworten zu können.<br /></p>]]></txt>
+<txt lng="eng"><![CDATA[<p>This study aims to test a metric. The metric calculates a value for a word or group of words in the text. <br />Questions can be automatically generated for the word (group of words) and the questions can be sorted according to the expertise demand(difficulty) based on the value of the metric.<br /></p>
+
+
+<p>The titel of the metric is:<br />"<b>Text-based Metric for Expertise Demand of Answerspans for Question Generation</b>"</p>
+
+<p><br /><br /><b>In the following, the three parts of the metric are explained piece by piece, please take your time and read the explanation carefully.</b><br /></p>
+
+<p><u>1. Answerspans and automatic generation of questions: </u><br />There are programs that use machine learning to generate questions about texts. The program is given a text with a marked Answerspan. The Answerspan consists of one or more words and should be able to answer the generated question. <br />Exampletext: "The French Revolution was <u>1789</u> and the Glorious Revolution took place in England."<br /> The automatically generated question for the Answerspan 1789 is:<br />"When was the French Revolution?"<br /></p>
+
+
+
+<p><u>2. Expertisedemand: </u><br />The metric being tested here is intended to help sort the generated questions according to difficulty. To do this, the Answerspans (which are then used to generate the questions) are rated. How easy or difficult questions are for a person can depend very much on the person. However, the aim is to eliminate all influences that differ between people, such as special memorization strategies, cultural backgrounds or personal interests. The metric should be as objective as possible. This is why we speak of expertise demand.<br /><b>The metric scores Answerspans based on their demand for expertise about the text. </b><br /><b>The better you have to know a text in order to answer a question, the higher the expertise demand on the corresponding answer phrase.  <br />Or: The expertise demand of an answer phrase is the probability of retaining the information of the Answerspans
+
+</b></p>
+
+<p><u>3. Text-based:
+</u><br />In addition to the focus on the text and not on the persons, text-based means that only a single text is considered, i.e. the response phrases are compared within a text and not between the texts. <b><br /></b></p>
+
+<p><b>
+
+ </b></p>
+
+<p><b><br /></b></p>
+
+<p><b>
+
+</b></p>
+
+<p>Summary: <br />demand Answerspans in a text to the expertise about the text are assessed. The expertise demand should be assessed as objectively as possible. This will later be used to generate questions that are sorted according to the expertise demand for the text using the metric.</p>
+
+<p><u><u><b>
+</b></u></u></p>]]></txt>
+</lead>
+<order>default</order>
+<attributes.specific program="ofb">
+<attr id="id">1</attr>
+<attr id="pos">1</attr>
+<attr id="alignment">default</attr>
+</attributes.specific>
+</question>
+<question>
+<description>Verständnis</description>
+<class>checkbox</class>
+<title>
+<txt>Verständnis der Metrik</txt>
+<txt lng="eng">Understanding the metric</txt>
+</title>
+<explanation />
+<inputPosition>right</inputPosition>
+<order>default</order>
+<attributes.specific program="ofb">
+<attr id="id">2</attr>
+<attr id="pos">2</attr>
+<attr id="restrictions.answered">yes</attr>
+</attributes.specific>
+<item>
+<text>
+<txt>Ich habe die Beschreibung der Metrik und jeden Teil des Namens der Metrik verstanden</txt>
+<txt lng="eng">I understood the description of the metric and every part of the name of the metric</txt>
+</text>
+<attributes.specific program="ofb">
+<attr id="id">1</attr>
+<attr id="pos">1</attr>
+</attributes.specific>
+</item>
+</question>
+<question>
+<description>Erklärung Sortieren</description>
+<class>TextContent</class>
+<title>
+<txt>Erklärung der Aufgabe (Sortieren)</txt>
+<txt lng="eng">Explanation of the task (ranking)</txt>
+</title>
+<explanation />
+<inputPosition>right</inputPosition>
+<lead>
+<txt><![CDATA[<p>Im Folgenden müssen Sie Antwortphrasen in einem Text sortieren. </p>
+
+<p>Die Antwortphrasen werden unterhalb des Textes angezeigt und müssen in dem Graph darunter einsortiert werden. Allerdings sind die Antwortphrasen nicht losgelöst von ihrer Position im Text zu betrachten, denn ihr Kontext (die umliegenden Wörter) werden später genutzt um die Frage zu generieren.
+</p>
+
+<p>Beispieltext: "Die französische Revolution war <b>1789</b> und die Glorious Revolution fand in England statt."<br />Die generierte Frage zur Antwortphrase 1789 ist:<br />"Wann war die französiche Revolution?"</p>
+
+<p><br /></p>]]></txt>
+<txt lng="eng"><![CDATA[<p>In the following, you have to rank Answerspans in a text.</p>
+
+<p>The Answerspans are displayed below the text and must be sorted into the graph below. However, the Answerspans should not be considered separately from their position in the text, as their context (the surrounding words) are used later to generate the question.
+</p>
+
+<p><br />Exampletext: "The French Revolution was <u>1789</u> and the Glorious Revolution took place in England."<br /> The automatically generated question for the Answerspan 1789 is:<br />"When was the French Revolution?"<br /><br /></p>
+
+<p></p>
+
+
+<p><br /></p>
+
+<p>The following text is in English, so if you have any minor problems understanding it, you can use simple aids such as the online dictionary at https://www.dict.cc/ - but keep this website open!<br /></p>]]></txt>
+</lead>
+<order>default</order>
+<attributes.specific program="ofb">
+<attr id="id">3</attr>
+<attr id="pos">3</attr>
+<attr id="alignment">default</attr>
+</attributes.specific>
+</question>
+<question>
+<description>Leseverständnis</description>
+<class>checkbox</class>
+<title>Sprachverständnis</title>
+<explanation>
+<txt><![CDATA[Der zu bearbeitende Text ist auf Englisch, falls Sie dadurch geringfügige Verständnisprobleme haben, dürfen Sie einfache Hilfmittel nutzen, wie zum Beispiel das Online-Wörterbuch auf https://www.dict.cc/.
+
+Bitte lesen Sie den englischen Text:
+
+Earthworms have the ability to regenerate lost segments, but this ability varies between species and depends on the extent of the damage. Stephenson (1930) devoted a chapter of his monograph to this topic, while C.E. Gates (1972) spent 20 years studying regeneration in a variety of species, but "because little interest was shown", Gates published only a few of his findings that, nevertheless, show it is theoretically possible to grow two whole worms from a bisected specimen in certain species. 
+
+Konnten Sie den Text (mit Hilfsmitteln) sprachlich und inhaltlich gut verstehen, sodass Sie ihn zB in eine andere Sprache übersetzen könnten?
+
+]]></txt>
+<txt lng="eng"><![CDATA[Please read through the text and the task and answer the following question:
+
+Were you able to understand the text clearly enough to complete the task successfully?]]></txt>
+</explanation>
+<inputPosition>right</inputPosition>
+<order>default</order>
+<attributes.specific program="ofb">
+<attr id="id">4</attr>
+<attr id="pos">4</attr>
+<attr id="restrictions.answered">yes</attr>
+</attributes.specific>
+<item>
+<text>
+<txt>Ja, ich habe den Text gut verstanden.</txt>
+<txt lng="eng">Yes, I understood the text clearly enough.</txt>
+</text>
+<attributes.specific program="ofb">
+<attr id="id">1</attr>
+<attr id="pos">1</attr>
+</attributes.specific>
+</item>
+</question>
+</section>
+<section>
+<title>Expertise Demand Ranking</title>
+<attributes.specific program="ofb">
+<attr id="id">A3</attr>
+<attr id="pos">2</attr>
+</attributes.specific>
+<question>
+<description>Ranking Expertisenanforderung</description>
+<class>cardrate</class>
+<title>
+<txt lng="eng">Assessment of Expertise Demand</txt>
+</title>
+<explanation>
+<txt>**Earthworms** have **the ability to regenerate lost segments**, but this ability varies between **species** and depends on **the extent of the damage**. **Stephenson** (1930) devoted **a chapter of his monograph** to this topic, while **C.E. Gates** (1972) spent **20 years** studying **regeneration in a variety of species**, but "because little interest was shown", **Gates** published only a few of his findings that, nevertheless, show it is theoretically possible to grow **two whole worms** from **a bisected specimen** in **certain species**. </txt>
+<txt lng="eng"><![CDATA[Sort the Answerspans from the text according to expertise demand. Place Answerspans with low expertise demand on the left and those with high expertise demand on the right.
+
+Reminder: Expertise demand for an Answerspans simply says how likely it is to memorize the information without taking individual factors (memorization strategies, cultural background or special personal interests) into account.
+
+
+
+**Earthworms** have **the ability to regenerate lost segments**, but this ability varies between **species** and depends on **the extent of the damage**. **Stephenson** (1930) devoted **a chapter of his monograph** to this topic, while **Gates** (1972) spent **20 years** studying **regeneration in a variety of species**, but "because little interest was shown", **Gates** published only a few of his findings that, nevertheless, show it is theoretically possible to grow **two whole worms** from **a bisected specimen** in **certain species**. ]]></txt>
+</explanation>
+<inputPosition>right</inputPosition>
+<labels>
+<li i="1">
+<txt>0 (geringe Expertisenanforderung)</txt>
+<txt lng="eng">0 (high Expertise demand)</txt>
+</li>
+<li i="2">
+<txt>10 (hohe Expertisenanforderung)</txt>
+<txt lng="eng">10 (low Expertise demand)</txt>
+</li>
+</labels>
+<order>default</order>
+<attributes.specific program="ofb">
+<attr id="id">1</attr>
+<attr id="pos">1</attr>
+<attr id="scale.metrics.height">300</attr>
+<attr id="restrictions.answered">probe</attr>
+</attributes.specific>
+<item>
+<text>Earthworms</text>
+<attributes.specific program="ofb">
+<attr id="id">1</attr>
+<attr id="pos">1</attr>
+</attributes.specific>
+</item>
+<item>
+<text>the ability to regenerate lost segments</text>
+<attributes.specific program="ofb">
+<attr id="id">2</attr>
+<attr id="pos">2</attr>
+</attributes.specific>
+</item>
+<item>
+<text>species</text>
+<attributes.specific program="ofb">
+<attr id="id">3</attr>
+<attr id="pos">3</attr>
+</attributes.specific>
+</item>
+<item>
+<text>the extent of the damage</text>
+<attributes.specific program="ofb">
+<attr id="id">4</attr>
+<attr id="pos">4</attr>
+</attributes.specific>
+</item>
+<item>
+<text>Stephenson</text>
+<attributes.specific program="ofb">
+<attr id="id">5</attr>
+<attr id="pos">5</attr>
+</attributes.specific>
+</item>
+<item>
+<text>a chapter of his monograph</text>
+<attributes.specific program="ofb">
+<attr id="id">6</attr>
+<attr id="pos">6</attr>
+</attributes.specific>
+</item>
+<item>
+<text>C.E. Gates</text>
+<attributes.specific program="ofb">
+<attr id="id">7</attr>
+<attr id="pos">7</attr>
+</attributes.specific>
+</item>
+<item>
+<text>20 years</text>
+<attributes.specific program="ofb">
+<attr id="id">8</attr>
+<attr id="pos">8</attr>
+</attributes.specific>
+</item>
+<item>
+<text>regeneration in a variety of species</text>
+<attributes.specific program="ofb">
+<attr id="id">9</attr>
+<attr id="pos">9</attr>
+</attributes.specific>
+</item>
+<item>
+<text>Gates</text>
+<attributes.specific program="ofb">
+<attr id="id">10</attr>
+<attr id="pos">10</attr>
+</attributes.specific>
+</item>
+<item>
+<text>two whole worms</text>
+<attributes.specific program="ofb">
+<attr id="id">11</attr>
+<attr id="pos">11</attr>
+</attributes.specific>
+</item>
+<item>
+<text>a bisected specimen</text>
+<attributes.specific program="ofb">
+<attr id="id">12</attr>
+<attr id="pos">12</attr>
+</attributes.specific>
+</item>
+<item>
+<text>certain species</text>
+<attributes.specific program="ofb">
+<attr id="id">13</attr>
+<attr id="pos">13</attr>
+</attributes.specific>
+</item>
+</question>
+<question>
+<description>Ranking Example</description>
+<class>cardrate</class>
+<title>
+<txt>Beispiel: Bewertung der Expertisenanforderung</txt>
+<txt lng="eng">Assessment of Expertise Demand</txt>
+</title>
+<explanation>
+<txt>There never was a period of **'flat Earth darkness'** among **scholars**, regardless of how the **public at large** may have conceptualized our **planet** both then and now. **Greek knowledge of sphericity** never faded, and **all major medieval scholars** accepted **the Earth's roundness** as an **established fact of cosmology**.</txt>
+<txt lng="eng"><![CDATA[Sort the Answerspans from the text according to expertise demand. Place Answerspans with low expertise demand on the left and those with high expertise demand on the right.
+
+Reminder: Expertise demand for an Answerspans simply says how likely it is to memorize the information without taking individual factors (memorization strategies, cultural background or special personal interests) into account.
+
+
+
+**Earthworms** have **the ability to regenerate lost segments**, but this ability varies between **species** and depends on **the extent of the damage**. **Stephenson** (1930) devoted **a chapter of his monograph** to this topic, while **Gates** (1972) spent **20 years** studying **regeneration in a variety of species**, but "because little interest was shown", **Gates** published only a few of his findings that, nevertheless, show it is theoretically possible to grow **two whole worms** from **a bisected specimen** in **certain species**. ]]></txt>
+</explanation>
+<inputPosition>right</inputPosition>
+<labels>
+<li i="1">
+<txt>0 (geringe Expertisenanforderung)</txt>
+<txt lng="eng">0 (high Expertise demand)</txt>
+</li>
+<li i="2">
+<txt>10 (hohe Expertisenanforderung)</txt>
+<txt lng="eng">10 (low Expertise demand)</txt>
+</li>
+</labels>
+<order>default</order>
+<attributes.specific program="ofb">
+<attr id="id">2</attr>
+<attr id="pos">2</attr>
+<attr id="scale.metrics.height">300</attr>
+<attr id="restrictions.answered">probe</attr>
+</attributes.specific>
+<item>
+<text>'flat Earth darkness'</text>
+<attributes.specific program="ofb">
+<attr id="id">1</attr>
+<attr id="pos">1</attr>
+</attributes.specific>
+</item>
+<item>
+<text>scholars</text>
+<attributes.specific program="ofb">
+<attr id="id">2</attr>
+<attr id="pos">2</attr>
+</attributes.specific>
+</item>
+<item>
+<text>public at large</text>
+<attributes.specific program="ofb">
+<attr id="id">3</attr>
+<attr id="pos">3</attr>
+</attributes.specific>
+</item>
+<item>
+<text>planet</text>
+<attributes.specific program="ofb">
+<attr id="id">4</attr>
+<attr id="pos">4</attr>
+</attributes.specific>
+</item>
+<item>
+<text>Greek knowledge of sphericity</text>
+<attributes.specific program="ofb">
+<attr id="id">5</attr>
+<attr id="pos">5</attr>
+</attributes.specific>
+</item>
+<item>
+<text>all major medieval scholars</text>
+<attributes.specific program="ofb">
+<attr id="id">6</attr>
+<attr id="pos">6</attr>
+</attributes.specific>
+</item>
+<item>
+<text>the Earth's roundness</text>
+<attributes.specific program="ofb">
+<attr id="id">7</attr>
+<attr id="pos">7</attr>
+</attributes.specific>
+</item>
+<item>
+<text>established fact of cosmology</text>
+<attributes.specific program="ofb">
+<attr id="id">8</attr>
+<attr id="pos">8</attr>
+</attributes.specific>
+</item>
+</question>
+<question>
+<description>Ranking Example 2</description>
+<class>cardrate</class>
+<title>
+<txt>Beispiel: Bewertung der Expertisenanforderung</txt>
+<txt lng="eng">Assessment of Expertise Demand</txt>
+</title>
+<explanation>
+<txt>**The forbidden fruit** mentioned in the **Book of Genesis (Bible)** is never identified as an **apple**, as widely depicted in **Western art**. **The original Hebrew texts** mention only **tree** and **fruit**.</txt>
+<txt lng="eng"><![CDATA[Sort the Answerspans from the text according to expertise demand. Place Answerspans with low expertise demand on the left and those with high expertise demand on the right.
+
+Reminder: Expertise demand for an Answerspans simply says how likely it is to memorize the information without taking individual factors (memorization strategies, cultural background or special personal interests) into account.
+
+
+
+**Earthworms** have **the ability to regenerate lost segments**, but this ability varies between **species** and depends on **the extent of the damage**. **Stephenson** (1930) devoted **a chapter of his monograph** to this topic, while **Gates** (1972) spent **20 years** studying **regeneration in a variety of species**, but "because little interest was shown", **Gates** published only a few of his findings that, nevertheless, show it is theoretically possible to grow **two whole worms** from **a bisected specimen** in **certain species**. ]]></txt>
+</explanation>
+<inputPosition>right</inputPosition>
+<labels>
+<li i="1">
+<txt>0 (geringe Expertisenanforderung)</txt>
+<txt lng="eng">0 (high Expertise demand)</txt>
+</li>
+<li i="2">
+<txt>10 (hohe Expertisenanforderung)</txt>
+<txt lng="eng">10 (low Expertise demand)</txt>
+</li>
+</labels>
+<order>default</order>
+<attributes.specific program="ofb">
+<attr id="id">4</attr>
+<attr id="pos">3</attr>
+<attr id="scale.metrics.height">300</attr>
+<attr id="restrictions.answered">probe</attr>
+</attributes.specific>
+<item>
+<text>The forbidden fruit</text>
+<attributes.specific program="ofb">
+<attr id="id">1</attr>
+<attr id="pos">1</attr>
+</attributes.specific>
+</item>
+<item>
+<text>Book of Genesis (Bible)</text>
+<attributes.specific program="ofb">
+<attr id="id">2</attr>
+<attr id="pos">2</attr>
+</attributes.specific>
+</item>
+<item>
+<text>apple</text>
+<attributes.specific program="ofb">
+<attr id="id">3</attr>
+<attr id="pos">3</attr>
+</attributes.specific>
+</item>
+<item>
+<text>Western art</text>
+<attributes.specific program="ofb">
+<attr id="id">4</attr>
+<attr id="pos">4</attr>
+</attributes.specific>
+</item>
+<item>
+<text>The original Hebrew texts</text>
+<attributes.specific program="ofb">
+<attr id="id">5</attr>
+<attr id="pos">5</attr>
+</attributes.specific>
+</item>
+<item>
+<text>tree</text>
+<attributes.specific program="ofb">
+<attr id="id">6</attr>
+<attr id="pos">6</attr>
+</attributes.specific>
+</item>
+<item>
+<text>fruit</text>
+<attributes.specific program="ofb">
+<attr id="id">7</attr>
+<attr id="pos">7</attr>
+</attributes.specific>
+</item>
+</question>
+<question>
+<description>show example</description>
+<class>TextContent</class>
+<title />
+<explanation />
+<headerText>Klicken Sie hier für eine ausgefüllte Beispielaufgabe</headerText>
+<inputPosition>right</inputPosition>
+<lead>
+<txt><![CDATA[<p><img alt="Bildschirmfoto-2024-01-02-um-17-50-54.png" width="900" src="https://i.postimg.cc/xCjbPn4G/Bildschirmfoto-2024-01-02-um-17-50-54.png" /></p>
+
+<div><br /></div>
+
+<p><br /></p>
+
+<p>In diesem Beispiel wurde <b>forbidden fruit</b> und <b>apple</b> links (geringe Expertisenanforderung) eingeordnet, da es die wichtigsten Antwortphrasen aus dem Text sind.<br />Die Fragen dazu sind zum Beispiel:<br /></p>
+
+<ul><li>Was wurde nie als Apfel identifiziert?</li><li>Als was wurde die verbotene Frucht in der Genesis (Bibel) nie identifiziert?</li></ul>
+
+<p>Diese Fragen betreffen die Kernaussage des Textes, daher haben die Antwortphrasen eine geringe Expertisenanforderung. Man muss den Text nicht gut kennen (erinnern) um diese Fragen beantworten zu können.<br /><br />Was genau in dem hebräischen Originaltext (<b>tree</b>, <b>fruit</b>) steht und wo die verbotene Frucht als Apfel dargestellt ist (<b>Western art</b>), können als nicht so wichtige Zusatzinformationen eingeschätzt werden und haben daher eine hohe Expertisenanforderung. Man muss den Text gut kennen um entsprechende Fragen beantworten zu können.<br /><font color="#e82a1f"><br />{EM_WARNING} Achtung: Bitte schließen Sie die Beispielaufgabe bevor Sie die Aufgabe bearbeiten {EM_WARNING}</font><br /></p>]]></txt>
+<txt lng="eng"><![CDATA[<p><br /></p>]]></txt>
+</lead>
+<order>default</order>
+<attributes.specific program="ofb">
+<attr id="id">3</attr>
+<attr id="pos">4</attr>
+<attr id="alignment">default</attr>
+<attr id="character">accordion</attr>
+</attributes.specific>
+</question>
+<question>
+<description>task description</description>
+<class>TextContent</class>
+<title>Bewertung der Expertisenanforderung</title>
+<explanation />
+<headerText>Bewertung der Expertisenanforderung</headerText>
+<inputPosition>right</inputPosition>
+<lead>
+<txt><![CDATA[<p>Sortieren Sie die Antwortphrasen aus dem Text per Drag and Drop nach Expertisenanforderungen in dem Graph unten. Platzieren Sie Antwortphrasen mit **geringer** Expertisenanforderung (leicht) **links** und solche mit **hoher** Expertisenanforderung (schwer) **rechts**. <br /></p>
+
+<div style="margin-top:32px;padding:20px;border:1px solid #808080;">Zur Erinnerung - Erklärung Expertisenanforderung: <br />
+Die Expertisenanforderung einer Antwortphrase ist **hoch** (rechts), wenn man den Text **sehr gut** kennen (erinnern) muss, um eine Frage zu der Antwortphrase beantworten zu können.<br />
+Die Expertisenanforderung einer Antwortphrase ist **niedrig** (links), wenn man den Text **kaum** kennen (erinnern) muss, um eine Frage zu der Antwortphrase beantworten zu können.<br />Oder: Die Expertisenanforderung von einer Antwortphrase ist die Wahrscheinlichkeit, dass Leser/innen die Information der Antwortphrase erinnern.<b>�</b></div>
+
+<p class="sceditor-nlf"><br /></p>]]></txt>
+<txt lng="eng"><![CDATA[<p><br /></p>]]></txt>
+</lead>
+<order>default</order>
+<attributes.specific program="ofb">
+<attr id="id">5</attr>
+<attr id="pos">5</attr>
+<attr id="alignment">default</attr>
+</attributes.specific>
+</question>
+</section>
+<section>
+<title>Relevanz Ranking</title>
+<attributes.specific program="ofb">
+<attr id="id">A4</attr>
+<attr id="pos">3</attr>
+</attributes.specific>
+<question>
+<description>Ranking Relevanz</description>
+<class>cardrate</class>
+<title>
+<txt>Bewertung der Relevanz</txt>
+<txt lng="eng">Assessment of Relevance</txt>
+</title>
+<explanation>
+<txt><![CDATA[Sortieren Sie die Antwortphrasen aus dem Text nach Relevanz. Platzieren Sie Antwortphrasen mit **geringer** Relevanz **links** und solche mit **hoher** Relevanz **rechts** <br>
+{EM_WARNING}️Es kann sein, dass einige Antwortphrasen, die eben auf der einen Seite standen, jetzt auf der anderen eingeordnet werden{EM_WARNING}️<br>
+<div style="margin-top: 32px; padding: 20px; border: 1px solid grey; ">
+Erklärung Relevanz:<br>Eine Kernaussage des Textes ist relevant und ein nebensächlichliches Detail ist irrelevant </div><br>
+
+**Earthworms** have **the ability to regenerate lost segments**, but this ability varies between **species** and depends on **the extent of the damage**. **Stephenson** (1930) devoted **a chapter of his monograph** to this topic, while **C.E. Gates** (1972) spent **20 years** studying **regeneration in a variety of species**, but "because little interest was shown", **Gates** published only a few of his findings that, nevertheless, show it is theoretically possible to grow **two whole worms** from **a bisected specimen** in **certain species**. ]]></txt>
+<txt lng="eng"><![CDATA[Please sort the Answerspans from the text according to their relevance
+
+Note: A core statement is relevant and a mere detail is irrelevant
+
+
+**Earthworms** have **the ability to regenerate lost segments**, but this ability varies between **species** and depends on **the extent of the damage**. **Stephenson** (1930) devoted **a chapter of his monograph** to this topic, while **Gates** (1972) spent **20 years** studying **regeneration in a variety of species**, but "because little interest was shown", **Gates** published only a few of his findings that, nevertheless, show it is theoretically possible to grow **two whole worms** from **a bisected specimen** in **certain species**. ]]></txt>
+</explanation>
+<inputPosition>right</inputPosition>
+<labels>
+<li i="1">
+<txt>0 (irrelevant)</txt>
+<txt lng="eng">0</txt>
+</li>
+<li i="2">
+<txt>10 (relevant)</txt>
+<txt lng="eng">10</txt>
+</li>
+</labels>
+<order>default</order>
+<attributes.specific program="ofb">
+<attr id="id">1</attr>
+<attr id="pos">1</attr>
+<attr id="scale.metrics.height">340</attr>
+<attr id="restrictions.answered">probe</attr>
+</attributes.specific>
+<item>
+<text>
+<txt>Earthworms</txt>
+<txt lng="eng">Earthworms</txt>
+</text>
+<attributes.specific program="ofb">
+<attr id="id">1</attr>
+<attr id="pos">1</attr>
+</attributes.specific>
+</item>
+<item>
+<text>
+<txt>the ability to regenerate lost segments</txt>
+<txt lng="eng">the ability to regenerate lost segments</txt>
+</text>
+<attributes.specific program="ofb">
+<attr id="id">2</attr>
+<attr id="pos">2</attr>
+</attributes.specific>
+</item>
+<item>
+<text>
+<txt>species</txt>
+<txt lng="eng">species</txt>
+</text>
+<attributes.specific program="ofb">
+<attr id="id">3</attr>
+<attr id="pos">3</attr>
+</attributes.specific>
+</item>
+<item>
+<text>
+<txt>the extent of the damage</txt>
+<txt lng="eng">the extent of the damage</txt>
+</text>
+<attributes.specific program="ofb">
+<attr id="id">4</attr>
+<attr id="pos">4</attr>
+</attributes.specific>
+</item>
+<item>
+<text>
+<txt>Stephenson</txt>
+<txt lng="eng">Stephenson</txt>
+</text>
+<attributes.specific program="ofb">
+<attr id="id">5</attr>
+<attr id="pos">5</attr>
+</attributes.specific>
+</item>
+<item>
+<text>
+<txt>a chapter of his monograph</txt>
+<txt lng="eng">a chapter of his monograph</txt>
+</text>
+<attributes.specific program="ofb">
+<attr id="id">6</attr>
+<attr id="pos">6</attr>
+</attributes.specific>
+</item>
+<item>
+<text>
+<txt>C.E. Gates</txt>
+<txt lng="eng">Gates</txt>
+</text>
+<attributes.specific program="ofb">
+<attr id="id">7</attr>
+<attr id="pos">7</attr>
+</attributes.specific>
+</item>
+<item>
+<text>
+<txt>20 years</txt>
+<txt lng="eng">20 years</txt>
+</text>
+<attributes.specific program="ofb">
+<attr id="id">8</attr>
+<attr id="pos">8</attr>
+</attributes.specific>
+</item>
+<item>
+<text>
+<txt>regeneration in a variety of species</txt>
+<txt lng="eng">regeneration in a variety of species</txt>
+</text>
+<attributes.specific program="ofb">
+<attr id="id">9</attr>
+<attr id="pos">9</attr>
+</attributes.specific>
+</item>
+<item>
+<text>
+<txt>Gates</txt>
+<txt lng="eng">Gates</txt>
+</text>
+<attributes.specific program="ofb">
+<attr id="id">10</attr>
+<attr id="pos">10</attr>
+</attributes.specific>
+</item>
+<item>
+<text>
+<txt>two whole worms</txt>
+<txt lng="eng">two whole worms</txt>
+</text>
+<attributes.specific program="ofb">
+<attr id="id">11</attr>
+<attr id="pos">11</attr>
+</attributes.specific>
+</item>
+<item>
+<text>
+<txt>a bisected specimen</txt>
+<txt lng="eng">a bisected specimen</txt>
+</text>
+<attributes.specific program="ofb">
+<attr id="id">12</attr>
+<attr id="pos">12</attr>
+</attributes.specific>
+</item>
+<item>
+<text>
+<txt>certain species</txt>
+<txt lng="eng">certain species</txt>
+</text>
+<attributes.specific program="ofb">
+<attr id="id">13</attr>
+<attr id="pos">13</attr>
+</attributes.specific>
+</item>
+</question>
+<question>
+<description>Relevanz Einfluss</description>
+<class>selscale</class>
+<title>
+<txt>Einfluss von Relevanz auf Expertisenanforderung</txt>
+<txt lng="eng">Influence of relevance on expertise demand</txt>
+</title>
+<explanation>
+<txt><![CDATA[Würden Sie grundsätzlich zustimmen:
+Je relevanter eine Antwortphrase ist, desto geriner ist ihre Expertisenanforderung (leichter).
+Und je irrelevanter eine Antwortphrase ist, desto höher ist ihre Expertisenanforderung (schwerer).]]></txt>
+<txt lng="eng"><![CDATA[Would you agree:
+The more relevant an Answerspan is, the lower the Expertise Demand on the text. And vice versa: the less relevant an Answerspan is, the higher the Expertise demand about the text. 
+
+Note: A core statement is relevant and a mere detail is irrelevant]]></txt>
+</explanation>
+<inputPosition>right</inputPosition>
+<order>default</order>
+<attributes.specific program="ofb">
+<attr id="id">2</attr>
+<attr id="pos">2</attr>
+<attr id="restrictions.answered">yes</attr>
+</attributes.specific>
+<item>
+<text>
+<txt>stimme überhaupt nicht zu</txt>
+<txt lng="eng">strongly disagree</txt>
+</text>
+<attributes.specific program="ofb">
+<attr id="id">5</attr>
+<attr id="pos">1</attr>
+</attributes.specific>
+</item>
+<item>
+<text>
+<txt>stimme nicht zu</txt>
+<txt lng="eng">disagree</txt>
+</text>
+<attributes.specific program="ofb">
+<attr id="id">4</attr>
+<attr id="pos">2</attr>
+</attributes.specific>
+</item>
+<item>
+<text>
+<txt>weder noch</txt>
+<txt lng="eng">neither agree or disagree</txt>
+</text>
+<attributes.specific program="ofb">
+<attr id="id">3</attr>
+<attr id="pos">3</attr>
+</attributes.specific>
+</item>
+<item>
+<text>
+<txt>stimme zu</txt>
+<txt lng="eng">agree</txt>
+</text>
+<attributes.specific program="ofb">
+<attr id="id">2</attr>
+<attr id="pos">4</attr>
+</attributes.specific>
+</item>
+<item>
+<text>
+<txt>stimme voll und ganz zu</txt>
+<txt lng="eng">strongly agree</txt>
+</text>
+<attributes.specific program="ofb">
+<attr id="id">1</attr>
+<attr id="pos">5</attr>
+</attributes.specific>
+</item>
+</question>
+<question>
+<description>Ranking Example 2</description>
+<class>cardrate</class>
+<title>
+<txt>Beispiel: Bewertung der Relevanz</txt>
+<txt lng="eng">Assessment of Expertise Demand</txt>
+</title>
+<explanation>
+<txt>**The forbidden fruit** mentioned in the **Book of Genesis (Bible)** is never identified as an **apple**, as widely depicted in **Western art**. **The original Hebrew texts** mention only **tree** and **fruit**.</txt>
+<txt lng="eng"><![CDATA[Sort the Answerspans from the text according to expertise demand. Place Answerspans with low expertise demand on the left and those with high expertise demand on the right.
+
+Reminder: Expertise demand for an Answerspans simply says how likely it is to memorize the information without taking individual factors (memorization strategies, cultural background or special personal interests) into account.
+
+
+
+**Earthworms** have **the ability to regenerate lost segments**, but this ability varies between **species** and depends on **the extent of the damage**. **Stephenson** (1930) devoted **a chapter of his monograph** to this topic, while **Gates** (1972) spent **20 years** studying **regeneration in a variety of species**, but "because little interest was shown", **Gates** published only a few of his findings that, nevertheless, show it is theoretically possible to grow **two whole worms** from **a bisected specimen** in **certain species**. ]]></txt>
+</explanation>
+<inputPosition>right</inputPosition>
+<labels>
+<li i="1">
+<txt>0 (irrelevant)</txt>
+<txt lng="eng">0 (high Expertise demand)</txt>
+</li>
+<li i="2">
+<txt>10 (relevant)</txt>
+<txt lng="eng">10 (low Expertise demand)</txt>
+</li>
+</labels>
+<order>default</order>
+<attributes.specific program="ofb">
+<attr id="id">3</attr>
+<attr id="pos">3</attr>
+<attr id="scale.metrics.height">300</attr>
+<attr id="restrictions.answered">probe</attr>
+</attributes.specific>
+<item>
+<text>The forbidden fruit</text>
+<attributes.specific program="ofb">
+<attr id="id">1</attr>
+<attr id="pos">1</attr>
+</attributes.specific>
+</item>
+<item>
+<text>Book of Genesis (Bible)</text>
+<attributes.specific program="ofb">
+<attr id="id">2</attr>
+<attr id="pos">2</attr>
+</attributes.specific>
+</item>
+<item>
+<text>apple</text>
+<attributes.specific program="ofb">
+<attr id="id">3</attr>
+<attr id="pos">3</attr>
+</attributes.specific>
+</item>
+<item>
+<text>Western art</text>
+<attributes.specific program="ofb">
+<attr id="id">4</attr>
+<attr id="pos">4</attr>
+</attributes.specific>
+</item>
+<item>
+<text>The original Hebrew texts</text>
+<attributes.specific program="ofb">
+<attr id="id">5</attr>
+<attr id="pos">5</attr>
+</attributes.specific>
+</item>
+<item>
+<text>tree</text>
+<attributes.specific program="ofb">
+<attr id="id">6</attr>
+<attr id="pos">6</attr>
+</attributes.specific>
+</item>
+<item>
+<text>fruit</text>
+<attributes.specific program="ofb">
+<attr id="id">7</attr>
+<attr id="pos">7</attr>
+</attributes.specific>
+</item>
+</question>
+</section>
+<section>
+<title>Plausibilität von falschen Alternativen Ranking</title>
+<attributes.specific program="ofb">
+<attr id="id">A5</attr>
+<attr id="pos">4</attr>
+</attributes.specific>
+<question>
+<description>Ranking Plausibilität von falschen Alternativen</description>
+<class>cardrate</class>
+<title>
+<txt>Bewertung der Plausibilität von falschen Alternativen</txt>
+<txt lng="eng">Assessment of plausibility of false alternatives</txt>
+</title>
+<explanation>
+<txt><![CDATA[Sortieren Sie die Antwortphrasen aus dem Text nach Plausibilität von falschen Alternativen (Verwechselbarkeit) in dem Text. Platzieren Sie Antwortphrasen mit **geringer** Plausibilität von falschen Alternativen **links** und solche mit **hoher** Plausibilität von falschen Alternativen **rechts**.<br>
+
+<div style="margin-top: 32px; padding: 20px; border: 1px solid lightblue; ">
+Eine Antwortphrase hat einen hohen Wert, wenn es in dem Text plausible falsche Alternativen gibt, die mit der Antwortphrase verwechselt werden könnten. 
+Eine Antwortphrase hat einen niedrigen Wert, wenn es in dem Text keine plausiblen falschen Alternativen gibt. <br><br>
+
+__Beispieltext__: "Die französische Revolution war 1789 und die Glorious Revolution fand in England statt."<br>
+Hier könnte man "Glorious Revolution" als pausible Alternative zu "französiche Revolution" bewerten (hoher Wert), da beides Revolutionen sind. "1789" kann aber keine plausible Alternative zu "England" sein (niedriger Wert), da "1789" eine Zeitangabe und "England" eine Ortsangabe ist.<br><br>
+
+Beachten Sie, dass C.E. Gates nicht mit Gates verwechselt werden kann, da beide Antwortphrasen dasselbe meinen.
+</div><br>
+
+
+**Earthworms** have **the ability to regenerate lost segments**, but this ability varies between **species** and depends on **the extent of the damage**. **Stephenson** (1930) devoted **a chapter of his monograph** to this topic, while **C.E. Gates** (1972) spent **20 years** studying **regeneration in a variety of species**, but "because little interest was shown", **Gates** published only a few of his findings that, nevertheless, show it is theoretically possible to grow **two whole worms** from **a bisected specimen** in **certain species**. ]]></txt>
+<txt lng="eng"><![CDATA[Sort the Answerspans from the text according to the plausibility of false alternatives:
+
+Hint: An Answerspans has a high value if there are plausible false alternatives that could be confused with the Answerspans. And vice versa: An Answerspans has a low value if there are no plausible false alternatives that could be confused with the Answerspans
+
+Example text: "The French Revolution was in 1789 and the Glorious Revolution took place in England."
+Here, "Glorious Revolution" could be assessed as a plausible alternative to "French Revolution", as both are revolutions. However, "1789" cannot be a plausible alternative to "England", as "1789" is a date and "England" is a place.
+
+
+**Earthworms** have **the ability to regenerate lost segments**, but this ability varies between **species** and depends on **the extent of the damage**. **Stephenson** (1930) devoted **a chapter of his monograph** to this topic, while **Gates** (1972) spent **20 years** studying **regeneration in a variety of species**, but "because little interest was shown", **Gates** published only a few of his findings that, nevertheless, show it is theoretically possible to grow **two whole worms** from **a bisected specimen** in **certain species**. ]]></txt>
+</explanation>
+<inputPosition>right</inputPosition>
+<labels>
+<li i="1">
+<txt>0 (gerine Plausibilität von falschen Alternativen)</txt>
+<txt lng="eng">0</txt>
+</li>
+<li i="2">
+<txt>10 (hohe Plausibilität von falschen Alternativen)</txt>
+<txt lng="eng">10</txt>
+</li>
+</labels>
+<order>default</order>
+<attributes.specific program="ofb">
+<attr id="id">1</attr>
+<attr id="pos">1</attr>
+<attr id="scale.metrics.height">340</attr>
+<attr id="restrictions.answered">probe</attr>
+</attributes.specific>
+<item>
+<text>
+<txt>Earthworms</txt>
+<txt lng="eng">Earthworms</txt>
+</text>
+<attributes.specific program="ofb">
+<attr id="id">1</attr>
+<attr id="pos">1</attr>
+</attributes.specific>
+</item>
+<item>
+<text>
+<txt>the ability to regenerate lost segments</txt>
+<txt lng="eng">the ability to regenerate lost segments</txt>
+</text>
+<attributes.specific program="ofb">
+<attr id="id">2</attr>
+<attr id="pos">2</attr>
+</attributes.specific>
+</item>
+<item>
+<text>
+<txt>species</txt>
+<txt lng="eng">species</txt>
+</text>
+<attributes.specific program="ofb">
+<attr id="id">3</attr>
+<attr id="pos">3</attr>
+</attributes.specific>
+</item>
+<item>
+<text>
+<txt>the extent of the damage</txt>
+<txt lng="eng">the extent of the damage</txt>
+</text>
+<attributes.specific program="ofb">
+<attr id="id">4</attr>
+<attr id="pos">4</attr>
+</attributes.specific>
+</item>
+<item>
+<text>
+<txt>Stephenson</txt>
+<txt lng="eng">Stephenson</txt>
+</text>
+<attributes.specific program="ofb">
+<attr id="id">5</attr>
+<attr id="pos">5</attr>
+</attributes.specific>
+</item>
+<item>
+<text>
+<txt>a chapter of his monograph</txt>
+<txt lng="eng">a chapter of his monograph</txt>
+</text>
+<attributes.specific program="ofb">
+<attr id="id">6</attr>
+<attr id="pos">6</attr>
+</attributes.specific>
+</item>
+<item>
+<text>
+<txt>C.E. Gates</txt>
+<txt lng="eng">Gates</txt>
+</text>
+<attributes.specific program="ofb">
+<attr id="id">7</attr>
+<attr id="pos">7</attr>
+</attributes.specific>
+</item>
+<item>
+<text>
+<txt>20 years</txt>
+<txt lng="eng">20 years</txt>
+</text>
+<attributes.specific program="ofb">
+<attr id="id">8</attr>
+<attr id="pos">8</attr>
+</attributes.specific>
+</item>
+<item>
+<text>
+<txt>regeneration in a variety of species</txt>
+<txt lng="eng">regeneration in a variety of species</txt>
+</text>
+<attributes.specific program="ofb">
+<attr id="id">9</attr>
+<attr id="pos">9</attr>
+</attributes.specific>
+</item>
+<item>
+<text>
+<txt>Gates</txt>
+<txt lng="eng">Gates</txt>
+</text>
+<attributes.specific program="ofb">
+<attr id="id">10</attr>
+<attr id="pos">10</attr>
+</attributes.specific>
+</item>
+<item>
+<text>
+<txt>two whole worms</txt>
+<txt lng="eng">two whole worms</txt>
+</text>
+<attributes.specific program="ofb">
+<attr id="id">11</attr>
+<attr id="pos">11</attr>
+</attributes.specific>
+</item>
+<item>
+<text>
+<txt>a bisected specimen</txt>
+<txt lng="eng">a bisected specimen</txt>
+</text>
+<attributes.specific program="ofb">
+<attr id="id">12</attr>
+<attr id="pos">12</attr>
+</attributes.specific>
+</item>
+<item>
+<text>
+<txt>certain species</txt>
+<txt lng="eng">certain species</txt>
+</text>
+<attributes.specific program="ofb">
+<attr id="id">13</attr>
+<attr id="pos">13</attr>
+</attributes.specific>
+</item>
+</question>
+<question>
+<description>Ranking 2</description>
+<class>cardrate</class>
+<title>
+<txt lng="eng">Assessment of plausibility of false alternatives</txt>
+</title>
+<explanation>
+<txt><![CDATA[Beachten Sie, dass C.E. Gates nicht mit Gates verwechselt werden kann, da beide Antwortphrasen dasselbe meinen.
+
+**Earthworms** have **the ability to regenerate lost segments**, but this ability varies between **species** and depends on **the extent of the damage**. **Stephenson** (1930) devoted **a chapter of his monograph** to this topic, while **C.E. Gates** (1972) spent **20 years** studying **regeneration in a variety of species**, but "because little interest was shown", **Gates** published only a few of his findings that, nevertheless, show it is theoretically possible to grow **two whole worms** from **a bisected specimen** in **certain species**. ]]></txt>
+<txt lng="eng"><![CDATA[Sort the Answerspans from the text according to the plausibility of false alternatives:
+
+Hint: An Answerspans has a high value if there are plausible false alternatives that could be confused with the Answerspans. And vice versa: An Answerspans has a low value if there are no plausible false alternatives that could be confused with the Answerspans
+
+Example text: "The French Revolution was in 1789 and the Glorious Revolution took place in England."
+Here, "Glorious Revolution" could be assessed as a plausible alternative to "French Revolution", as both are revolutions. However, "1789" cannot be a plausible alternative to "England", as "1789" is a date and "England" is a place.
+
+
+**Earthworms** have **the ability to regenerate lost segments**, but this ability varies between **species** and depends on **the extent of the damage**. **Stephenson** (1930) devoted **a chapter of his monograph** to this topic, while **Gates** (1972) spent **20 years** studying **regeneration in a variety of species**, but "because little interest was shown", **Gates** published only a few of his findings that, nevertheless, show it is theoretically possible to grow **two whole worms** from **a bisected specimen** in **certain species**. ]]></txt>
+</explanation>
+<inputPosition>right</inputPosition>
+<labels>
+<li i="1">
+<txt>0 (gerine Plausibilität von falschen Alternativen)</txt>
+<txt lng="eng">0</txt>
+</li>
+<li i="2">
+<txt>10 (hohe Plausibilität von falschen Alternativen)</txt>
+<txt lng="eng">10</txt>
+</li>
+</labels>
+<order>default</order>
+<attributes.specific program="ofb">
+<attr id="id">7</attr>
+<attr id="pos">2</attr>
+<attr id="scale.metrics.height">340</attr>
+<attr id="restrictions.answered">probe</attr>
+</attributes.specific>
+<item>
+<text>
+<txt>Earthworms</txt>
+<txt lng="eng">Earthworms</txt>
+</text>
+<attributes.specific program="ofb">
+<attr id="id">1</attr>
+<attr id="pos">1</attr>
+</attributes.specific>
+</item>
+<item>
+<text>
+<txt>the ability to regenerate lost segments</txt>
+<txt lng="eng">the ability to regenerate lost segments</txt>
+</text>
+<attributes.specific program="ofb">
+<attr id="id">2</attr>
+<attr id="pos">2</attr>
+</attributes.specific>
+</item>
+<item>
+<text>
+<txt>species</txt>
+<txt lng="eng">species</txt>
+</text>
+<attributes.specific program="ofb">
+<attr id="id">3</attr>
+<attr id="pos">3</attr>
+</attributes.specific>
+</item>
+<item>
+<text>
+<txt>the extent of the damage</txt>
+<txt lng="eng">the extent of the damage</txt>
+</text>
+<attributes.specific program="ofb">
+<attr id="id">4</attr>
+<attr id="pos">4</attr>
+</attributes.specific>
+</item>
+<item>
+<text>
+<txt>Stephenson</txt>
+<txt lng="eng">Stephenson</txt>
+</text>
+<attributes.specific program="ofb">
+<attr id="id">5</attr>
+<attr id="pos">5</attr>
+</attributes.specific>
+</item>
+<item>
+<text>
+<txt>a chapter of his monograph</txt>
+<txt lng="eng">a chapter of his monograph</txt>
+</text>
+<attributes.specific program="ofb">
+<attr id="id">6</attr>
+<attr id="pos">6</attr>
+</attributes.specific>
+</item>
+<item>
+<text>
+<txt>C.E. Gates</txt>
+<txt lng="eng">Gates</txt>
+</text>
+<attributes.specific program="ofb">
+<attr id="id">7</attr>
+<attr id="pos">7</attr>
+</attributes.specific>
+</item>
+<item>
+<text>
+<txt>20 years</txt>
+<txt lng="eng">20 years</txt>
+</text>
+<attributes.specific program="ofb">
+<attr id="id">8</attr>
+<attr id="pos">8</attr>
+</attributes.specific>
+</item>
+<item>
+<text>
+<txt>regeneration in a variety of species</txt>
+<txt lng="eng">regeneration in a variety of species</txt>
+</text>
+<attributes.specific program="ofb">
+<attr id="id">9</attr>
+<attr id="pos">9</attr>
+</attributes.specific>
+</item>
+<item>
+<text>
+<txt>Gates</txt>
+<txt lng="eng">Gates</txt>
+</text>
+<attributes.specific program="ofb">
+<attr id="id">10</attr>
+<attr id="pos">10</attr>
+</attributes.specific>
+</item>
+<item>
+<text>
+<txt>two whole worms</txt>
+<txt lng="eng">two whole worms</txt>
+</text>
+<attributes.specific program="ofb">
+<attr id="id">11</attr>
+<attr id="pos">11</attr>
+</attributes.specific>
+</item>
+<item>
+<text>
+<txt>a bisected specimen</txt>
+<txt lng="eng">a bisected specimen</txt>
+</text>
+<attributes.specific program="ofb">
+<attr id="id">12</attr>
+<attr id="pos">12</attr>
+</attributes.specific>
+</item>
+<item>
+<text>
+<txt>certain species</txt>
+<txt lng="eng">certain species</txt>
+</text>
+<attributes.specific program="ofb">
+<attr id="id">13</attr>
+<attr id="pos">13</attr>
+</attributes.specific>
+</item>
+</question>
+<question>
+<description>Einfluss Plausibilität von falschen Alternativen</description>
+<class>selscale</class>
+<title>
+<txt>Einfluss von Plausibilität von falschen Alternativen auf Expertisenanforderung</txt>
+<txt lng="eng">Influence of plausibility of false alternativies on Expertise demand</txt>
+</title>
+<explanation>
+<txt><![CDATA[Würden Sie grundsätzlich zustimmen:
+
+Eine Antwortphrase hat hohe Expertisenanforderung (schwer), wenn es plausible falsche Alternativen gibt, die mit der Antwortphrase verwechselt werden könnten. 
+Und eine Antwortphrase hat geringe Expertisenanforderung (leicht), wenn es keine plausiblen falschen Alternativen gibt.]]></txt>
+<txt lng="eng"><![CDATA[Would you principally agree:
+
+An Answerspan has higher Expertise Demand if there are plausible false alternatives that could be confused with the Answerspan. 
+And vice versa: An Answerspan has less Expertise Demand if there are no plausible false alternatives that could be confused with the Answerspan.]]></txt>
+</explanation>
+<inputPosition>right</inputPosition>
+<order>default</order>
+<attributes.specific program="ofb">
+<attr id="id">2</attr>
+<attr id="pos">3</attr>
+<attr id="restrictions.answered">yes</attr>
+</attributes.specific>
+<item>
+<text>
+<txt>stimme überhaupt nicht zu</txt>
+<txt lng="eng">strongly disagree</txt>
+</text>
+<attributes.specific program="ofb">
+<attr id="id">5</attr>
+<attr id="pos">1</attr>
+</attributes.specific>
+</item>
+<item>
+<text>
+<txt>stimme nicht zu</txt>
+<txt lng="eng">disagree</txt>
+</text>
+<attributes.specific program="ofb">
+<attr id="id">4</attr>
+<attr id="pos">2</attr>
+</attributes.specific>
+</item>
+<item>
+<text>
+<txt>weder noch</txt>
+<txt lng="eng">neither agree or disagree</txt>
+</text>
+<attributes.specific program="ofb">
+<attr id="id">3</attr>
+<attr id="pos">3</attr>
+</attributes.specific>
+</item>
+<item>
+<text>
+<txt>stimme zu</txt>
+<txt lng="eng">agree</txt>
+</text>
+<attributes.specific program="ofb">
+<attr id="id">2</attr>
+<attr id="pos">4</attr>
+</attributes.specific>
+</item>
+<item>
+<text>
+<txt>stimme voll und ganz zu</txt>
+<txt lng="eng">strongly agree</txt>
+</text>
+<attributes.specific program="ofb">
+<attr id="id">1</attr>
+<attr id="pos">5</attr>
+</attributes.specific>
+</item>
+</question>
+<question>
+<description>Ranking Example 2</description>
+<class>cardrate</class>
+<title>
+<txt>Beispiel: Bewertung der Plausibilität von falschen Alternativen</txt>
+<txt lng="eng">Assessment of Expertise Demand</txt>
+</title>
+<explanation>
+<txt>**The forbidden fruit** mentioned in the **Book of Genesis (Bible)** is never identified as an **apple**, as widely depicted in **Western art**. **The original Hebrew texts** mention only **tree** and **fruit**.</txt>
+<txt lng="eng"><![CDATA[Sort the Answerspans from the text according to expertise demand. Place Answerspans with low expertise demand on the left and those with high expertise demand on the right.
+
+Reminder: Expertise demand for an Answerspans simply says how likely it is to memorize the information without taking individual factors (memorization strategies, cultural background or special personal interests) into account.
+
+
+
+**Earthworms** have **the ability to regenerate lost segments**, but this ability varies between **species** and depends on **the extent of the damage**. **Stephenson** (1930) devoted **a chapter of his monograph** to this topic, while **Gates** (1972) spent **20 years** studying **regeneration in a variety of species**, but "because little interest was shown", **Gates** published only a few of his findings that, nevertheless, show it is theoretically possible to grow **two whole worms** from **a bisected specimen** in **certain species**. ]]></txt>
+</explanation>
+<inputPosition>right</inputPosition>
+<labels>
+<li i="1">
+<txt>0 (gerine Plausibilität von falschen Alternativen)</txt>
+<txt lng="eng">0 (high Expertise demand)</txt>
+</li>
+<li i="2">
+<txt>10 (hohe Plausibilität von falschen Alternativen)</txt>
+<txt lng="eng">10 (low Expertise demand)</txt>
+</li>
+</labels>
+<order>default</order>
+<attributes.specific program="ofb">
+<attr id="id">3</attr>
+<attr id="pos">4</attr>
+<attr id="scale.metrics.height">300</attr>
+<attr id="restrictions.answered">probe</attr>
+</attributes.specific>
+<item>
+<text>The forbidden fruit</text>
+<attributes.specific program="ofb">
+<attr id="id">1</attr>
+<attr id="pos">1</attr>
+</attributes.specific>
+</item>
+<item>
+<text>Book of Genesis (Bible)</text>
+<attributes.specific program="ofb">
+<attr id="id">2</attr>
+<attr id="pos">2</attr>
+</attributes.specific>
+</item>
+<item>
+<text>apple</text>
+<attributes.specific program="ofb">
+<attr id="id">3</attr>
+<attr id="pos">3</attr>
+</attributes.specific>
+</item>
+<item>
+<text>Western art</text>
+<attributes.specific program="ofb">
+<attr id="id">4</attr>
+<attr id="pos">4</attr>
+</attributes.specific>
+</item>
+<item>
+<text>The original Hebrew texts</text>
+<attributes.specific program="ofb">
+<attr id="id">5</attr>
+<attr id="pos">5</attr>
+</attributes.specific>
+</item>
+<item>
+<text>tree</text>
+<attributes.specific program="ofb">
+<attr id="id">6</attr>
+<attr id="pos">6</attr>
+</attributes.specific>
+</item>
+<item>
+<text>fruit</text>
+<attributes.specific program="ofb">
+<attr id="id">7</attr>
+<attr id="pos">7</attr>
+</attributes.specific>
+</item>
+</question>
+<question>
+<description>show example</description>
+<class>TextContent</class>
+<title />
+<explanation />
+<headerText>Klicken Sie hier für eine ausgefüllte Beispielaufgabe, ähnlich zu der Aufgabe unten</headerText>
+<inputPosition>right</inputPosition>
+<lead>
+<txt><![CDATA[<p><img src="https://i.postimg.cc/J04hq7Pp/Bildschirmfoto-2024-01-03-um-19-01-26.png" alt="Bildschirmfoto-2024-01-03-um-19-01-26.png" width="900" /></p>
+
+<p><br /></p>
+
+<p>In diesem Beispiel könnte Verwechselt werden wo der Apfel dargestellt wird (Western art) und wo nur von einer verbotenen Frucht die Rede ist (The original Hebrew texts; Book of Genesis (Bible)). Allerdings ist die Bibel eine einzige Sache, während die westlich Kunst ein loser Zusammenhang aus vielen verschiedenen Werken ist. Deshalb könnte man alle drei Antwortphrasen mittig einordnen.</p>
+
+<p>tree ist die unverwechselbarste Antwortphrase und steht daher ganz links. Allerdings hat dieser kurze Text nicht wirklich <br /></p>]]></txt>
+<txt lng="eng"><![CDATA[<p><br /></p>]]></txt>
+</lead>
+<order>default</order>
+<attributes.specific program="ofb">
+<attr id="id">4</attr>
+<attr id="pos">5</attr>
+<attr id="alignment">default</attr>
+<attr id="character">accordion</attr>
+</attributes.specific>
+</question>
+<question>
+<description>show example 3</description>
+<class>TextContent</class>
+<title />
+<explanation />
+<headerText>Klicken Sie hier für eine ausgefüllte Beispielaufgabe</headerText>
+<inputPosition>right</inputPosition>
+<lead>
+<txt><![CDATA[<p><img alt="Bildschirmfoto-2024-01-07-um-14-08-02.png" width="900" src="https://i.postimg.cc/4drycXs0/Bildschirmfoto-2024-01-07-um-14-08-02.png" /><br /></p>
+
+<p><br /></p>
+
+<p>In diesem Beispiel können die Arten der Zellteilung **Meiosis**   und **Mitosis** leicht verwechselt werden. Dasselbe gilt für ihre Beschreibungen (**special type of cell divison** and **the way normal body cells divide**).<br /></p>
+
+<p>Für "**half the usual number of chromosomes**" könnte "**the way normal body cells divide**" eine einigermaßen plausible falsche Alternative sein, allerdings sind die beiden Antwortphrasen nicht ganz so ähnlich wie die oben genannten Paare.<br /></p>
+
+<p>"**genetic variation**" hingegen hat keine ähnliche Antwortphrase, also keine plausible falsche Alternative.</p>
+
+<p><br /></p>
+
+<p><font color="#e82a1f">
+{EM_WARNING}Achtung: Bitte schließen Sie die Beispielaufgabe bevor Sie die Aufgabe bearbeiten{EM_WARNING}
+
+</font><br /></p>]]></txt>
+<txt lng="eng"><![CDATA[<p><br /></p>]]></txt>
+</lead>
+<order>default</order>
+<attributes.specific program="ofb">
+<attr id="id">6</attr>
+<attr id="pos">6</attr>
+<attr id="alignment">default</attr>
+<attr id="character">accordion</attr>
+</attributes.specific>
+</question>
+<question>
+<description>Ranking Example 3</description>
+<class>cardrate</class>
+<title>
+<txt>Beispiel: Bewertung der Plausibilität von falschen Alternativen</txt>
+<txt lng="eng">Assessment of Expertise Demand</txt>
+</title>
+<explanation>
+<txt>**Meiosis** is a **special type of cell division**. Unlike **mitosis**, **the way normal body cells divide**, **meiosis** results in cells that only have **half the usual number of chromosomes**. In the long run, it increases **genetic variation**.</txt>
+<txt lng="eng"><![CDATA[Sort the Answerspans from the text according to expertise demand. Place Answerspans with low expertise demand on the left and those with high expertise demand on the right.
+
+Reminder: Expertise demand for an Answerspans simply says how likely it is to memorize the information without taking individual factors (memorization strategies, cultural background or special personal interests) into account.
+
+
+
+**Earthworms** have **the ability to regenerate lost segments**, but this ability varies between **species** and depends on **the extent of the damage**. **Stephenson** (1930) devoted **a chapter of his monograph** to this topic, while **Gates** (1972) spent **20 years** studying **regeneration in a variety of species**, but "because little interest was shown", **Gates** published only a few of his findings that, nevertheless, show it is theoretically possible to grow **two whole worms** from **a bisected specimen** in **certain species**. ]]></txt>
+</explanation>
+<inputPosition>right</inputPosition>
+<labels>
+<li i="1">
+<txt>0 (gerine Plausibilität von falschen Alternativen)</txt>
+<txt lng="eng">0 (high Expertise demand)</txt>
+</li>
+<li i="2">
+<txt>10 (hohe Plausibilität von falschen Alternativen)</txt>
+<txt lng="eng">10 (low Expertise demand)</txt>
+</li>
+</labels>
+<order>default</order>
+<attributes.specific program="ofb">
+<attr id="id">5</attr>
+<attr id="pos">7</attr>
+<attr id="scale.metrics.height">350</attr>
+<attr id="restrictions.answered">probe</attr>
+</attributes.specific>
+<item>
+<text>Meiosis</text>
+<attributes.specific program="ofb">
+<attr id="id">1</attr>
+<attr id="pos">1</attr>
+</attributes.specific>
+</item>
+<item>
+<text>special type of cell division</text>
+<attributes.specific program="ofb">
+<attr id="id">2</attr>
+<attr id="pos">2</attr>
+</attributes.specific>
+</item>
+<item>
+<text>mitosis</text>
+<attributes.specific program="ofb">
+<attr id="id">3</attr>
+<attr id="pos">3</attr>
+</attributes.specific>
+</item>
+<item>
+<text>the way normal body cells divide</text>
+<attributes.specific program="ofb">
+<attr id="id">4</attr>
+<attr id="pos">4</attr>
+</attributes.specific>
+</item>
+<item>
+<text>meiosis</text>
+<attributes.specific program="ofb">
+<attr id="id">5</attr>
+<attr id="pos">5</attr>
+</attributes.specific>
+</item>
+<item>
+<text>half the usual number of chromosomes</text>
+<attributes.specific program="ofb">
+<attr id="id">6</attr>
+<attr id="pos">6</attr>
+</attributes.specific>
+</item>
+<item>
+<text>genetic variation</text>
+<attributes.specific program="ofb">
+<attr id="id">7</attr>
+<attr id="pos">7</attr>
+</attributes.specific>
+</item>
+</question>
+<question>
+<description>task description</description>
+<class>TextContent</class>
+<title>Bewertung der Plausibilität von falschen Alternativen</title>
+<explanation />
+<inputPosition>right</inputPosition>
+<lead>
+<txt><![CDATA[<p>Sortieren Sie die Antwortphrasen aus dem Text nach Plausibilität von falschen Alternativen (Verwechselbarkeit) in dem Text. Platzieren Sie Antwortphrasen mit **geringer** Plausibilität von falschen Alternativen **links** und solche mit **hoher** Plausibilität von falschen Alternativen **rechts** in dem Graph.<br /></p>
+
+<div style="margin-top:32px;padding:20px;border:1px solid #808080;">
+Erklärung Plausibilität von falschen Alternativen:<br />Eine Antwortphrase hat einen hohen Wert im Graph (hohe Plausibilität von falschen Alternativen), wenn es in dem Text plausible falsche Alternativen gibt, die mit der Antwortphrase verwechselt werden könnten. 
+Eine Antwortphrase hat einen niedrigen Wert, wenn es in dem Text keine plausiblen falschen Alternativen gibt.
+</div>
+
+<p><br /></p>]]></txt>
+<txt lng="eng"><![CDATA[<p><br /></p>]]></txt>
+</lead>
+<order>default</order>
+<attributes.specific program="ofb">
+<attr id="id">8</attr>
+<attr id="pos">8</attr>
+<attr id="alignment">default</attr>
+</attributes.specific>
+</question>
+</section>
+<section>
+<title>Weiteres</title>
+<attributes.specific program="ofb">
+<attr id="id">A6</attr>
+<attr id="pos">5</attr>
+</attributes.specific>
+<question>
+<description>weitere Enflussgrösen</description>
+<class>mentions</class>
+<title>
+<txt>Weitere Einflussgrößen</txt>
+<txt lng="eng">other influencing factors</txt>
+</title>
+<explanation>
+<txt>Fallen Ihnen noch weitere potenzielle Einflussgrößen ein, die die Expertisenanforderung erhöhen, verringern oder anderweitig beeinflussen könnten? (Abgesehen von Relevanz und Plausibilität von falschen Alternativen)</txt>
+<txt lng="eng">What other factors increase, decrease or otherwise influence the Expertise Demand? </txt>
+</explanation>
+<inputPosition>right</inputPosition>
+<order>default</order>
+<attributes.specific program="ofb">
+<attr id="id">1</attr>
+<attr id="pos">1</attr>
+<attr id="height.auto">yes</attr>
+</attributes.specific>
+</question>
+<question>
+<description>weiteres</description>
+<class>text</class>
+<title>
+<![CDATA[Falls Sie noch Anmerkungen haben, nutzen Sie bitte das folgende Textfeld.
+]]>
+</title>
+<explanation />
+<inputPosition>right</inputPosition>
+<order>default</order>
+<attributes.specific program="ofb">
+<attr id="id">2</attr>
+<attr id="pos">2</attr>
+</attributes.specific>
+<item>
+<text />
+<attributes.specific program="ofb">
+<attr id="id">1</attr>
+<attr id="pos">1</attr>
+<attr id="height.auto">yes</attr>
+</attributes.specific>
+</item>
+</question>
+</section>
+<section>
+<title>Aufklärung zur Studienteilnahme</title>
+<attributes.specific program="ofb">
+<attr id="id">A1</attr>
+<attr id="pos">6</attr>
+</attributes.specific>
+<question>
+<description>Aufklärung zur Studienteilnahme</description>
+<class>TextContent</class>
+<title />
+<explanation />
+<headerText>Evaluation der Metrik: Textbasierte Metrik für Expertisenanforderung von Antwortphrasen zur Generierung von Fragen</headerText>
+<inputPosition>right</inputPosition>
+<lead>
+<txt><![CDATA[<div align="center"><img width="200" src="https://getlogo.net/wp-content/uploads/2020/06/universitaet-duisburg-essen-ude-logo-vector.png" alt="universitaet-duisburg-essen-ude-logo-vector.png" /><br /></div>
+
+
+
+<p><b>Bitte nehmen Sie an dieser Studie am PC oder Tablet teil</b><br /><br />Herzlich Willkommen bei der Online-Studie zur Evaluation der Metrik: Textbasierte Metrik für Expertisenanforderung von Antwortphrasen zur Generierung von Fragen. (Eine Metrik wird verwendet, um Dinge zu messen oder zu bewerten, oft in 
+Zahlen ausgedrückt, um objektive Vergleiche zu ermöglichen. Diese Metrik wird auf der nächsten Seite ausführlich erklärt.)<br /></p>
+
+<p><span style="font-weight:bold;">In dieser Studie geht es darum, herauszufinden, welche Faktoren (Einflussgrößen) genutzt werden können, um die Expertisenanforderung (ähnlich wie Schwierigkeit) von automatisch generierten Fragen einzuschätzen. <br /></span></p>
+
+<p><span style="font-weight:bold;">Dafür müssen Sie einen kurzen Text auf Englisch lesen und Wörter/Wortgruppen aus dem Text z.B. nach Expertisenanforderung sortieren.<br /></span></p>
+
+<p>Diese Studie wird im Rahmen meiner Masterarbeit am Fachgebiet „Informatische Methoden und Analyse von Lernprozessen“ der Universität Duisburg-Essen (Leitung: Prof. Dr. Irene-Angelica Chounta) durchgeführt. Ich danke Ihnen sehr für Ihr Interesse und Ihre Bereitschaft, mit Ihrer Mitarbeit diese Studie zu unterstützen. Um an der Studie teilzunehmen, möchte ich Sie bitten, die folgenden Informationen zu lesen. Sie werden darin über ihre Rechte als Teilnehmende/r an der Studie aufgeklärt.</p>
+
+<p>Die Studie wurde durch eine Ethikkommission (https://www.uni-due.de/iw/inko/de/ethikkommission/) geprüft und akzeptiert. Die Daten werden ausschließlich zu wissenschaftlichen Zwecken verwendet. Ihre Daten werden anonym erhoben. Eine Zuordnung der Daten zu Ihrer Person ist nicht möglich, daher ist eine Löschung Ihrer Daten nach Beendigung der Studie auch nicht mehr möglich. Die von Ihnen erhobenen Daten bestehen ausschließlich aus Ihren Angaben zu Texten und Wörtern / Wortgruppen darin.<br /></p>
+
+<p>Die Teilnahme an der Studie ist freiwillig. Sie können jederzeit und ohne Angaben von Gründen die Teilnahme an dieser Studie beenden, ohne dass Ihnen deshalb Nachteile entstehen, in dem Fall werden Ihre Daten gelöscht. Die Teilnahme nimmt ca <b>20-30min</b> in Anspruch und wird nicht vergütet.<br /></p>
+
+<p>Bei Fragen wenden Sie sich bitte an Lenard Schnakenbeck über lenard.schnakenbeck@stud.uni-due.de, wenn Sie zu genüge aufgeklärt wurden und keine weiteren Fragen haben, können Sie frei entscheiden, ob Sie an der Studie teilnehmen oder nicht. Bitte klicken Sie dazu auf „<span style="font-weight:bold;">weiter</span>“ und lesen Sie sich hierzu die Datenschutzerklärung durch. Vielen Dank für Ihre Unterstützung!</p>]]></txt>
+<txt lng="eng"><![CDATA[<p>Welcome to the online study to evaluate the metric: Text-based metric for expertise demand of answer phrases for generating questions.<br /><br /><b>This study is about finding out which factors can be used to estimate the expertise demand of automatically generated questions.</b><br /><br />This study is being conducted as part of my Master's thesis at the <span style="font-weight:normal;"><font size="3">Computational Methods in Modeling and Analysis of Learning Processes (colaps) </font></span>at the University of Duisburg-Essen (supervisor: Prof. Dr. Irene-Angelica Chounta). Thank you very much for your interest and your willingness to support this study with your cooperation. In order to participate in the study, I would like to ask you to read the following information. You will be informed about your rights as a participant in the study.<br /><br />Your data will be collected anonymously. It is not possible to link the data to you personally. The data will be used exclusively for scientific purposes. The data collected from you consists exclusively of the questions you answer in the questionnaire.<br /><br />Participation in the study is voluntary. You can end your participation in this study at any time and without giving reasons, without incurring any disadvantages.</p>
+
+<p><br />Now that you have received all the necessary information, you are free to decide whether or not to take part in the study. Please click on "<b>next</b>" and read the data protection declaration. Thank you for your support!<br /></p>]]></txt>
+</lead>
+<order>default</order>
+<attributes.specific program="ofb">
+<attr id="id">2</attr>
+<attr id="pos">1</attr>
+<attr id="alignment">default</attr>
+</attributes.specific>
+</question>
+<question>
+<description>Datenschutzerklärung</description>
+<class>TextContent</class>
+<title />
+<explanation />
+<headerText>Datenschutzerklärung</headerText>
+<inputPosition>right</inputPosition>
+<lead>
+<txt><![CDATA[<p style="margin-bottom:8.25pt;" class="MsoNormal"><b><span style="font-size:18pt;font-family:'Times New Roman', serif;">Datenschutzerklärung</span></b><span style="font-family:'Times New Roman', serif;"></span></p>
+
+<p style="margin-bottom:8.25pt;" class="MsoNormal"><b><span style="font-size:13.5pt;font-family:'Times New Roman', serif;">1. Datenschutz
+auf einen Blick</span></b><span style="font-family:'Times New Roman', serif;"></span></p>
+
+<p style="margin-bottom:8.25pt;" class="MsoNormal"><b><span style="font-family:'Times New Roman', serif;">Allgemeine Hinweise</span></b><span style="font-family:'Times New Roman', serif;"></span></p>
+
+<p style="margin-bottom:8.25pt;" class="MsoNormal"><span style="font-family:'Times New Roman', serif;">Die folgenden Hinweise geben
+einen einfachen Überblick darüber, was mit Ihren personenbezogenen Daten
+passiert, wenn Sie unsere Website besuchen. Personenbezogene Daten sind alle
+Daten, mit denen Sie persönlich identifiziert werden können. Ausführliche Informationen
+zum Thema Datenschutz entnehmen Sie der hier aufgeführten Datenschutzerklärung.</span></p>
+
+<p style="margin-bottom:8.25pt;" class="MsoNormal"><span style="font-family:'Times New Roman', serif;"> </span></p>
+
+<p style="margin-bottom:8.25pt;" class="MsoNormal"><b><span style="font-family:'Times New Roman', serif;">Datenerfassung auf unserer
+Website</span></b><span style="font-family:'Times New Roman', serif;"></span></p>
+
+<p style="margin-bottom:8.25pt;" class="MsoNormal"><b><span style="font-family:'Times New Roman', serif;">Wer ist verantwortlich für die
+Datenerfassung auf dieser Website?</span></b><span style="font-family:'Times New Roman', serif;"></span></p>
+
+<p style="margin-bottom:8.25pt;" class="MsoNormal"><span style="font-family:'Times New Roman', serif;">Die Datenverarbeitung auf dieser
+Website erfolgt durch den Websitebetreiber. Dies ist</span></p>
+
+<p style="margin-bottom:8.25pt;" class="MsoNormal"><i><span style="font-family:'Times New Roman', serif;">Lenard Schnakenbeck, im Auftrag
+von</span></i></p>
+
+<p style="margin-bottom:8.25pt;" class="MsoNormal"><i><span style="font-family:'Times New Roman', serif;">Prof. Dr. Irene-Angelica Chounta<br />
+Fachgebiet Informatische Methoden und Analyse von Lernprozessen<br />
+Abteilung für Informatik und Angewandte Kognitionswissenschaft<br />
+Fakultät für Ingenieurwissenschaften</span></i><span style="font-family:'Times New Roman', serif;"></span></p>
+
+<p style="margin-bottom:8.25pt;" class="MsoNormal"><i><span style="font-family:'Times New Roman', serif;">Universität Duisburg-Essen,<br />
+Campus Duisburg<br />
+Forsthausweg 2<br />
+47057 Duisburg<br />
+Germany</span></i><span style="font-family:'Times New Roman', serif;"></span></p>
+
+<p style="margin-bottom:8.25pt;" class="MsoNormal"><b><span style="font-family:'Times New Roman', serif;">Wer ist Datenschutzbeauftragter?</span></b><span style="font-family:'Times New Roman', serif;"></span></p>
+
+<p style="margin-bottom:8.25pt;" class="MsoNormal"><span style="font-family:'Times New Roman', serif;">Datenschutzbeauftragter der
+Universität Duisburg-Essen ist Dr. Kai-Uwe Loser (</span><span style="font-size:11pt;"><a href="mailto:kai-uwe.loser@uni-due.de" target="_blank" rel="noreferrer noopener"><span style="font-size:12pt;font-family:'Times New Roman', serif;color:#0000FF;">kai-uwe.loser@uni-due.de</span></a></span><span style="font-family:'Times New Roman', serif;">). Weitere Informationen zum
+Thema Datenschutz an der Universität Duisburg-Essen finden Sie unter </span><span style="font-size:11pt;"><a href="http://www.uni-due.de/verwaltung/datenschutz" target="_blank" rel="noreferrer noopener"><span style="font-size:12pt;font-family:'Times New Roman', serif;color:#0000FF;">www.uni-due.de/verwaltung/datenschutz</span></a></span><span style="font-family:'Times New Roman', serif;">.</span></p>
+
+<p style="margin-bottom:8.25pt;" class="MsoNormal"><b><span style="font-family:'Times New Roman', serif;">Wie erfassen wir Ihre Daten?</span></b><span style="font-family:'Times New Roman', serif;"></span></p>
+
+<p style="margin-bottom:8.25pt;" class="MsoNormal"><span style="font-family:'Times New Roman', serif;">Ihre Daten werden zum einen
+dadurch erhoben, dass Sie uns diese mitteilen. Hierbei kann es sich um Daten
+handeln, die beispielsweise in ein Kontaktformular oder einen Fragebogen
+eingeben werden.</span></p>
+
+<p style="margin-bottom:8.25pt;" class="MsoNormal"><span style="font-family:'Times New Roman', serif;">Andere Daten werden automatisch
+beim Besuch der Website durch unsere IT-Systeme erfasst. Das sind vor allem
+technische Daten (z.B. Internetbrowser, Betriebssystem oder Uhrzeit des
+Seitenaufrufs). Die Erfassung dieser Daten erfolgt automatisch, sobald Sie
+unsere Website betreten.</span></p>
+
+<p style="margin-bottom:8.25pt;" class="MsoNormal"><b><span style="font-family:'Times New Roman', serif;">Wofür nutzen wir Ihre Daten?</span></b><span style="font-family:'Times New Roman', serif;"></span></p>
+
+<p style="margin-bottom:8.25pt;" class="MsoNormal"><span style="font-family:'Times New Roman', serif;">Ein Teil der Daten wird erhoben,
+um eine fehlerfreie Bereitstellung der Website zu gewährleisten.</span></p>
+
+<p style="margin-bottom:8.25pt;" class="MsoNormal"><span style="font-family:'Times New Roman', serif;">Der andere Teil der Daten wird zu
+wissenschaftlichen Zwecken verwendet (siehe 3. Datenerfassung auf unserer
+Website, Umfragedaten).</span></p>
+
+<p style="margin-bottom:8.25pt;" class="MsoNormal"><b><span style="font-family:'Times New Roman', serif;">Welche Rechte haben Sie bezüglich
+Ihrer Daten?</span></b><span style="font-family:'Times New Roman', serif;"></span></p>
+
+<p style="margin-bottom:8.25pt;" class="MsoNormal"><span style="font-family:'Times New Roman', serif;">Sie haben jederzeit das Recht,
+Auskunft über Herkunft, Empfänger und Zweck Ihrer gespeicherten
+personenbezogenen Daten zu erhalten. Sie haben außerdem das Recht, die
+Berichtigung, den Widerruf oder die Löschung dieser Daten zu verlangen. Hierzu
+sowie zu weiteren Fragen zum Thema Datenschutz können Sie sich jederzeit unter
+der im Impressum angegebenen Adresse an uns wenden. Des Weiteren steht Ihnen
+ein Beschwerderecht bei einer Aufsichtsbehörde zu, zum Beispiel beim
+Landesbeauftragten für Datenschutz und Informationsfreiheit Nordrhein-Westfalen
+(</span><span style="font-size:11pt;"><a href="http://www.ldi.nrw.de" target="_blank" rel="noreferrer noopener"><span style="font-size:12pt;font-family:'Times New Roman', serif;color:#0000FF;">www.ldi.nrw.de</span></a></span><span style="font-family:'Times New Roman', serif;">).</span></p>
+
+<p style="margin-bottom:8.25pt;" class="MsoNormal"><span style="font-family:'Times New Roman', serif;">Außerdem haben Sie das Recht,
+unter bestimmten Umständen die Einschränkung der Verarbeitung Ihrer
+personenbezogenen Daten zu verlangen. Details hierzu entnehmen Sie der
+Datenschutzerklärung unter „Recht auf Einschränkung der Verarbeitung“.</span></p>
+
+<p style="margin-bottom:8.25pt;" class="MsoNormal"><span style="font-family:'Times New Roman', serif;">Bei anonymisierten Studien ist
+eine nachträgliche Auskunft, Löschung, Berichtigung, Widerrufung und
+Einschränkung der Verarbeitung der in der Umfrage angegebenen Daten nicht
+möglich, da die in der Umfrage erhobenen Daten in diesem Fall nicht
+nachträglich Ihrer Person zugeordnet werden können.</span></p>
+
+<p style="margin-bottom:8.25pt;" class="MsoNormal"><span style="font-family:'Times New Roman', serif;"> </span></p>
+
+<p style="margin-bottom:8.25pt;" class="MsoNormal"><b><span style="font-size:13.5pt;font-family:'Times New Roman', serif;">2. Allgemeine
+Hinweise und Pflichtinformationen</span></b><span style="font-family:'Times New Roman', serif;"></span></p>
+
+<p style="margin-bottom:8.25pt;" class="MsoNormal"><b><span style="font-family:'Times New Roman', serif;">Datenschutz</span></b><span style="font-family:'Times New Roman', serif;"></span></p>
+
+<p style="margin-bottom:8.25pt;" class="MsoNormal"><span style="font-family:'Times New Roman', serif;">Die Betreiber dieser Seiten
+nehmen den Schutz Ihrer persönlichen Daten sehr ernst. Wir behandeln Ihre
+personenbezogenen Daten vertraulich und entsprechend der gesetzlichen
+Datenschutzvorschriften sowie dieser Datenschutzerklärung.</span></p>
+
+<p style="margin-bottom:8.25pt;" class="MsoNormal"><span style="font-family:'Times New Roman', serif;">Diese Seite nutzt daher aus
+Sicherheitsgründen und zum Schutz der Übertragung vertraulicher Inhalte, wie
+zum Beispiel Bestellungen oder Anfragen, die Sie an uns als Seitenbetreiber
+senden, eine SSL-bzw. TLS-Verschlüsselung. Eine verschlüsselte Verbindung
+erkennen Sie daran, dass die Adresszeile des Browsers von “http://” auf
+“https://” wechselt und an dem Schloss-Symbol in Ihrer Browserzeile.</span></p>
+
+<p style="margin-bottom:8.25pt;" class="MsoNormal"><span style="font-family:'Times New Roman', serif;">Wenn die SSL- bzw.
+TLS-Verschlüsselung aktiviert ist, können die Daten, die Sie an uns
+übermitteln, nicht von Dritten mitgelesen werden.</span></p>
+
+<p style="margin-bottom:8.25pt;" class="MsoNormal"><span style="font-family:'Times New Roman', serif;">Wenn Sie diese Website benutzen,
+werden verschiedene personenbezogene Daten erhoben. Personenbezogene Daten sind
+Daten, mit denen Sie persönlich identifiziert werden können. Die vorliegende
+Datenschutzerklärung erläutert, welche Daten wir erheben und wofür wir sie
+nutzen. Sie erläutert auch, wie und zu welchem Zweck das geschieht.</span></p>
+
+<p style="margin-bottom:8.25pt;" class="MsoNormal"><span style="font-family:'Times New Roman', serif;">Wir weisen darauf hin, dass die
+Datenübertragung im Internet (z.B. bei der Kommunikation per E-Mail)
+Sicherheitslücken aufweisen kann. Ein lückenloser Schutz der Daten vor dem
+Zugriff durch Dritte ist nicht möglich.</span></p>
+
+<p style="margin-bottom:8.25pt;" class="MsoNormal"><b><span style="font-family:'Times New Roman', serif;">Hinweis zur verantwortlichen
+Stelle</span></b><span style="font-family:'Times New Roman', serif;"></span></p>
+
+<p style="margin-bottom:8.25pt;" class="MsoNormal"><span style="font-family:'Times New Roman', serif;">Die verantwortliche Stelle für
+die Datenverarbeitung auf dieser Website ist:</span></p>
+
+<p style="margin-bottom:8.25pt;" class="MsoNormal"><span style="font-family:'Times New Roman', serif;">Lenard Schnakenbeck, im Auftrag
+von</span></p>
+
+<p style="margin-bottom:8.25pt;" class="MsoNormal"><span style="font-family:'Times New Roman', serif;">Prof. Dr. Irene-Angelica Chounta<br />
+Fachgebiet Informatische Methoden und Analyse von Lernprozessen<br />
+Abteilung für Informatik und Angewandte Kognitionswissenschaft<br />
+Fakultät für Ingenieurwissenschaften</span></p>
+
+<p style="margin-bottom:8.25pt;" class="MsoNormal"><span style="font-family:'Times New Roman', serif;">Universität Duisburg-Essen,<br />
+Campus Duisburg<br />
+Forsthausweg 2<br />
+47057 Duisburg<br />
+Germany</span></p>
+
+<p style="margin-bottom:8.25pt;" class="MsoNormal"><span style="font-family:'Times New Roman', serif;">Telefon: +49 (0) 157 860 841 18<br />
+E-Mail: lenard.schnakenbeck@stud.uni-due.de</span></p>
+
+<p style="margin-bottom:8.25pt;" class="MsoNormal"><span style="font-family:'Times New Roman', serif;">Verantwortliche Stelle ist die
+natürliche oder juristische Person, die allein oder gemeinsam mit anderen über
+die Zwecke und Mittel der Verarbeitung von personenbezogenen Daten (z.B. Namen,
+E-Mail-Adressen o. Ä.) entscheidet.</span></p>
+
+<p style="margin-bottom:8.25pt;" class="MsoNormal"><b><span style="font-family:'Times New Roman', serif;">Widerruf Ihrer Einwilligung zur
+Datenverarbeitung</span></b><span style="font-family:'Times New Roman', serif;"></span></p>
+
+<p style="margin-bottom:8.25pt;" class="MsoNormal"><span style="font-family:'Times New Roman', serif;">Viele Datenverarbeitungsvorgänge
+sind nur mit Ihrer ausdrücklichen Einwilligung möglich. Sie können eine bereits
+erteilte Einwilligung jederzeit widerrufen. Dazu reicht eine formlose
+Mitteilung per E-Mail an uns. Die Rechtmäßigkeit der bis zum Widerruf erfolgten
+Datenverarbeitung bleibt vom Widerruf unberührt.</span></p>
+
+<p style="margin-bottom:8.25pt;" class="MsoNormal"><b><span style="font-family:'Times New Roman', serif;">Beschwerderecht bei
+Aufsichtsbehörden</span></b><span style="font-family:'Times New Roman', serif;"></span></p>
+
+<p style="margin-bottom:8.25pt;" class="MsoNormal"><span style="font-family:'Times New Roman', serif;">Im Falle von Verstößen gegen die
+DSGVO steht den Betroffenen ein Beschwerderecht bei einer beliebigen
+Aufsichtsbehörde, insbesondere in dem Mitgliedstaat ihres gewöhnlichen
+Aufenthalts, ihres Arbeitsplatzes oder des Orts des mutmaßlichen Verstoßes zu.
+Das Beschwerderecht besteht unbeschadet anderweitiger verwaltungsrechtlicher
+oder gerichtlicher Rechtsbehelfe.</span></p>
+
+<p style="margin-bottom:8.25pt;" class="MsoNormal"><b><span style="font-family:'Times New Roman', serif;">Recht auf Datenübertragbarkeit</span></b><span style="font-family:'Times New Roman', serif;"></span></p>
+
+<p style="margin-bottom:8.25pt;" class="MsoNormal"><span style="font-family:'Times New Roman', serif;">Sie haben das Recht, Daten, die
+wir auf Grundlage Ihrer Einwilligung oder in Erfüllung eines Vertrags
+automatisiert verarbeiten, an sich oder an einen Dritten in einem gängigen,
+maschinenlesbaren Format aushändigen zu lassen. Sofern Sie die direkte
+Übertragung der Daten an einen anderen Verantwortlichen verlangen, erfolgt dies
+nur, soweit es technisch machbar ist.</span></p>
+
+<p style="margin-bottom:8.25pt;" class="MsoNormal"><b><span style="font-family:'Times New Roman', serif;">Auskunft, Widerruf, Löschung und
+Berichtigung</span></b><span style="font-family:'Times New Roman', serif;"></span></p>
+
+<p style="margin-bottom:8.25pt;" class="MsoNormal"><span style="font-family:'Times New Roman', serif;">Sie haben im Rahmen der geltenden
+gesetzlichen Bestimmungen jederzeit das Recht auf Auskunft über Ihre
+gespeicherten personenbezogenen Daten, deren Herkunft und Empfänger und den
+Zweck der Datenverarbeitung und ggf. ein Recht auf Berichtigung, Widerruf oder
+Löschung dieser Daten. Hierzu sowie zu weiteren Fragen zum Thema
+personenbezogene Daten können Sie sich jederzeit unter der im Impressum
+angegebenen Adresse an uns wenden.</span></p>
+
+<p style="margin-bottom:8.25pt;" class="MsoNormal"><b><span style="font-family:'Times New Roman', serif;">Recht auf Einschränkung der
+Verarbeitung</span></b><span style="font-family:'Times New Roman', serif;"></span></p>
+
+<p style="margin-bottom:8.25pt;" class="MsoNormal"><span style="font-family:'Times New Roman', serif;">Sie haben das Recht, die
+Einschränkung der Verarbeitung Ihrer personenbezogenen Daten zu verlangen.
+Hierzu können Sie sich jederzeit unter der im Impressum angegebenen Adresse an
+uns wenden. Das Recht auf Einschränkung der Verarbeitung besteht in folgenden
+Fällen:</span></p>
+
+<ul type="disc">
+ <li style="margin-bottom:8.25pt;" class="MsoNormal"><span style="font-family:'Times New Roman', serif;">Wenn Sie die Richtigkeit
+     Ihrer bei uns gespeicherten personenbezogenen Daten bestreiten, benötigen
+     wir in der Regel Zeit, um dies zu überprüfen. Für die Dauer der Prüfung
+     haben Sie das Recht, die Einschränkung der Verarbeitung Ihrer
+     personenbezogenen Daten zu verlangen.</span></li>
+ <li style="margin-bottom:8.25pt;" class="MsoNormal"><span style="font-family:'Times New Roman', serif;">Wenn Sie der Ansicht sind,
+     dass die Verarbeitung Ihrer personenbezogenen Daten unrechtmäßig geschah
+     oder geschieht, können Sie statt der Löschung die Einschränkung der
+     Datenverarbeitung verlangen.</span></li>
+ <li style="margin-bottom:8.25pt;" class="MsoNormal"><span style="font-family:'Times New Roman', serif;">Wenn wir Ihre
+     personenbezogenen Daten nicht mehr benötigen, Sie sie jedoch zur Ausübung,
+     Verteidigung oder Geltendmachung von Rechtsansprüchen benötigen, haben Sie
+     das Recht, statt der Löschung die Einschränkung der Verarbeitung Ihrer
+     personenbezogenen Daten zu verlangen.</span></li>
+ <li style="margin-bottom:8.25pt;" class="MsoNormal"><span style="font-family:'Times New Roman', serif;">Wenn Sie einen Widerspruch
+     nach Art. 21 Abs. 1 DSGVO eingelegt haben, muss eine Abwägung zwischen
+     Ihren und unseren Interessen vorgenommen werden. Solange noch nicht
+     feststeht, wessen Interessen überwiegen, haben Sie das Recht, die
+     Einschränkung der Verarbeitung Ihrer personenbezogenen Daten zu verlangen.</span></li>
+</ul>
+
+<p style="margin-bottom:8.25pt;" class="MsoNormal"><span style="font-family:'Times New Roman', serif;">Wenn Sie die Verarbeitung Ihrer
+personenbezogenen Daten eingeschränkt haben, dürfen diese Daten – von ihrer
+Speicherung abgesehen – nur mit Ihrer Einwilligung oder zur Geltendmachung,
+Ausübung oder Verteidigung von Rechtsansprüchen oder zum Schutz der Rechte
+einer anderen natürlichen oder juristischen Person oder aus Gründen eines
+wichtigen öffentlichen Interesses der Europäischen Union oder eines
+Mitgliedstaats verarbeitet werden.</span></p>
+
+<p style="margin-bottom:8.25pt;" class="MsoNormal"><b><span style="font-size:13.5pt;font-family:'Times New Roman', serif;">3.
+Datenerfassung auf unserer Website</span></b><span style="font-family:'Times New Roman', serif;"></span></p>
+
+<p style="margin-bottom:8.25pt;" class="MsoNormal"><b><span style="font-family:'Times New Roman', serif;">Cookies</span></b><span style="font-family:'Times New Roman', serif;"></span></p>
+
+<p style="margin-bottom:8.25pt;" class="MsoNormal"><span style="font-family:'Times New Roman', serif;">Die Internetseiten verwenden
+teilweise sogenannte Cookies. Cookies richten auf Ihrem Rechner keinen Schaden
+an und enthalten keine Viren. Cookies dienen dazu, unser Angebot
+nutzerfreundlicher, effektiver und sicherer zu machen. Cookies sind kleine
+Textdateien, die auf Ihrem Rechner abgelegt werden und die Ihr Browser
+speichert.</span></p>
+
+<p style="margin-bottom:8.25pt;" class="MsoNormal"><span style="font-family:'Times New Roman', serif;">Die meisten der von uns
+verwendeten Cookies sind so genannte “Session-Cookies”. Sie werden nach Ende
+Ihres Besuchs automatisch gelöscht. Andere Cookies bleiben auf Ihrem Endgerät
+gespeichert bis Sie diese löschen. Diese Cookies ermöglichen es uns, Ihren
+Browser beim nächsten Besuch wiederzuerkennen.</span></p>
+
+<p style="margin-bottom:8.25pt;" class="MsoNormal"><span style="font-family:'Times New Roman', serif;">Sie können Ihren Browser so
+einstellen, dass Sie über das Setzen von Cookies informiert werden und Cookies
+nur im Einzelfall erlauben, die Annahme von Cookies für bestimmte Fälle oder
+generell ausschließen sowie das automatische Löschen der Cookies beim Schließen
+des Browsers aktivieren. Bei der Deaktivierung von Cookies kann die
+Funktionalität dieser Website eingeschränkt sein.</span></p>
+
+<p style="margin-bottom:8.25pt;" class="MsoNormal"><span style="font-family:'Times New Roman', serif;">Cookies, die zur Durchführung des
+elektronischen Kommunikationsvorgangs oder zur Bereitstellung bestimmter, von
+Ihnen erwünschter Funktionen (z.B. Speichern und späteres Fortsetzen der
+Umfrage) erforderlich sind, werden auf Grundlage von Art. 6 Abs. 1 lit. f DSGVO
+gespeichert. Der Websitebetreiber hat ein berechtigtes Interesse an der
+Speicherung von Cookies zur technisch fehlerfreien und optimierten
+Bereitstellung seiner Dienste.</span></p>
+
+<p style="margin-bottom:8.25pt;" class="MsoNormal"><span style="font-family:'Times New Roman', serif;">Die Erfassung dieser Daten
+erfolgt auf Grundlage von Art. 6 Abs. 1 lit. f DSGVO. Der Websitebetreiber hat
+ein berechtigtes Interesse an der technisch fehlerfreien Darstellung und der
+Optimierung seiner Website – hierzu müssen die Server-Log-Files erfasst werden.</span></p>
+
+<p style="margin-bottom:8.25pt;" class="MsoNormal"><b><span style="font-family:'Times New Roman', serif;">Anfrage per E-Mail, Telefon oder
+Telefax</span></b><span style="font-family:'Times New Roman', serif;"></span></p>
+
+<p style="margin-bottom:8.25pt;" class="MsoNormal"><span style="font-family:'Times New Roman', serif;">Wenn Sie uns per E-Mail, Telefon
+oder Telefax kontaktieren, wird Ihre Anfrage inklusive aller daraus
+hervorgehenden personenbezogenen Daten (Name, Anfrage) zum Zwecke der
+Bearbeitung Ihres Anliegens bei uns gespeichert und verarbeitet. Diese Daten
+geben wir nicht ohne Ihre Einwilligung weiter.</span></p>
+
+<p style="margin-bottom:8.25pt;" class="MsoNormal"><span style="font-family:'Times New Roman', serif;">Die Verarbeitung dieser Daten
+erfolgt auf Grundlage von Art. 6 Abs. 1 lit. b DSGVO, sofern Ihre Anfrage mit
+der Erfüllung eines Vertrags zusammenhängt oder zur Durchführung
+vorvertraglicher Maßnahmen erforderlich ist. In allen übrigen Fällen beruht die
+Verarbeitung auf Ihrer Einwilligung (Art. 6 Abs. 1 lit. a DSGVO) und / oder auf
+unseren berechtigten Interessen (Art. 6 Abs. 1 lit. f DSGVO), da wir ein
+berechtigtes Interesse an der effektiven Bearbeitung der an uns gerichteten
+Anfragen haben.</span></p>
+
+<p style="margin-bottom:8.25pt;" class="MsoNormal"><span style="font-family:'Times New Roman', serif;">Die von Ihnen an uns per
+Kontaktanfragen übersandten Daten verbleiben bei uns, bis Sie uns zur Löschung
+auffordern, Ihre Einwilligung zur Speicherung widerrufen oder der Zweck für die
+Datenspeicherung entfällt (z. B. nach abgeschlossener Bearbeitung Ihres
+Anliegens). Zwingende gesetzliche Bestimmungen – insbesondere gesetzliche
+Aufbewahrungsfristen – bleiben unberührt.</span></p>
+
+<p style="margin-bottom:8.25pt;" class="MsoNormal"><b><span style="font-family:'Times New Roman', serif;">Umfragedaten</span></b><span style="font-family:'Times New Roman', serif;"></span></p>
+
+<p style="margin-bottom:8.25pt;" class="MsoNormal"><span style="font-family:'Times New Roman', serif;">Die innerhalb der Umfrage
+erhobenen Daten (z.B. angegebene Antworten) werden zu wissenschaftlichen
+Zwecken verwendet (siehe Art. 89 DSGVO) und können in anonymisierter Form für
+wissenschaftliche Darstellungen und Veröffentlichungen verwendet werden.
+Zugriff auf Ihre personenbezogenen Daten haben ausschließlich
+Studiendurchführende und Mitarbeitende des Fachgebiets Allgemeine Psychologie:
+Kognition. Ihre personenbezogenen Daten werden nicht an Dritte weitergegeben.</span></p>
+
+<p style="margin-bottom:8.25pt;" class="MsoNormal"><span style="font-family:'Times New Roman', serif;">Die im Rahmen der Studie
+erhobenen Daten werden solange gespeichert, wie sie für die fortlaufende
+Forschung relevant sind (Art.13 Abs. 2a &amp; Art.15 Abs.1d DSGVO).</span></p>
+
+<p style="margin-bottom:8.25pt;" class="MsoNormal"><b><span style="font-family:'Times New Roman', serif;">Stand und Änderungen der
+Datenschutzerklärung</span></b><span style="font-family:'Times New Roman', serif;"></span></p>
+
+<p style="margin-bottom:8.25pt;" class="MsoNormal"><span style="font-family:'Times New Roman', serif;">Die Nutzer werden gebeten sich
+regelmäßig über den Inhalt der Datenschutzerklärung zu informieren.</span></p>
+
+<p style="margin-bottom:8.25pt;" class="MsoNormal"><b><span style="font-family:'Times New Roman', serif;">Änderungen der
+Datenschutzerklärung</span></b><span style="font-family:'Times New Roman', serif;"></span></p>
+
+<p style="margin-bottom:8.25pt;" class="MsoNormal"><span style="font-family:'Times New Roman', serif;">Wir behalten uns vor, diese
+Datenschutzerklärung zu ändern, um sie an geänderte Rechtslagen, oder bei
+Änderungen des Dienstes sowie der Datenverarbeitung anzupassen. Dies gilt
+jedoch nur im Hinblick auf Erklärungen zur Datenverarbeitung. Sofern
+Einwilligungen der Nutzer erforderlich sind oder Bestandteile der
+Datenschutzerklärung Regelungen des Vertragsverhältnisses mit den Nutzern
+enthalten, erfolgen die Änderungen nur mit Zustimmung der Nutzer.</span></p>
+
+<p class="MsoNormal"><span> </span></p>
+
+<p></p>
+
+<p><br /></p>]]></txt>
+<txt lng="eng"><![CDATA[<p><br /></p>]]></txt>
+</lead>
+<order>default</order>
+<attributes.specific program="ofb">
+<attr id="id">3</attr>
+<attr id="pos">2</attr>
+<attr id="alignment">default</attr>
+<attr id="character">accordion</attr>
+</attributes.specific>
+</question>
+<question>
+<description>Akzeptieren der Datenschutzerklärung</description>
+<class>checkbox</class>
+<title />
+<explanation />
+<inputPosition>right</inputPosition>
+<order>default</order>
+<attributes.specific program="ofb">
+<attr id="id">4</attr>
+<attr id="pos">3</attr>
+<attr id="restrictions.answered">yes</attr>
+</attributes.specific>
+<item>
+<text>
+<txt>Ich habe die Datenschutzerklärung, sowie die Informationen zur Studie gelesen, verstanden und akzeptiert</txt>
+<txt lng="eng">I have read and accepted the privacy policy </txt>
+</text>
+<attributes.specific program="ofb">
+<attr id="id">1</attr>
+<attr id="pos">1</attr>
+</attributes.specific>
+</item>
+</question>
+</section>
+<layoutTexts>
+<layoutText id="default.imprint"><txt lng="ger"><![CDATA[<a href="mailto:lenard.schnakenbeck@stud.uni-due.de">B.Sc. Lenard Schnakenbeck</a>, 
+Universität Duisburg-Essen – 2023]]></txt>
+<txt lng="eng"><![CDATA[<a href="mailto:lenard.schnakenbeck@stud.uni-due.de">B.Sc. Lenard Schnakenbeck</a>, 
+Universität Duisburg-Essen – 2023]]></txt></layoutText>
+</layoutTexts>
+<questionnaire>
+<title>Questionnaire</title>
+<lang>ger</lang>
+<attributes.specific program="ofb">
+<attr id="id">base</attr>
+<attr id="content">
+<![CDATA[<?xml version="1.0"?>
+<questionnaire>
+
+<!-- Page 1 -->
+<page ident="P0" intID="16">
+<info>Aufklärung Studienteiln.</info>
+<question id="A102" intID="17" />
+<question id="A103" intID="18" />
+<question id="A104" intID="19" />
+</page>
+
+
+<!-- Page 2 -->
+<page ident="P1" intID="1">
+<info>Erklärung Metrik</info>
+<question id="A201" intID="2" />
+<question id="A202" intID="3" />
+</page>
+
+
+<!-- Page 3 -->
+<page ident="P2" intID="5">
+<info>Expertise Demand</info>
+<question id="A204" intID="7" />
+<question id="A305" intID="23" />
+<question id="A303" intID="21" />
+<question id="A301" intID="6" />
+</page>
+
+
+<!-- Page 4 -->
+<page ident="P3" intID="8">
+<info>Relevanz</info>
+<question id="A401" intID="9" />
+<question id="A402" intID="10" />
+</page>
+
+
+<!-- Page 5 -->
+<page ident="P4" intID="11">
+<info>Plausibilität von Alternativen</info>
+<question id="A508" intID="25" />
+<question id="A506" intID="22" />
+<question id="A507" intID="24" />
+<question id="A502" intID="13" />
+</page>
+
+
+<!-- Page 6 -->
+<page ident="P5" intID="14">
+<info>Weiteres</info>
+<question id="A601" intID="15" />
+<question id="A602" intID="20" />
+</page>
+
+
+</questionnaire>]]>
+</attr>
+<attr id="goodbye">
+<txt><![CDATA[<h1>Vielen Dank für Ihre Teilnahme!</h1>
+
+<p>Ich möchte mich ganz herzlich für Ihre Mithilfe bedanken.</p>
+
+<!-- Hier evtl. noch Zweck der Studie, Ansprechpartner, etc. -->
+<p>Ihre Antworten werden verwendet, um die beschriebene Metrik zu evaluieren. 
+Die Metrik misst mit den zwei Einflussgrößen Relevanz (negativer Einfluss auf Expertisenanforderung) und Plausibilität von falschen Alternativen (positiver Einfluss auf Expertisenanforderung) die Expertisenanforderung von Antwortphrasen im Text.
+Die Metrik wird durch ein Computerprogramm automatisch berechnet.
+Mithilfe dieser Studie wird geprüft ob bei der aktuellen Implementation der Metrik Relevanz und Plausibilität von falschen Alternativen genau so eingeschätzt werden, wie von den Versuchsteilnehmenden. Außerdem wird geprüft ob diese beiden Einflussgrößen wirklich einen Einfluss auf Expertisenanforderung haben. 
+Zum Schluss wird noch geprüft wie ähnlich die Einschätzungen der Expertisenanforderungen von Versuchsteilnehmenden und Metrik sind.</p>
+
+<p>Bei Fragen stehe ich Ihnen unter lenard.schnakenbeck@stud.uni-due.de zur Verfügung.</p>
+
+<p>Ihre Antworten wurden gespeichert, Sie können das Browser-Fenster nun schließen.</p>
+
+<!-- Zusätzlicher Abstand (ggf. entfernen/anpassen) -->
+<div style="padding-bottom: 20px"></div>]]></txt>
+<txt lng="eng"><![CDATA[<h1>Thank You for Your Participation!</h1>
+
+<p>We would like to express our sincere gratitude for your assistance.</p>
+
+<!-- Possibly include the purpose of the study, contact person, etc. -->
+
+<p>Your responses have been saved. You may now close the browser window.</p>
+
+<!-- Additional spacing (adjust or remove if necessary) -->
+<div style="padding-bottom: 20px"></div>
+]]></txt>
+</attr>
+<attr id="selection">1</attr>
+<attr id="probePreset">no</attr>
+</attributes.specific>
+</questionnaire>
+</surveyProject>
