@@ -32,7 +32,6 @@ def wordnet_similarity(candidates, candidates_pos, tokens, tokens_pos):
                 score += 1
         return score
 
-    #adjust pos for lemmatizer
     candidates_pos = list(
         map(map_pos_tokenizer_to_lemmatizer, candidates_pos))
 

@@ -37,10 +37,10 @@ def word_scoring(chunked_candidates, window = 10):
     return scores
 
 
-# Candidate score = sum(word scores)
-def candidate_scoring(word_scores, candidates): #apply_softmax = False
+
+def candidate_scoring(word_scores, candidates):
     scores_array = []
-    #candidates = [candidate for candidate, iscandidate in chunked_candidates if iscandidate]
+
     for index, k in enumerate(candidates):
         if isinstance(k, list):
             tokens = k
@@ -52,7 +52,6 @@ def candidate_scoring(word_scores, candidates): #apply_softmax = False
 def calculate_and_write_pickle_singlerank_scores(labeled_documents_path, singlerank_scores_path):
     documents_json = open(labeled_documents_path)
     documents = json.load(documents_json)
-    #results = []
     for document in documents:
         candidates = document["candidates"]
         document["candidates_only"] = [candidate for candidate in document["candidates"] if isinstance(candidate, list)]

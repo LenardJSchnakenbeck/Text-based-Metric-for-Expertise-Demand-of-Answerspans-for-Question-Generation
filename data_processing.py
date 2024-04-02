@@ -584,62 +584,6 @@ def plot_deviations_PER_ANSWERSPAN_bar_mean():
     plt.tight_layout()  # Adjust layout to prevent clipping of labels
     plt.show()
 
-#compare to expert
-df_evaluation_w_expert = pd.DataFrame({
-    #Rel
-    "sqr_deviation_CosineRel":
-        calculate_distances_to_mean(expert_Rel,  scale_0_1000(metric_results['CosineRel']),    squared=True),
-    "sqr_deviation_SingleRankRel":
-        calculate_distances_to_mean(expert_Rel,  scale_0_1000(metric_results["SinglerankRel"]),squared=True),
-    "sqr_deviation_MeanRel":
-        calculate_distances_to_mean(expert_Rel, [np.mean(means_Rel) for i in range(13)], squared=True),
-    #PlofA
-    "sqr_deviation_WordnetSim":
-        calculate_distances_to_mean(expert_PlofA,scale_0_1000(metric_results['WordnetSim']),   squared=True),
-    "sqr_deviation_CosineSim":
-        calculate_distances_to_mean(expert_PlofA,scale_0_1000(metric_results['CosineSim']),    squared=True),
-    "sqr_deviation_MeanSim":
-        calculate_distances_to_mean(expert_PlofA,[np.mean(means_PlofA) for i in range(13)],    squared=True),
-    #ExpDem
-    "sqr_deviation_CosineSim_CosineRel":
-        calculate_distances_to_mean(expert_ExpDem, scale_0_1000(metric_results['CosineSim_CosineRel']), squared=True),
-    "sqr_deviation_WordnetSim_SinglerankRel":
-        calculate_distances_to_mean(expert_ExpDem, scale_0_1000(metric_results["WordnetSim_SinglerankRel"]), squared=True),
-    "sqr_deviation_WordnetSim_CosineRel":
-        calculate_distances_to_mean(expert_ExpDem, scale_0_1000(metric_results['WordnetSim_CosineRel']), squared=True),
-    "sqr_deviation_CosineSim_SinglerankRel":
-        calculate_distances_to_mean(expert_ExpDem, scale_0_1000(metric_results['CosineSim_SinglerankRel']), squared=True),
-    "sqr_deviation_Mean":
-        calculate_distances_to_mean(expert_ExpDem, [np.mean(means_ExpDem) for i in range(13)], squared=True)
-    })
-
-mean_dev_expert = {
-'CosineRel': np.mean(df_evaluation_w_expert["sqr_deviation_CosineRel"]),
-"SinglerankRel": np.mean(df_evaluation_w_expert["sqr_deviation_SingleRankRel"]),
-'MeanRel': np.mean(df_evaluation_w_expert["sqr_deviation_MeanRel"]),
-'WordnetPlofA': np.mean(df_evaluation_w_expert["sqr_deviation_WordnetSim"]),
-'CosinePlofA': np.mean(df_evaluation_w_expert["sqr_deviation_CosineSim"]),
-'MeanPlofA': np.mean(df_evaluation_w_expert["sqr_deviation_MeanSim"]),
-'CosinePlofA_CosineRel': np.mean(df_evaluation_w_expert["sqr_deviation_CosineSim_CosineRel"]),
-"WordnetPlofA_SinglerankRel": np.mean(df_evaluation_w_expert["sqr_deviation_WordnetSim_SinglerankRel"]),
-'WordnetPlofA_CosineRel': np.mean(df_evaluation_w_expert["sqr_deviation_WordnetSim_CosineRel"]),
-'CosinePlofA_SinglerankRel': np.mean(df_evaluation_w_expert["sqr_deviation_CosineSim_SinglerankRel"]),
-'MeanExpDem': np.mean(df_evaluation_w_expert["sqr_deviation_Mean"])
-           }
-
-def plot_deviations_bar_expert(mean_dev_expert):
-    mean_dev_expert = pd.DataFrame(mean_dev_expert, index=[0])
-    #mean_dev_expert[['CosineRel', "SinglerankRel", 'MeanRel']].plot(kind='bar', colormap="Set2")
-    mean_dev_expert[['WordnetPlofA', 'CosinePlofA', 'MeanPlofA']].plot(kind='bar', colormap="Set2")
-    mean_dev_expert[['CosinePlofA_CosineRel', "WordnetPlofA_SinglerankRel", 'WordnetPlofA_CosineRel', 'CosinePlofA_SinglerankRel', 'MeanExpDem']].plot(kind='bar', colormap="Set2")
-    plt.xlabel('method')
-    plt.ylabel('Expert Squared Deviation')
-    plt.title('Expert Deviation Comparison')
-    plt.xticks(rotation=0)  # Rotate x-axis labels if needed
-    plt.tight_layout()  # Adjust layout to prevent clipping of labels
-    plt.show()
-
-
 
 #Normalverteilung
 #from statsmodels.stats.diagnostic import kstest_normal
