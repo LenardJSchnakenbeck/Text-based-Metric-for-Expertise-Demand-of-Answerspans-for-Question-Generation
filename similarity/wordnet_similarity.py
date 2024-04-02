@@ -4,6 +4,8 @@ import nltk
 from nltk.corpus import wordnet
 import numpy as np
 from itertools import chain
+import sys
+sys.path.append('../')
 from preprocessing.candidate_phrases import get_main_word, map_pos_tokenizer_to_lemmatizer
 
 

@@ -13,6 +13,7 @@ lemmatizer = nltk.stem.WordNetLemmatizer()
 
 def encode_text_and_avg_candidates(documents):
     model = SentenceTransformer('all-mpnet-base-v2')
+    #print("SentenceTransformer loaded")
     result = []
     for document in documents:
         text_encoded = model.encode(document['text'])
